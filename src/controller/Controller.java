@@ -2,7 +2,10 @@ package controller;
 
 import model.Model;
 import view.View;
+import common.FieldMockup;
+import common.events.FieldClickEvent;
 import common.events.GameEvent;
+import common.events.GameStartEvent;
 
 import java.util.concurrent.BlockingQueue;;
 
@@ -46,7 +49,24 @@ public class Controller {
 	private void processEvents() {
 		try {
 			GameEvent event = this.blocking_queue.take();
-			// @TODO: zrob cos z event 
+            Class<? extends GameEvent> event_class = event.getClass();
+            if(event_class == FieldClickEvent.class){
+            	FieldClickEvent field_click_event = (FieldClickEvent)event;
+            	// kliknieto pole
+            	if(model.isAnyCheckerSelected())
+            	{
+            		model.moveSelectedCheckerTo(field_click_event.getFieldX(), field_click_event.getFieldY());
+            		
+            	}
+            	else
+            	{
+            		//@TODO dokoncz mnie
+            	}
+            }
+            else if(event_class == GameStartEvent.class)
+            {
+            	
+            }
 		}
 		catch(InterruptedException exception)
 		{

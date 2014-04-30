@@ -8,9 +8,18 @@ package common;
  */
 public final class Mockup {
 	
-	/// reprezentacja planszy
+	/// opis planszy
 	FieldMockup fields [][];
 	
 	/// stan gry
 	GameStateMockup game_state;
+	
+	/// gracze
+	PlayerMockup players[];
+	
+	Mockup()
+	{
+		players = new PlayerMockup[2];
+		fields = new FieldMockup[8][8];
+	}
 }
