@@ -5,6 +5,11 @@ import common.Mockup;
 
 import java.lang.UnsupportedOperationException;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Logger;
+
+// tylko do debugu
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class View {
     private BlockingQueue<GameEvent> blocking_queue;
@@ -20,7 +25,7 @@ public class View {
      */
 	public void init() {
 		// @TODO write me
-		throw new UnsupportedOperationException("Not yet implemented");
+		//throw new UnsupportedOperationException("Not yet implemented");
 	}
 	
 	/**
@@ -31,6 +36,7 @@ public class View {
 	 */
 	public void draw(Mockup mockup) {
 		// @TODO write me
+		Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, "test");
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 	

@@ -2,11 +2,14 @@ package controller;
 
 import model.Model;
 import view.View;
+import common.Mockup;
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.events.GameStartEvent;
 
-import java.util.concurrent.BlockingQueue;;
+import java.util.concurrent.BlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Controller {
     /// Model 
@@ -37,6 +40,7 @@ public class Controller {
      */
     public void go() {
     	view.init();
+    	refreshView();
     	while(true) {
     		processEvents();
     	}
@@ -44,6 +48,8 @@ public class Controller {
 
     /**
      * Pobiera obiekt z kolejki zdarzeń (być może czekając na niego), po czym obsługuje go
+     * 
+     * @TODO zastosować wzorzec strategii
      */
 	private void processEvents() {
 		try {
@@ -63,22 +69,35 @@ public class Controller {
             		model.selectChecker(x, y);
             	} else if(model.isAnyCheckerSelected()) {
             		model.moveSelectedCheckerTo(x, y);
+            		model.unselectChecker();
             	} else {
-            		throw new RuntimeException("Unexpected event");
+            		throw new RuntimeException("Controller received event of unexpected type");
             	}
-            }
-            else if(event_class == GameStartEvent.class) {
+            	if(model.hasPlayer1Won()) {
+            		// @TODO czy trzeba to obsluzyc???
+            	}
+            } else if(event_class == GameStartEvent.class) {
+            	// kliknieto przycisk rozpoczecia gry
             	GameStartEvent game_start_event = (GameStartEvent) event;
             	model.startGame();
+            } else {
+            	/// ????
             }
-            else {
-            	
-            }
+            // po kazdym zdarzeniu odswiezamy
+        	refreshView();
 		}
 		catch(InterruptedException exception) {
 			// nie powinno sie zdarzyć
 			throw new RuntimeException("unexpected exception");
 		}
+	}
+
+	/**
+	 * Każe widokowi się odświeżyć
+	 */
+	private void refreshView() {
+		Mockup mockup = model.getMockup();
+		view.draw(mockup);
 	}
 
 }

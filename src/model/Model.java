@@ -1,7 +1,23 @@
 package model;
 
+import common.Mockup;
+
 public class Model {
 
+	/// rozmiar planszy
+	private final static int BOARD_SIZE = 8;
+	
+	/// po ile rzędów pionków rozstawić na starcie (dla wymiaru 8 jest to najczęściej
+	/// 3, dla wymiaru 10 - 4)
+	private final static int INITIAL_CHECKERS_ROWS = 3;
+	
+	/// odnosnik do planszy
+	private Board board;
+	
+	public Model() {
+		this.board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
+	}
+	
 	/**
 	 * @return true wtedy i tylko wtedy, gdy jakikolwiek pionek jest zaznaczony
 	 */
@@ -17,7 +33,8 @@ public class Model {
 	 * + jeżeli jakiś pionek jest zaznaczony, a docelowe pole znajduje się 1 pole 
 	 * 	 naprzód (po skosie) od obecnej pozycji pionka (zwykły ruch), to pionek 
 	 *   przesuwa się na zadane pole, następuje zmiana kolejki, a pionek zostaje 
-	 *   odznaczony
+	 *   odznaczony; UWAGA: zwykły ruch jest dozwolony tylko wtedy, gdy gracz nie
+	 *   ma żadnego bicia
 	 * + jeżeli jakiś pionek jest zaznaczony, a docelowe pole znajduje się 2 pola 
 	 *   naprzód od niego i między polem docelowym a obecnym znajduje się pionek 
 	 *   przeciwnika (bicie), wówczas pionek przesuwa się 2 na pole docelowe, a pionek 
@@ -29,20 +46,21 @@ public class Model {
 	 *   jeżeli tak, to:
 	 * ++ nie następuje zmiana kolejki
 	 * ++ pionek nie zostaje odznaczony
-	 * ++ w następnej kolejce pionek ma "wymuszone bicie", tj. gracz 
+	 * ++ w następnej kolejce pionek zostaje zablokowany, tj. gracz nie może go odznaczyć,
 	 *    musi wykonać bicie tym pionkiem
 	 * + jeżeli nie zachodzi żaden z powyższych przypadków, to ruch jest uznawany 
 	 *   za niepoprawny; funkcja rzuca wyjątek, nie zostają wprowadzone żadne zmiany 
 	 *   w modelu
 	 * 
-	 * @throws RuntimeException jeżeli ruch jest niedozwolony
 	 * @param target_x współrzędna x docelowego pola
 	 * @param target_y współrzędna y docelowego pola
+	 * @return true jeżeli ruch jest dozwolony i został wykonany
+	 * 		   false jeżeli ruch jest niedozwolony; w takim wypadku żadne zmiany nie zostają
+	 * 		   wprowadzone do modelu
 	 */
-	public final void moveSelectedCheckerTo(int target_x, int target_y) {
+	public final boolean moveSelectedCheckerTo(int target_x, int target_y) {
 		// @TODO write me
 		throw new UnsupportedOperationException("Not yet implemented");
-		
 	}
 	
 	/**
@@ -64,7 +82,7 @@ public class Model {
 	 * @return true jeżelili na danej pozycji znajduje się pionek i jest on zaznaczony
 	 * 		   false jeżeli na danej pozycji nie ma pionka lub pionek jest niezaznaczony
 	 */
-	public boolean isCheckerSelected(int x, int y) {
+	public final boolean isCheckerSelected(int x, int y) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
@@ -77,7 +95,7 @@ public class Model {
 	 * @param y współrzędna y pozycji do sprawdzenia
 	 * @return true jeżeli na polu (x, y) znajduje się pionek aktywnego gracza.
 	 */
-	public boolean isCurrentPlayerCheckerOnPosition(int x, int y) {
+	public final boolean isCurrentPlayerCheckerOnPosition(int x, int y) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
@@ -91,7 +109,7 @@ public class Model {
 	 * @throws RuntimeException jeżeli na pozycji (x, y) nie ma pionka aktywnego gracza
 	 * @throws RuntimeException jeżeli jakiś pionek jest już zaznaczony
 	 */
-	public void selectChecker(int x, int y) {
+	public final void selectChecker(int x, int y) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Not yet implemented");
 		
@@ -101,11 +119,50 @@ public class Model {
 	 * Rozpoczyna nową grę, tj. tworzy planszę, ustawia pionki i ustawia białego gracza
 	 * jako aktywnego.
 	 */
-	public void startGame() {
+	public final void startGame() {
+		// rozstaw pionki
+		board.setUp();
+		
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Not yet implemented");
 		
 	}
 
+	/**
+	 * Generuje makietę
+	 * @return makieta obecnego stanu gry
+	 * @see #Mockup
+	 */
+	public final Mockup getMockup() {
+		Mockup mockup = new Mockup(); // wypelnij mnie
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	/**
+	 * Sprawdza, czy gracz 1 wygrał
+	 * @return true wtedy i tylko wtedy, gdy spelnione są oba poniższe warunki:
+	 * 	+ Gracz 2 jest aktywny
+	 *  + Gracz 2 nie ma żadnego dozwolonego ruchu
+	 */
+	public boolean hasPlayer1Won() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	/**
+	 * Sprawdza, czy gracz 2 wygrał
+	 * @return true wtedy i tylko wtedy, gdy spelnione są oba poniższe warunki:
+	 * 	+ Gracz 1 jest aktywny
+	 *  + Gracz 1 nie ma żadnego dozwolonego ruchu
+	 *  
+	 *  @TODO copy-paste programming - moze przedefiniowac interfejs?
+	 */
+	public boolean hasPlayer2Won() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	
 }
  
