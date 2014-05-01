@@ -1,8 +1,7 @@
 package common;
 
 /**
- * Makieta, tj. obiekt generowany przez model, który zawiera wszystkie informacje potrzebne 
- * do wyświetlenia gry przez widok
+ * Makieta, tj. obiekt generowany przez 
  * 
  *
  */

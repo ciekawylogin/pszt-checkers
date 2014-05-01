@@ -7,7 +7,7 @@ import java.lang.UnsupportedOperationException;
 import java.util.concurrent.BlockingQueue;
 
 public class View {
-    private BlockingQueue blocking_queue;
+    private BlockingQueue<GameEvent> blocking_queue;
     
     public View(BlockingQueue<GameEvent> blocking_queue) {
     	this.blocking_queue = blocking_queue;
@@ -25,6 +25,9 @@ public class View {
 	
 	/**
 	 * Wyświetla stan gry na podstawie podanej makiety
+	 * 
+	 * W zależności od stanu gry podanego w makiecie może rysować różne ekrany (ekran powitalny,
+	 * ekran gry etc.) - patrz dokumentacja klasy GameStateMockup
 	 */
 	public void draw(Mockup mockup) {
 		// @TODO write me

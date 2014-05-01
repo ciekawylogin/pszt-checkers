@@ -2,7 +2,6 @@ package controller;
 
 import model.Model;
 import view.View;
-import common.FieldMockup;
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.events.GameStartEvent;
@@ -50,26 +49,33 @@ public class Controller {
 		try {
 			GameEvent event = this.blocking_queue.take();
             Class<? extends GameEvent> event_class = event.getClass();
-            if(event_class == FieldClickEvent.class){
-            	FieldClickEvent field_click_event = (FieldClickEvent)event;
+            if(event_class == FieldClickEvent.class) {
             	// kliknieto pole
-            	if(model.isAnyCheckerSelected())
-            	{
-            		model.moveSelectedCheckerTo(field_click_event.getFieldX(), field_click_event.getFieldY());
-            		
-            	}
-            	else
-            	{
-            		//@TODO dokoncz mnie
+            	FieldClickEvent field_click_event = (FieldClickEvent)event;
+            	int x = field_click_event.getFieldX();
+            	int y = field_click_event.getFieldY();
+            	if(model.isCheckerSelected(x, y)) {
+            		model.unselectChecker();
+            	} else if(model.isCurrentPlayerCheckerOnPosition(x, y)) {
+            		if(model.isAnyCheckerSelected()) {
+                		model.unselectChecker();
+            		}
+            		model.selectChecker(x, y);
+            	} else if(model.isAnyCheckerSelected()) {
+            		model.moveSelectedCheckerTo(x, y);
+            	} else {
+            		throw new RuntimeException("Unexpected event");
             	}
             }
-            else if(event_class == GameStartEvent.class)
-            {
+            else if(event_class == GameStartEvent.class) {
+            	GameStartEvent game_start_event = (GameStartEvent) event;
+            	model.startGame();
+            }
+            else {
             	
             }
 		}
-		catch(InterruptedException exception)
-		{
+		catch(InterruptedException exception) {
 			// nie powinno sie zdarzyć
 			throw new RuntimeException("unexpected exception");
 		}
