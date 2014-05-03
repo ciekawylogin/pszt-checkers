@@ -2,7 +2,7 @@ package model;
 
 
 public class Field {
-	/// pionek na tym polu
+	/* pionek na tym polu */
 	private Checker checker;
 	
 	Field() {
@@ -16,6 +16,15 @@ public class Field {
 	public void setChecker(Checker checker) {
 		this.checker = checker;
 	}
+	
+	/**
+	 * Zwraca pionek.
+	 * 
+	 * @return checker
+	 */
+	public Checker getChecker() {
+        return checker;
+    }
 	
 	/**
 	 * Kasuje pionka z pola

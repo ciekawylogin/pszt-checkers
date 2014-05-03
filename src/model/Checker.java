@@ -1,13 +1,108 @@
 package model;
 
 public class Checker {
-	/// typ pionka (zwykly lub krolowa)
-	private final CheckerType type;
-	/// kolor pionka (bialy lub czarny)
+	/* typ pionka (zwykly lub krolowa) */
+	private CheckerType type;
+	
+	/* kolor pionka (bialy lub czarny) */
 	private final CheckerColor color;
 	
-	Checker(CheckerColor color, CheckerType type) {
+	/* pozycja X pionka */
+	private int positionX;
+	
+	/*pozycja Y pionka */
+	private int positionY;
+	
+	/**
+	 * Konstruktor.
+	 * 
+	 * @param color - tworzony kolor
+	 * @param type - tworzony typ
+	 */
+	Checker(final CheckerColor color, final CheckerType type) {
 		this.type = type;
 		this.color = color;
+
+        positionX = -1;
+        positionY = -1;
 	}
+	
+	/**
+	 * Konstruktor kopiujacy.
+	 * 
+	 * @param ch
+	 */
+	Checker(final Checker checkerToCopy) {
+        positionX = checkerToCopy.positionX;
+        positionY = checkerToCopy.positionY;
+        color = checkerToCopy.color;
+        type = checkerToCopy.type;
+    }
+	
+	/**
+	 * Zwraca typ pionka
+	 * 
+	 * @return
+	 */
+	public CheckerType getType() {
+        return type;
+    }
+
+    /**
+     * Ustawienie pozycji pionka
+     *
+     * @param x - pozycja x
+     * @param y - pozycja y
+     */
+    public void setPositionOnBoard(final int x, final int y) {
+        positionX = x;
+        positionY = y;
+    }
+
+    /**
+     * Zwraca numer pola na ktorym znajduje sie pionek
+     *
+     * @return position on board
+     */
+    public int getPositionOnBoard() {
+        return positionY * 8 + positionX;
+    }
+
+    /**
+     * Zwraca pozycje x pionka
+     *
+     * @return positionX
+     */
+    public int getPositionX() {
+        return positionX;
+    }
+
+    /**
+     * Zwraca pozycje y pionka
+     *
+     * @return positionY
+     */
+    public int getPositionY() {
+        return positionY;
+    }
+    
+    /**
+     * Zwraca kolor pionka.
+     * 
+     * @return color
+     */
+    public CheckerColor getColor() {
+        return color;
+    }
+    
+    /**
+     * Awans pionka na dame
+     */
+    public void promote() { 
+        if (color == CheckerColor.WHITE && positionY == 7) {
+            type = CheckerType.QUEEN;
+        } else if (color == CheckerColor.BLACK && positionY == 0) {
+            type = CheckerType.QUEEN;
+        }
+    }
 }

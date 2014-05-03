@@ -7,7 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Główna klasa programu
+ * Glowna klasa programu
  */
 public final class PsztCheckers {
 	public static void main(String[] args) {
