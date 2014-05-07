@@ -19,7 +19,6 @@ public class Field {
 	
 	/**
 	 * Zwraca pionek.
-	 * 
 	 * @return checker
 	 */
 	public Checker getChecker() {
@@ -27,7 +26,7 @@ public class Field {
     }
 	
 	/**
-	 * Kasuje pionka z pola
+	 * Kasuje pionek z pola
 	 */
 	public void removeChecker()
 	{

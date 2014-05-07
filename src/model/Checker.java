@@ -28,9 +28,37 @@ public class Checker {
 	}
 	
 	/**
+	 * Konstruktor.
+	 * 
+	 * @param color - tworzony kolor
+	 */
+	Checker(final CheckerColor color) {
+		this.type = CheckerType.NORMAL;
+		this.color = color;
+
+        positionX = -1;
+        positionY = -1;
+	}
+	
+	/**
+     * Konstruktor.
+     *
+     * @param position - pozycja na planszy
+     * @param type - rodzaj pionka
+     */
+    public Checker(final int position, final CheckerType type) {
+    	this.type = CheckerType.NORMAL;
+		this.color = CheckerColor.WHITE;
+
+		positionX = position % 8;
+        positionY = position / 8;
+    }
+
+	
+	/**
 	 * Konstruktor kopiujacy.
 	 * 
-	 * @param ch
+	 * @param checkerToCopy
 	 */
 	Checker(final Checker checkerToCopy) {
         positionX = checkerToCopy.positionX;
