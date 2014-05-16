@@ -86,8 +86,8 @@ public class Model {
 	 * 		   false jeżeli na danej pozycji nie ma pionka lub pionek jest niezaznaczony
 	 */
 	public final boolean isCheckerSelected(int x, int y) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not yet implemented");
+		Field field = board.getField(x, y);
+		return field.isSelected();
 	}
 
 	/**

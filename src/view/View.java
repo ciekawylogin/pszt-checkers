@@ -48,7 +48,7 @@ public class View {
 		System.out.println("board:");
 		for(int i=0; i < Model.getBoardSize(); ++i) {
 			for(int j=0; j< Model.getBoardSize(); ++j) {
-				System.out.print("\t" + mockup.getField(j, i).getCheckerMockup());
+				System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
 			}
 			System.out.println();
 		}

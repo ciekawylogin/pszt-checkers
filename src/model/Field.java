@@ -5,8 +5,10 @@ import common.FieldMockup;
 
 
 public class Field {
-	/* pionek na tym polu */
+	/** pionek na tym polu */
 	private Checker checker;
+	/** czy pole jest zaznaczone */
+	private boolean is_selected;
 	
 	Field() {
 		this.checker = null;
@@ -72,4 +74,8 @@ public class Field {
 		}
 	}
 	// @TODO dokonczyc
+
+	public boolean isSelected() {
+		return is_selected;
+	}
 }
