@@ -70,8 +70,16 @@ public class Controller {
             		}
             		model.selectChecker(x, y);
             	} else if(model.isAnyCheckerSelected()) {
-            		model.moveSelectedCheckerTo(x, y);
-            		model.unselectChecker();
+            		boolean correctMove = model.moveSelectedCheckerTo(x, y);
+            		if(correctMove)
+            		{
+                    	refreshView();
+                    	while(model.isAITurn())
+                    	{
+                    		model.makeAIMove();
+                    	}
+            		}
+                	model.unselectChecker();
             	} else {
             		// kliknieto puste pole (?)
             		// ignorujemy
@@ -80,11 +88,6 @@ public class Controller {
             	}
             	if(model.hasPlayer1Won()) {
             		// @TODO czy trzeba to obsluzyc???
-            	}
-            	refreshView();
-            	if(model.isAITurn())
-            	{
-            		model.makeAIMove();
             	}
             } else if(event_class == GameStartEvent.class) {
             	// kliknieto przycisk rozpoczecia gry
