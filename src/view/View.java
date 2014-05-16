@@ -13,11 +13,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -27,6 +29,13 @@ import java.util.logging.Level;
 
 public class View extends Application implements Runnable {
     private BlockingQueue<GameEvent> blocking_queue;
+    @FXML
+    private Button start;
+    private Button exit;
+    private ChoiceBox difficulty;
+    private ChoiceBox color;
+    private TextField name;
+
     
     public View() {}
     
@@ -42,7 +51,19 @@ public class View extends Application implements Runnable {
             primaryStage.setScene(new Scene(page));
             primaryStage.setTitle("Checkers");
             primaryStage.show();
-        } catch (Exception ex) {
+//            start.setOnAction(new EventHandler<ActionEvent>() {
+//            	@Override
+//                public void handle(ActionEvent event) {
+//                   	System.out.println("Start game");
+//                }
+//			});
+//            exit.setOnAction(new EventHandler<ActionEvent>() {
+//            	@Override
+//                public void handle(ActionEvent event) {
+//                   	System.out.println("Exit");
+//                }
+//			});
+            } catch (Exception ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
     	

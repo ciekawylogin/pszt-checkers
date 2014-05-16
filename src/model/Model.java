@@ -79,7 +79,7 @@ public class Model {
 	 * 
 	 * @param target_x wspolrzedna x docelowego pola
 	 * @param target_y wspolrzedna y docelowego pola
-	 * @return true jezeli ruch jest dozwolony i zostac‚ wykonany
+	 * @return true jezeli ruch jest dozwolony i zostacï¿½ wykonany
 	 * 		   false jezeli ruch jest niedozwolony; w takim wypadku zadne zmiany nie zostaja
 	 * 		   wprowadzone do modelu
 	 */
@@ -523,7 +523,7 @@ public class Model {
 
 	/**
 <<<<<<< HEAD
-	 * Sprawdza, czy gracz 1 wygrac‚
+	 * Sprawdza, czy gracz 1 wygracï¿½
 	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
 =======
 	 * Sprawdza, czy gracz 1 wygracï¿½
@@ -538,7 +538,7 @@ public class Model {
 	}
 
 	/**
-	 * Sprawdza, czy gracz 2 wygrac‚
+	 * Sprawdza, czy gracz 2 wygracï¿½
 	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
 	 * 	+ Gracz 1 jest aktywny
 	 *  + Gracz 1 nie ma zadnego dozwolonego ruchu
@@ -601,7 +601,7 @@ public class Model {
 		ArrayList<Move> moves = getAllPossibleMoves(players[active_player].getPlayerColor());
 		int movesCount = moves.size();
 		System.out.println("liczba dozwolonych ruchow: " + movesCount);
-		int randomId = (int) Math.floor(Math.random() * movesCount + 1);
+		int randomId = (int) Math.floor(Math.random() * movesCount);
 		Move selectedMove = moves.get(randomId);
 		selectChecker(selectedMove.startX, selectedMove.startY);
 		moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
