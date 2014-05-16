@@ -203,6 +203,7 @@ public class Model {
 	 * @param source_y - wspolrzedna y poczatkowej pozycji
 	 * @param target_x - wspolrzedna x koncowej pozycji
 	 * @param target_y - pozycja y koncowej pozycji
+	 * @param coordinatesToDelete - tablica zbitych po drodze pionkow
 	 * @return true gdy ruch poprawny
 	 */
 	private boolean isQueenCheckerMoveCorrect(final int source_x, final int source_y,
@@ -232,7 +233,8 @@ public class Model {
 				
 				if(temp != null && temp.getColor() == CheckerColor.BLACK) {
 					return false;
-				} else if(temp !=null && temp.getColor() == CheckerColor.WHITE) {
+				} else if(temp !=null && temp.getColor() == CheckerColor.WHITE
+						&& coordinatesToDelete != null) {
 					coordinatesToDelete.add(new Coordinate (x, y));
 				}
 				
@@ -252,7 +254,8 @@ public class Model {
 				
 				if(temp != null && temp.getColor() == CheckerColor.WHITE) {
 					return false;
-				} else if(temp !=null && temp.getColor() == CheckerColor.BLACK) {
+				} else if(temp !=null && temp.getColor() == CheckerColor.BLACK
+						&& coordinatesToDelete != null) {
 					coordinatesToDelete.add(new Coordinate (x, y));
 				}
 				
@@ -272,7 +275,8 @@ public class Model {
 				
 				if(temp != null && temp.getColor() == CheckerColor.BLACK) {
 					return false;
-				} else if(temp !=null && temp.getColor() == CheckerColor.WHITE) {
+				} else if(temp !=null && temp.getColor() == CheckerColor.WHITE
+						&& coordinatesToDelete != null) {
 					coordinatesToDelete.add(new Coordinate (x, y));
 				}
 				
@@ -292,7 +296,8 @@ public class Model {
 				
 				if(temp != null && temp.getColor() == CheckerColor.WHITE) {
 					return false;
-				} else if(temp !=null && temp.getColor() == CheckerColor.BLACK) {
+				} else if(temp !=null && temp.getColor() == CheckerColor.BLACK
+						&& coordinatesToDelete != null) {
 					coordinatesToDelete.add(new Coordinate (x, y));
 				}
 			}
