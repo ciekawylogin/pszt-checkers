@@ -90,7 +90,7 @@ public class View extends Application implements Runnable {
      * zostanie zawolana metoda draw)
      */
 	public void init() {
-		// @TODO write me
+		//TODO write me
 		//throw new UnsupportedOperationException("Not yet implemented");
 	}
 	
@@ -164,6 +164,14 @@ public class View extends Application implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		launch();
+	}
+	
+	/**
+	 * Funkcja do celow testowych (tymczasowo)
+	 */
+	public void displayEnd(final String playerName) {
+		System.out.println("KONIEC GRY");
+		System.out.println("wygral gracz: "+playerName);
 	}
 	
 }

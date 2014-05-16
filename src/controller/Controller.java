@@ -91,14 +91,18 @@ public class Controller {
             		blocking_queue.add(new GameFinishEvent(false, null));
             	}
             	
+            // podjecie eventu startu gry
             } else if(event_class == GameStartEvent.class) {
             	// kliknieto przycisk rozpoczecia gry
             	//GameStartEvent game_start_event = (GameStartEvent) event;
             	model.startGame();
-            	
+            
+            // podjecie eventu zakonczenia rozgrywki
             } else if(event_class == GameFinishEvent.class) {
             	//TODO
-            	// zakonczyc wszystko
+            	// powrot do glownego menu
+            	GameFinishEvent ev = (GameFinishEvent) event;
+            	view.displayEnd(ev.getVictoriusPlayer().getName());
             	
             } else {
             	throw new RuntimeException("unrecognized event taken from blockingQueue");

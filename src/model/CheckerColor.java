@@ -27,4 +27,8 @@ public enum CheckerColor {
 	public boolean isBlack() {
 		return CheckerColor.isBlack(this);
 	}
+	
+	public static CheckerColor getOppositeColor(final CheckerColor color) {
+		return color == CheckerColor.WHITE ? CheckerColor.BLACK : CheckerColor.WHITE;
+	}
 }

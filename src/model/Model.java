@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.sun.media.jfxmedia.events.PlayerStateEvent.PlayerState;
+
 import common.FieldMockup;
 import common.GameStateMockup;
 import common.Mockup;
@@ -128,6 +130,11 @@ public class Model {
 	 * @return true jesli ruch zostal wykonany
 	 */
 	private boolean makeNormalCheckerMove(int source_x, int source_y, int target_x, int target_y) {
+		if(target_x >= BOARD_SIZE || target_y >= BOARD_SIZE ||
+				target_x < 0 || target_y < 0) {
+			return false;
+		}
+		
 		boolean normalMove = isNormalCheckerNormalMoveCorrect(source_x, source_y, target_x, target_y);
 		boolean captureMove = isNormalCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y);
 		boolean correctMove = normalMove || captureMove;
@@ -531,9 +538,12 @@ public class Model {
 	 * @return wygrany zawodnik
 	 */
 	public Player checkIfAnyPlayerWon() {
-		if(hasPlayer1Won()) {
+		// sprawdzenie czy pierwszy gracz wygral
+		if(hasPlayerWon(players[0])) {
 			return getPlayer(0);
-		} else if(hasPlayer2Won()) {
+			
+		// sprawdzenie czy drugi gracz wygral
+		} else if(hasPlayerWon(players[1])) {
 			return getPlayer(1);
 		}
 		return null;
@@ -545,32 +555,41 @@ public class Model {
 	 */
 	public boolean checkIfWithdraw() {
 		//TODO
+		// sprawdzenie czy jeden i drugi gracz nie maja mozliwosci ruchu
 		return false;
 		
 	}
-
+	
 	/**
-	 * Sprawdza, czy gracz 1 wygral
-	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
-	 * 	+ Gracz 2 jest aktywny
-	 *  + Gracz 2 nie ma zadnego dozwolonego ruchu
+	 * Sprawdza czy podany w parametrze gracz wygral rozgrywke.
+	 * 
+	 * @param player - gracz dla ktorego sprawdzamy warunek zwyciestwa
+	 * @return true jesli gracz wygral
 	 */
-	public boolean hasPlayer1Won() {
+	public boolean hasPlayerWon(final Player player) {
 		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/**
-	 * Sprawdza, czy gracz 2 wygral
-	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
-	 * 	+ Gracz 1 jest aktywny
-	 *  + Gracz 1 nie ma zadnego dozwolonego ruchu
-	 *  
-	 *  @TODO copy-paste programming - moze przedefiniowac interfejs?
-	 */
-	public boolean hasPlayer2Won() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		CheckerColor color = player.getPlayerColor();
+		
+		// przeszukujemy cala plansze w poszukiwaniu chociaz jednego pionka przeciwnika
+		for(int i = 0; i< BOARD_SIZE; ++i) {
+			for(int j = 0; j< BOARD_SIZE; ++j) {
+				
+				if(board.getField(j, i).getChecker() != null &&
+						board.getField(j, i).getChecker().getColor() != color) {
+					return false;
+				}
+				
+			}
+		}
+		
+		// sprawdzenie czy, mimo posiadania pionkow, przeciwnik ma mozliwosc ruchu 
+		ArrayList<Move> list = getAllPossibleMoves(CheckerColor.getOppositeColor(color));
+		if(list.size() != 0) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -579,14 +598,6 @@ public class Model {
 	 */
 	public static int getBoardSize() {
 		return BOARD_SIZE;
-	}
-	
-	/**
-	 * Zwraca tablice z graczami
-	 * @return players
-	 */
-	public Player[] getPlayers() {
-		return players;
 	}
 	
 	/**
@@ -641,11 +652,15 @@ public class Model {
 		int movesCount = moves.size();
 		System.out.println("liczba dozwolonych ruchow: " + movesCount);
 		int randomId = (int) Math.floor(Math.random() * movesCount);
-		Move selectedMove = moves.get(randomId);
-		System.out.println("wybrany ruch z ["+ selectedMove.startX + ", " + selectedMove.startY +
-						   "] na [" + selectedMove.endX + ", " + selectedMove.endY + "]");
-		selectChecker(selectedMove.startX, selectedMove.startY);
-		moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
+		
+		if(!moves.isEmpty()) {
+			Move selectedMove = moves.get(randomId);
+			System.out.println("wybrany ruch z ["+ selectedMove.startX + ", " + selectedMove.startY +
+							   "] na [" + selectedMove.endX + ", " + selectedMove.endY + "]");
+			selectChecker(selectedMove.startX, selectedMove.startY);
+			moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
+		}
+		
 	}
 	
 	
