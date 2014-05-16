@@ -22,11 +22,11 @@ public class Board {
 	final int INIT_ROWS;
 	
 	/** tablica z czarymi pionkami */
-	private ArrayList<BlackChecker> blackCheckers;
+	//private ArrayList<BlackChecker> blackCheckers;
 	/** tablica z bialymi pionkami */
-    private ArrayList<WhiteChecker> whiteCheckers;
+    //private ArrayList<WhiteChecker> whiteCheckers;
     /* tablica z graczami */
-    private ArrayList<Player> players;
+    //private ArrayList<Player> players;
     
     /*  aktualny kolor pionka majacy prawo do ruchu */
     private CheckerColor actualMoveColor = WHITE;
@@ -39,9 +39,9 @@ public class Board {
 		this.INIT_ROWS = 8;
 		fields = new Field[SIZE][SIZE];
 		
-		blackCheckers = new ArrayList<>();
-        whiteCheckers = new ArrayList<>();
-        players = new ArrayList<>();
+		//blackCheckers = new ArrayList<>();
+        //whiteCheckers = new ArrayList<>();
+        //players = new ArrayList<>();
 	}
     
     /**
@@ -55,9 +55,9 @@ public class Board {
 		this.INIT_ROWS = init_rows;
 		fields = new Field[SIZE][SIZE];
 		
-		blackCheckers = new ArrayList<>();
-        whiteCheckers = new ArrayList<>();
-        players = new ArrayList<>();
+		//blackCheckers = new ArrayList<>();
+        //whiteCheckers = new ArrayList<>();
+        //players = new ArrayList<>();
 	}
 
 	/**
@@ -124,27 +124,27 @@ public class Board {
 	 * @param idx indeks gracza
 	 * @return
 	 */
-	public Player getPlayer(final int idx) {
-        return players.get(idx);
-    }
+	//public Player getPlayer(final int idx) {
+    //    return players.get(idx);
+    //}
 	
 	/**
 	 * Zwraca tablice bialych pionkow
 	 * 
 	 * @return whiteCheckers
 	 */
-	public ArrayList<WhiteChecker> getWhiteCheckersArray() {
-        return whiteCheckers;
-    }
+	//public ArrayList<WhiteChecker> getWhiteCheckersArray() {
+    //    return whiteCheckers;
+    //}
 
 	/**
 	 * Zwraca tablice czarnych pionkow
 	 * 
 	 * @return blackCheckers
 	 */
-    public ArrayList<BlackChecker> getBlackCheckersArray() {
-        return blackCheckers;
-    }
+    //public ArrayList<BlackChecker> getBlackCheckersArray() {
+    //    return blackCheckers;
+    //}
     
     /**
      * Zwraca pionek z planszy
@@ -152,9 +152,9 @@ public class Board {
      * @param idx - indeks pionka
      * @return Checker
      */
-    public Checker getChecker(final int idx) {
-    	return fields[idx % 8][idx / 8].getChecker();
-    }
+    //public Checker getChecker(final int idx) {
+    //	return fields[idx % 8][idx / 8].getChecker();
+    //}
     
     /**
      * Ustawia pionek na planszy
@@ -162,15 +162,16 @@ public class Board {
      * @param checker - pionek do ustawienia
      * @param idx - index pola do wstawienia
      */
-    public void setChecker(final Checker checker, final int idx) {
-        fields[idx % 8][idx / 8].setChecker(checker);
-    }
+    //public void setChecker(final Checker checker, final int idx) {
+    //    fields[idx % 8][idx / 8].setChecker(checker);
+    //}
 
     /**
      * Usuwa pionek z planszy
      *
      * @param checker - pionek do usuniecia
      */
+	/*
     private void deleteChecker(final Checker checker) {
     	int x = checker.getPositionOnBoard() % 8;
     	int y = checker.getPositionOnBoard() / 8;
@@ -190,6 +191,7 @@ public class Board {
             	throw new RuntimeException("Nierozpoznany pionek");
         }
     }
+    */
     
     /**
      * Sprawdzenie czy dany kolor ma mozliwosc ruchu.
@@ -197,6 +199,7 @@ public class Board {
      * @param color - kolor do sprawdzenia
      * @return true - jesli znaleziono mozliwosc
      */
+	/*
     boolean hasMove(final CheckerColor color) {
         switch (color) {
             case WHITE:
@@ -221,6 +224,7 @@ public class Board {
         }
         return false;
     }
+    */
     
     /**
      * Sprawdza, czy pionek moze wykonac ruch
@@ -228,6 +232,7 @@ public class Board {
      * @param checker - pionek do sprawdzenia
      * @return true - jesli truch mozliwy
      */
+	/*
     boolean hasMove(final Checker checker) {
     	
         int x = checker.getPositionX();
@@ -255,6 +260,7 @@ public class Board {
         }
         return false;
     }
+    */
     
     /**
      * Sprawdza, czy pionek moze wykonac bicie
@@ -262,10 +268,12 @@ public class Board {
      * @param checker - pionek do sprawdzenia
      * @return true - jesli bicie jest mozliwe
      */
+	/*
     boolean hasCaptures(final Checker checker) {
     	//TODO
     	return false;
     }
+    */
     
     /**
      * Wykonanie ruchu.

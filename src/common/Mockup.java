@@ -17,6 +17,7 @@ public final class Mockup {
 	/// gracze (0 = bialy, 1 = czarny)
 	PlayerMockup players[];
 	
+	
 	public Mockup() {
 		players = new PlayerMockup[2];
 		fields = new FieldMockup[8][8];
