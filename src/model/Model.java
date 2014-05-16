@@ -29,6 +29,9 @@ public class Model {
 	public Model() {
 		this.board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
 		this.players = new Player[2];
+		players[0] = new Player("player", CheckerColor.WHITE, false, null);
+		players[1] = new Player("CPU", CheckerColor.BLACK, true, GameLevel.EASY);
+		this.active_player = 0;
 	}
 	
 	/**
@@ -503,8 +506,13 @@ public class Model {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Sprawdza, czy gracz 1 wygrac�
 	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
+=======
+	 * Sprawdza, czy gracz 1 wygrac�
+	 * @return true wtedy i tylko wtedy, gdy spelnione są oba poniższe warunki:
+>>>>>>> ee09bca1ec744862cc236b0cd3227c90cf6760b3
 	 * 	+ Gracz 2 jest aktywny
 	 *  + Gracz 2 nie ma zadnego dozwolonego ruchu
 	 */
@@ -572,10 +580,14 @@ public class Model {
 	}
 
 	public void makeAIMove() {
-		ArrayList<Move> moves = getAllPossibleMoves(players[active_player].getPlayerColor());
-		int movesCount = moves.size();
-		int randomId = (int) Math.floor(Math.random() * movesCount + 1);
-		Move randomMove = moves.get(randomId);
+		throw new RuntimeException();
+//		ArrayList<Move> moves = getAllPossibleMoves(players[active_player].getPlayerColor());
+//		int movesCount = moves.size();
+//		System.out.println("liczba dozwolonych ruchow: " + movesCount);
+//		int randomId = (int) Math.floor(Math.random() * movesCount + 1);
+//		Move selectedMove = moves.get(randomId);
+//		selectChecker(selectedMove.startX, selectedMove.startY);
+//		moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
 	}
 	
 	

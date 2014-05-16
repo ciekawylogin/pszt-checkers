@@ -23,11 +23,11 @@ public class Controller {
     private final BlockingQueue <GameEvent> blocking_queue;
     
     /**
-     * Konstruktor sterownika, do wołania w mainie programu
+     * Konstruktor sterownika, do wolania w mainie programu
      * 
      * @param model Model
      * @param view Widok
-     * @param blocking_queue Kolejka zdarzeń od widoku
+     * @param blocking_queue Kolejka zdarzen od widoku
      */
     public Controller(final Model model, final View view, final BlockingQueue<GameEvent> blocking_queue) {
         this.model = model;
@@ -70,8 +70,16 @@ public class Controller {
             		}
             		model.selectChecker(x, y);
             	} else if(model.isAnyCheckerSelected()) {
-            		model.moveSelectedCheckerTo(x, y);
-            		model.unselectChecker();
+            		boolean correctMove = model.moveSelectedCheckerTo(x, y);
+            		if(correctMove)
+            		{
+                    	refreshView();
+                    	while(model.isAITurn())
+                    	{
+                    		model.makeAIMove();
+                    	}
+            		}
+                	model.unselectChecker();
             	} else {
             		// kliknieto puste pole (?)
             		// ignorujemy
@@ -80,11 +88,6 @@ public class Controller {
             	}
             	if(model.hasPlayer1Won()) {
             		// @TODO czy trzeba to obsluzyc???
-            	}
-            	refreshView();
-            	if(model.isAITurn())
-            	{
-            		model.makeAIMove();
             	}
             } else if(event_class == GameStartEvent.class) {
             	// kliknieto przycisk rozpoczecia gry
