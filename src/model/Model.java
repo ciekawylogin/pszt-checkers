@@ -78,8 +78,39 @@ public class Model {
 	 * 		   wprowadzone do modelu
 	 */
 	public final boolean moveSelectedCheckerTo(int target_x, int target_y) {
-		// @TODO write me
-		throw new UnsupportedOperationException("Not yet implemented");
+		Coordinate source_coordinate = getSelectedCheckerCoordinate();
+		int source_x = source_coordinate.getX();
+		int source_y = source_coordinate.getY();
+		CheckerType checkerType = board.getField(source_x, source_y).getChecker().getType();
+		if(checkerType == CheckerType.QUEEN) {
+			// ruch dama
+			
+		} else {
+			// ruch normalny
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * 
+	 */
+	
+	/**
+	 * Znajduje zaznaczony pionek
+	 */
+	public final Coordinate getSelectedCheckerCoordinate() {
+		for(int x=0; x<8; ++x)
+		{
+			for(int y=0; y<8; ++y)
+			{
+				if(board.getField(x, y).isSelected())
+				{
+					return new Coordinate(x, y);
+				}
+			}
+		}
+		throw new RuntimeException("hm");
 	}
 	
 	/**
