@@ -29,6 +29,6 @@ public class FieldClickEvent extends GameEvent {
 	 * @return wspolrzedna y (czyli pionowa) kliknietego pola
 	 */
 	public int getFieldY() {
-		return field_x;
+		return field_y;
 	}
 }

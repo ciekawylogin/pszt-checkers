@@ -42,7 +42,7 @@ public class Field {
 	 * Tworzy makietę pola
 	 */
 	public FieldMockup getMockup() {
-		return new FieldMockup(getCheckerMockup(), false);
+		return new FieldMockup(getCheckerMockup(), is_selected);
 	}
 	
 	/**
@@ -73,9 +73,17 @@ public class Field {
 			throw new RuntimeException("unknown checker type detected");
 		}
 	}
-	// @TODO dokonczyc
 
 	public boolean isSelected() {
 		return is_selected;
 	}
+
+	public void select() {
+		this.is_selected = true;
+	}
+	
+	public void unselect() {
+		this.is_selected = false;
+	}
+	
 }

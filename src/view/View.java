@@ -1,5 +1,7 @@
 package view;
 
+import java.util.Scanner;
+
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.Mockup;
@@ -54,15 +56,11 @@ public class View {
 		}
 		
 		System.out.println("----------------");
-		
-		int x, y;
-		try {
-			x = System.in.read();
-			y = System.in.read();
-			blocking_queue.add(new FieldClickEvent(x, y));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		Scanner in = new Scanner(System.in);
+		int x = in.nextInt();
+		int y = in.nextInt();
+		blocking_queue.add(new FieldClickEvent(x, y));
 	}
 	
 }
