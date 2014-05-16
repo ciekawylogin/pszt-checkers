@@ -83,19 +83,54 @@ public class Model {
 		int source_y = source_coordinate.getY();
 		CheckerType checkerType = board.getField(source_x, source_y).getChecker().getType();
 		if(checkerType == CheckerType.QUEEN) {
-			// ruch dama
-			
+			return makeQueenMove(source_x, source_y, target_x, target_y);
 		} else {
-			// ruch normalny
+			return makeNormalCheckerMove(source_x, source_y, target_x, target_y);
 		}
-		
-		return false;
 	}
 	
-	/**
-	 * 
-	 */
-	
+
+	private boolean makeNormalCheckerMove(int source_x, int source_y, int target_x, int target_y) {
+
+		if(isNormalCheckerMoveCorrect(source_x, source_y, target_x, target_y)) {
+			Field oldField = board.getField(source_x, source_y);
+			Checker checker = oldField.getChecker();
+			oldField.removeChecker();
+
+			Field newField = board.getField(target_x, target_y);
+			newField.setChecker(checker);
+			checker.setPositionOnBoard(target_x, target_y);
+			
+			return true;
+			
+		} else if(isCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y)) {
+			int checkerToRemoveX = (target_x + source_x) / 2;
+			int checkerToRemoveY = (target_y + source_y) / 2; 
+			
+			board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
+			
+			return true;
+			
+		}
+			
+		return false;
+	}
+
+	private boolean isCheckerCaptureMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
+		Checker checker = board.getField(source_x, source_y).getChecker();
+		return true;
+	}
+
+	private boolean makeQueenMove(int source_x, int source_y, int target_x, int target_y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	/**
 	 * Znajduje zaznaczony pionek
 	 */

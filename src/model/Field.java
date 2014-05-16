@@ -32,6 +32,7 @@ public class Field {
 	
 	/**
 	 * Kasuje pionek z pola
+	 * @return 
 	 */
 	public void removeChecker()
 	{
