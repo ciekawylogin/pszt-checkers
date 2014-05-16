@@ -101,7 +101,7 @@ public class Board {
 	 * @return true jezeli na polu na poczatku gry ma stac czarny pionek
 	 */
 	private boolean isBlackStartingPosition(final int x, final int y) {
-		return SIZE - y >= INIT_ROWS && isFieldAccessible(x, y);
+		return SIZE - y <= INIT_ROWS && isFieldAccessible(x, y);
 	}
 
 	/**

@@ -39,6 +39,8 @@ public class Controller {
      * woła metody inicjalizujące model i widok), po czym wchodzi w główną pętlę programu.
      */
     public void go() {
+    	blocking_queue.add(new GameStartEvent());
+    	
     	view.init();
     	refreshView();
     	while(true) {
