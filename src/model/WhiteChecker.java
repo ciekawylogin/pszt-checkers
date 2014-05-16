@@ -4,8 +4,7 @@ package model;
  * White checker class
  */
 public class WhiteChecker extends Checker {
-	
-	/**
+    /**
      * WhiteChecker konstruktor
      */
     public WhiteChecker() {
@@ -30,5 +29,4 @@ public class WhiteChecker extends Checker {
     public WhiteChecker(final Checker checker) {
         super(checker);
     }
-
 }

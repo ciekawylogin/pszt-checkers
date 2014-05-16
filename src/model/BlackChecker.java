@@ -4,8 +4,7 @@ package model;
  * Black checker class
  */
 public class BlackChecker extends Checker {
-	
-	/**
+    /**
      * BlackChecker konstruktor
      */
     public BlackChecker() {
@@ -30,5 +29,4 @@ public class BlackChecker extends Checker {
     public BlackChecker(final Checker checker) {
         super(checker);
     }
-
 }

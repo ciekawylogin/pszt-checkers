@@ -1,78 +1,74 @@
 package model;
 
 public class Checker {
-	/* typ pionka (zwykly lub krolowa) */
-	private CheckerType type;
-	
-	/* kolor pionka (bialy lub czarny) */
-	private final CheckerColor color;
-	
-	/* pozycja X pionka */
-	private int positionX;
-	
-	/*pozycja Y pionka */
-	private int positionY;
-	
-	/**
-	 * Konstruktor.
-	 * 
-	 * @param color - tworzony kolor
-	 * @param type - tworzony typ
-	 */
-	Checker(final CheckerColor color, final CheckerType type) {
-		this.type = type;
-		this.color = color;
+    // typ pionka (zwykly lub krolowa)
+    private CheckerType type;
 
+    // kolor pionka (bialy lub czarny)
+    private final CheckerColor color;
+
+    // pozycja X pionka
+    private int positionX;
+
+    // pozycja Y pionka
+    private int positionY;
+
+    /**
+     * Konstruktor.
+     *
+     * @param color - tworzony kolor
+     * @param type - tworzony typ
+     */
+    Checker(final CheckerColor color, final CheckerType type) {
+        this.type = type;
+        this.color = color;
         positionX = -1;
         positionY = -1;
-	}
-	
-	/**
-	 * Konstruktor.
-	 * 
-	 * @param color - tworzony kolor
-	 */
-	Checker(final CheckerColor color) {
-		this.type = CheckerType.NORMAL;
-		this.color = color;
+    }
 
+    /**
+     * Konstruktor.
+     *
+     * @param color - tworzony kolor
+     */
+    Checker(final CheckerColor color) {
+        this.type = CheckerType.NORMAL;
+        this.color = color;
         positionX = -1;
         positionY = -1;
-	}
-	
-	/**
+    }
+
+    /**
      * Konstruktor.
      *
      * @param position - pozycja na planszy
      * @param type - rodzaj pionka
      */
     public Checker(final int position, final CheckerType type) {
-    	this.type = CheckerType.NORMAL;
-		this.color = CheckerColor.WHITE;
-
-		positionX = position % 8;
+        this.type = CheckerType.NORMAL;
+        this.color = CheckerColor.WHITE;
+        positionX = position % 8;
         positionY = position / 8;
     }
 
-	
-	/**
-	 * Konstruktor kopiujacy.
-	 * 
-	 * @param checkerToCopy
-	 */
-	Checker(final Checker checkerToCopy) {
+    /**
+     * Konstruktor kopiujacy.
+     *
+     * @param checkerToCopy
+     */
+    Checker(final Checker checkerToCopy) {
         positionX = checkerToCopy.positionX;
         positionY = checkerToCopy.positionY;
         color = checkerToCopy.color;
         type = checkerToCopy.type;
     }
-	
-	/**
-	 * Zwraca typ pionka
-	 * 
-	 * @return
-	 */
-	public CheckerType getType() {
+
+    /**
+     * Zwraca typ pionka
+     *
+     * @return
+     */
+    public CheckerType getType() {
         return type;
     }
 
@@ -113,25 +109,24 @@ public class Checker {
     public int getPositionY() {
         return positionY;
     }
-    
+
     /**
      * Zwraca kolor pionka.
-     * 
+     *
      * @return color
      */
     public CheckerColor getColor() {
         return color;
     }
-    
+
     /**
      * Awans pionka na dame
      */
-    public void promote() { 
+    public void promote() {
         if (color == CheckerColor.WHITE && positionY == 7) {
             type = CheckerType.QUEEN;
         } else if (color == CheckerColor.BLACK && positionY == 0) {
             type = CheckerType.QUEEN;
         }
     }
-    
 }

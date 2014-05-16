@@ -1,20 +1,15 @@
 package model;
 
 /**
- * Klasa reprezentujaca ruch gracza.
- *
+ * Klasa reprezentujaca ruch gracza
  */
 public enum MoveState {
-	
-	/** Ruch poprawny */
+    // Ruch poprawny
     CORRECT,
-    
-    /** Ruch poprawny, ale wymagane bicie */
+    // Ruch poprawny, ale wymagane bicie
     DOCAPTURE,
-    
-    /** Ruch niepoprawny */
+    // Ruch niepoprawny
     INCORRECT,
-    
-    /** Po biciu nastepuje kolejne bicie */
+    // Po biciu nastepuje kolejne bicie
     MULTICAPTURE;
 }

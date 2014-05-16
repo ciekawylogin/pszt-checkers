@@ -1,6 +1,6 @@
 package model;
 
 enum CheckerType {
-	NORMAL,
-	QUEEN
+    NORMAL,
+    QUEEN
 }
