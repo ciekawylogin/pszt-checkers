@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
+import common.CheckerMockup;
 import common.Mockup;
 import model.Model;
 
@@ -110,7 +111,39 @@ public class View extends Application implements Runnable {
 		System.out.println("board:");
 		for(int i=0; i < Model.getBoardSize(); ++i) {
 			for(int j=0; j< Model.getBoardSize(); ++j) {
-				System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
+				//System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
+				if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.EMPTY_FIELD) {
+					if(mockup.getField(j, i).isSelected()) {
+						System.out.print("]_[ ");
+					} else {
+						System.out.print("[_] ");
+					}
+				} else if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.BLACK_CHECKER) {
+					
+					if(mockup.getField(j, i).isSelected()) {
+						System.out.print("]@[ ");
+					} else {
+						System.out.print("[@] ");
+					}
+				} else if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.BLACK_QUEEN) {
+					if(mockup.getField(j, i).isSelected()) {
+						System.out.print("]2[ ");
+					} else {
+						System.out.print("[2] ");
+					}
+				}  else if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.WHITE_CHECKER) {
+					if(mockup.getField(j, i).isSelected()) {
+						System.out.print("]#[ ");
+					} else {
+						System.out.print("[#] ");
+					}
+				}  else if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.WHITE_QUEEN) {
+					if(mockup.getField(j, i).isSelected()) {
+						System.out.print("]3[ ");
+					} else {
+						System.out.print("[3] ");
+					}
+				}
 			}
 			System.out.println();
 		}
