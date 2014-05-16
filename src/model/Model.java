@@ -13,7 +13,7 @@ public class Model {
 	/// rozmiar planszy
 	private final static int BOARD_SIZE = 8;
 	
-	/// po ile rzędów pionków rozstawić na starcie (dla wymiaru 8 jest to najczęściej
+	/// po ile rzedow pionkow rozstawic na starcie (dla wymiaru 8 jest to najczesciej
 	/// 3, dla wymiaru 10 - 4)
 	private final static int INITIAL_CHECKERS_ROWS = 3;
 	
@@ -52,35 +52,35 @@ public class Model {
 	}
 
 	/**
-	 * Przemieszcza zaznaczony pionek na pole o współrzędnych (target_x, target_y).
+	 * Przemieszcza zaznaczony pionek na pole o wspolrzednych (target_x, target_y).
 	 * 
-	 * Możliwe warianty wykonania ruchu:
-	 * + jeżeli jakiś pionek jest zaznaczony, a docelowe pole znajduje się 1 pole 
-	 * 	 naprzód (po skosie) od obecnej pozycji pionka (zwykły ruch), to pionek 
-	 *   przesuwa się na zadane pole, następuje zmiana kolejki, a pionek zostaje 
-	 *   odznaczony; UWAGA: zwykły ruch jest dozwolony tylko wtedy, gdy gracz nie
-	 *   ma żadnego bicia
-	 * + jeżeli jakiś pionek jest zaznaczony, a docelowe pole znajduje się 2 pola 
-	 *   naprzód od niego i między polem docelowym a obecnym znajduje się pionek 
-	 *   przeciwnika (bicie), wówczas pionek przesuwa się 2 na pole docelowe, a pionek 
-	 *   pzreciwnika zostaje usunięty dodatkowo przy biciu funkcja musi sprawdzić, 
-	 *   czy jest możliwe kolejne bicie; 
-	 *   jeżeli nie, to:
-	 * ++ następuje zmiana kolejki
+	 * Mozliwe warianty wykonania ruchu:
+	 * + jezeli jakis pionek jest zaznaczony, a docelowe pole znajduje sie 1 pole 
+	 * 	 naprzod (po skosie) od obecnej pozycji pionka (zwykly ruch), to pionek 
+	 *   przesuwa sie na zadane pole, nastepuje zmiana kolejki, a pionek zostaje 
+	 *   odznaczony; UWAGA: zwykly ruch jest dozwolony tylko wtedy, gdy gracz nie
+	 *   ma zadnego bicia
+	 * + jezeli jakis pionek jest zaznaczony, a docelowe pole znajduje sie 2 pola 
+	 *   naprzod od niego i miedzy polem docelowym a obecnym znajduje sie pionek 
+	 *   przeciwnika (bicie), wowczas pionek przesuwa sie 2 na pole docelowe, a pionek 
+	 *   pzreciwnika zostaje usuniety dodatkowo przy biciu funkcja musi sprawdzic, 
+	 *   czy jest mozliwe kolejne bicie; 
+	 *   jezeli nie, to:
+	 * ++ nastepuje zmiana kolejki
 	 * ++ pionek zostaje odznaczony
-	 *   jeżeli tak, to:
-	 * ++ nie następuje zmiana kolejki
+	 *   jezeli tak, to:
+	 * ++ nie nastepuje zmiana kolejki
 	 * ++ pionek nie zostaje odznaczony
-	 * ++ w następnej kolejce pionek zostaje zablokowany, tj. gracz nie może go odznaczyć,
-	 *    musi wykonać bicie tym pionkiem
-	 * + jeżeli nie zachodzi żaden z powyższych przypadków, to ruch jest uznawany 
-	 *   za niepoprawny; funkcja rzuca wyjątek, nie zostają wprowadzone żadne zmiany 
+	 * ++ w nastepnej kolejce pionek zostaje zablokowany, tj. gracz nie moze go odznaczyc,
+	 *    musi wykonac bicie tym pionkiem
+	 * + jezeli nie zachodzi zaden z powyzszych przypadkow, to ruch jest uznawany 
+	 *   za niepoprawny; funkcja rzuca wyjatek, nie zostajz wprowadzone zadne zmiany 
 	 *   w modelu
 	 * 
-	 * @param target_x współrzędna x docelowego pola
-	 * @param target_y współrzędna y docelowego pola
-	 * @return true jeżeli ruch jest dozwolony i został wykonany
-	 * 		   false jeżeli ruch jest niedozwolony; w takim wypadku żadne zmiany nie zostają
+	 * @param target_x wspolrzedna x docelowego pola
+	 * @param target_y wspolrzedna y docelowego pola
+	 * @return true jezeli ruch jest dozwolony i zostac� wykonany
+	 * 		   false jezeli ruch jest niedozwolony; w takim wypadku zadne zmiany nie zostaja
 	 * 		   wprowadzone do modelu
 	 */
 	public final boolean moveSelectedCheckerTo(int target_x, int target_y) {
@@ -117,7 +117,15 @@ public class Model {
 		return correctMove;
 	}
 	
-
+	/**
+	 * Wykonuje ruch zwyklego pionka, sprawdzajac jego poprawnosc
+	 * 
+	 * @param source_x - wspolrzedna X poczatkowej pozycji
+	 * @param source_y - wspolrzedna Y poczatkowej pozycji
+	 * @param target_x - wspolrzedna X koncowej pozycji
+	 * @param target_y - wspolrzedna Y koncowej pozycji
+	 * @return true jesli ruch zostal wykonany
+	 */
 	private boolean makeNormalCheckerMove(int source_x, int source_y, int target_x, int target_y) {
 		boolean normalMove = isNormalCheckerNormalMoveCorrect(source_x, source_y, target_x, target_y);
 		boolean captureMove = isNormalCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y);
@@ -142,12 +150,27 @@ public class Model {
 		return correctMove;
 	}
 
+	/**
+	 * Sprawdza czy zwykly pionek moze stac sie dama
+	 * 
+	 * @param target_x - wspolrzedna X koncowej pozycji
+	 * @param target_y - wspolrzedna Y koncowej pozycji
+	 */
 	private void checkQueenCondition(final int target_x, final int target_y) {
 		if(target_y == 0 || target_y == BOARD_SIZE) {
 			board.getField(target_x, target_y).getChecker().promote();
 		}
 	}
 
+	/**
+	 * Ogolna metoda sprawdzajaca czy dany ruch jest poprawny dla pionka dowolnego typu
+	 * 
+	 * @param source_x - wspolrzedna X poczatkowej pozycji
+	 * @param source_y - wspolrzedna Y poczatkowej pozycji
+	 * @param target_x - wspolrzedna X koncowej pozycji
+	 * @param target_y - wspolrzedna Y koncowej pozycji
+	 * @return
+	 */
 	private boolean isMoveCorrect(int source_x, int source_y, int target_x, int target_y)
 	{
 		CheckerType type = board.getField(source_x, source_y).getChecker().getType();
@@ -161,6 +184,15 @@ public class Model {
 		}
 	}
 	
+	/**
+	 * Sprawdza czy ruch normalnego pionka jest poprawny
+	 * 
+	 * @param source_x - wspolrzedna X poczatkowej pozycji
+	 * @param source_y - wspolrzedna Y poczatkowej pozycji
+	 * @param target_x - wspolrzedna X koncowej pozycji
+	 * @param target_y - wspolrzedna Y koncowej pozycji
+	 * @return true jesli ruch jest dozwolony
+	 */
 	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
 		return (board.getField(target_x, target_y).getChecker() == null) &&
 			( 
@@ -170,6 +202,15 @@ public class Model {
 			);
 	}
 	
+	/**
+	 * Sprawdza czy dane bicie jest poprawne dla normalnego pionka
+	 * 
+	 * @param source_x - wspolrzedna X poczatkowej pozycji
+	 * @param source_y - wspolrzedna Y poczatkowej pozycji
+	 * @param target_x - wspolrzedna X koncowej pozycji
+	 * @param target_y - wspolrzedna Y koncowej pozycji
+	 * @return
+	 */
 	private boolean isNormalCheckerCaptureMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
 		boolean isTargetToTheLeft = target_x == source_x - 2;
 		boolean isTargetToTheRight = target_x == source_x + 2;
@@ -190,6 +231,15 @@ public class Model {
 			&& CheckerToRemove.getColor() != MovingChecker.getColor();
 	}
 
+	/**
+	 * Sprawdza czy dany ruch zwyklego pionka jest poprawny
+	 * 
+	 * @param source_x - wspolrzedna X poczatkowej pozycji
+	 * @param source_y - wspolrzedna Y poczatkowej pozycji
+	 * @param target_x - wspolrzedna X koncowej pozycji
+	 * @param target_y - wspolrzedna Y koncowej pozycji
+	 * @return true jesli ruch jest dozwolony
+	 */
 	private boolean isNormalCheckerNormalMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
 		Checker checker = board.getField(source_x, source_y).getChecker();
 		CheckerColor color = checker.getColor();
@@ -204,6 +254,15 @@ public class Model {
 		}
 	}
 
+	/**
+	 * Wykonuje dany ruch dla damy, sprawdzajac czy ten ruch jest poprawny
+	 * 
+	 * @param source_x - wspolrzedna X poczatkowej pozycji
+	 * @param source_y - wspolrzedna Y poczatkowej pozycji
+	 * @param target_x - wspolrzedna X koncowej pozycji
+	 * @param target_y - wspolrzedna Y koncowej pozycji
+	 * @return true, jesli ruch zostal wykonany
+	 */
 	private boolean makeQueenMove(int source_x, int source_y, int target_x, int target_y) {
 			ArrayList<Coordinate> coordinatesToDelete = new ArrayList<>();
 		
@@ -362,11 +421,11 @@ public class Model {
 	}
 	
 	/**
-	 * Odznacza zaznaczonego obecnie pionka. Jeżeli odznaczenie jest niedozwolone
-	 * (taka sytuacja zachodzi gdy gracz ma wymuszone bicie), to rzuca wyjątek
+	 * Odznacza zaznaczonego obecnie pionka. Jezeli odznaczenie jest niedozwolone
+	 * (taka sytuacja zachodzi gdy gracz ma wymuszone bicie), to rzuca wyjatek
 	 * 
-	 * @throws RuntimeException jeżeli gracz ma wymuszone bicie
-	 * @throws RuntimeException jeżeli żaden pionek nie jest zaznaczony
+	 * @throws RuntimeException jezeli gracz ma wymuszone bicie
+	 * @throws RuntimeException jezeli żaden pionek nie jest zaznaczony
 	 */
 	public final void unselectChecker() {
 		for(int x=0; x<8; ++x) {
@@ -393,11 +452,11 @@ public class Model {
 	}
 	
 	/**
-	 * Sprawdza, czy na danej pozycji znajduje się zaznaczony pionek.
-	 * @param x współrzędna x pozycji do sprawdzenia
-	 * @param y współrzędna y pozycji do sprawdzenia
-	 * @return true jeżelili na danej pozycji znajduje się pionek i jest on zaznaczony
-	 * 		   false jeżeli na danej pozycji nie ma pionka lub pionek jest niezaznaczony
+	 * Sprawdza, czy na danej pozycji znajduje sie zaznaczony pionek.
+	 * @param x wspolrzedna x pozycji do sprawdzenia
+	 * @param y wspolrzedna y pozycji do sprawdzenia
+	 * @return true jezeli na danej pozycji znajduje sie pionek i jest on zaznaczony
+	 * 		   false jezeli na danej pozycji nie ma pionka lub pionek jest niezaznaczony
 	 */
 	public final boolean isCheckerSelected(int x, int y) {
 		Field field = board.getField(x, y);
@@ -405,12 +464,12 @@ public class Model {
 	}
 
 	/**
-	 * Sprawdza, czy na zadanej pozycji znajduje się pionek aktywnego gracza 
+	 * Sprawdza, czy na zadanej pozycji znajduje sie pionek aktywnego gracza 
 	 * (gracz jest aktywny = 'jest jego ruch').
 	 * 
-	 * @param x współrzędna x pozycji do sprawdzenia
-	 * @param y współrzędna y pozycji do sprawdzenia
-	 * @return true jeżeli na polu (x, y) znajduje się pionek aktywnego gracza.
+	 * @param x wspolrzedna x pozycji do sprawdzenia
+	 * @param y wspolrzedna y pozycji do sprawdzenia
+	 * @return true jezeli na polu (x, y) znajduje sie pionek aktywnego gracza.
 	 */
 	public final boolean isCurrentPlayerCheckerOnPosition(int x, int y) {
 		Checker checker = board.getField(x, y).getChecker();
@@ -422,18 +481,18 @@ public class Model {
 	/**
 	 * Zaznacza pionek na pozycji (x, y).
 	 * 
-	 * @param x współrzędna x pionka do zaznaczenia
-	 * @param y współrzędna y pionka do zaznaczenia
+	 * @param x wspolrzedna x pionka do zaznaczenia
+	 * @param y wspolrzedna y pionka do zaznaczenia
 	 * 
-	 * @throws RuntimeException jeżeli na pozycji (x, y) nie ma pionka aktywnego gracza
-	 * @throws RuntimeException jeżeli jakiś pionek jest już zaznaczony
+	 * @throws RuntimeException jezeli na pozycji (x, y) nie ma pionka aktywnego gracza
+	 * @throws RuntimeException jezeli jakis pionek jest juz zaznaczony
 	 */
 	public final void selectChecker(int x, int y) {
 		board.getField(x, y).select();
 	}
 
 	/**
-	 * Rozpoczyna nową grę, tj. tworzy planszę, ustawia pionki i ustawia białego gracza
+	 * Rozpoczyna nowa gre, tj. tworzy plansze, ustawia pionki i ustawia bialego gracza
 	 * jako aktywnego.
 	 */
 	public final void startGame() {
@@ -463,10 +522,15 @@ public class Model {
 	}
 
 	/**
+<<<<<<< HEAD
+	 * Sprawdza, czy gracz 1 wygrac�
+	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
+=======
 	 * Sprawdza, czy gracz 1 wygrac�
 	 * @return true wtedy i tylko wtedy, gdy spelnione są oba poniższe warunki:
+>>>>>>> ee09bca1ec744862cc236b0cd3227c90cf6760b3
 	 * 	+ Gracz 2 jest aktywny
-	 *  + Gracz 2 nie ma żadnego dozwolonego ruchu
+	 *  + Gracz 2 nie ma zadnego dozwolonego ruchu
 	 */
 	public boolean hasPlayer1Won() {
 		// TODO Auto-generated method stub
@@ -474,10 +538,10 @@ public class Model {
 	}
 
 	/**
-	 * Sprawdza, czy gracz 2 wygrał
-	 * @return true wtedy i tylko wtedy, gdy spelnione są oba poniższe warunki:
+	 * Sprawdza, czy gracz 2 wygrac�
+	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
 	 * 	+ Gracz 1 jest aktywny
-	 *  + Gracz 1 nie ma żadnego dozwolonego ruchu
+	 *  + Gracz 1 nie ma zadnego dozwolonego ruchu
 	 *  
 	 *  @TODO copy-paste programming - moze przedefiniowac interfejs?
 	 */
@@ -511,7 +575,7 @@ public class Model {
 	}
 
 	/**
-	 * Zwraca listę dozwolonych ruchów z danego pola
+	 * Zwraca liste dozwolonych ruchow z danego pola
 	 * @param x
 	 * @param y
 	 * @return

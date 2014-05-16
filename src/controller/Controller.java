@@ -22,11 +22,11 @@ public class Controller {
     private final BlockingQueue <GameEvent> blocking_queue;
     
     /**
-     * Konstruktor sterownika, do wołania w mainie programu
+     * Konstruktor sterownika, do wolania w mainie programu
      * 
      * @param model Model
      * @param view Widok
-     * @param blocking_queue Kolejka zdarzeń od widoku
+     * @param blocking_queue Kolejka zdarzen od widoku
      */
     public Controller(final Model model, final View view, final BlockingQueue<GameEvent> blocking_queue) {
         this.model = model;
