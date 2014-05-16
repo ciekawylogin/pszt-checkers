@@ -6,6 +6,7 @@ package model;
 public class Player {
 	/** nazwa gracza */
     private String playerName;
+    private CheckerColor playerColor;
     
 	/** flaga mowiaca o wygranej */
     private boolean isVictory;
@@ -13,8 +14,10 @@ public class Player {
 	/** 
 	 * Konstruktor
 	 */
-    public Player() {
-		playerName = "player";
+    public Player(final CheckerColor playerColor) {
+		this.playerName = "CPU";
+		this.playerColor = playerColor;
+		// TODO poziom trudnosci 
     }
 
 	/**
@@ -22,9 +25,10 @@ public class Player {
 	 * 
 	 * @param name player's name
 	 */
-    public Player(final String name) {
-        playerName = name.trim();
-        isVictory = false;
+    public Player(final String playerName, final CheckerColor playerColor) {
+		this.playerName = playerName.trim();
+		this.playerColor = playerColor;
+        this.isVictory = false;
     }
 
 	/** 
