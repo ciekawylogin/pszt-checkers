@@ -113,6 +113,7 @@ public class Model {
 			Field newField = board.getField(target_x, target_y);
 			newField.setChecker(checker);
 			checker.setPositionOnBoard(target_x, target_y);
+			checkQueenCondition(target_x, target_y);
 		}
 		if (captureMove) {
 			int checkerToRemoveX = (target_x + source_x) / 2;
@@ -122,6 +123,12 @@ public class Model {
 		}
 			
 		return correctMove;
+	}
+
+	private void checkQueenCondition(final int target_x, final int target_y) {
+		if(target_y == 0 || target_y == BOARD_SIZE) {
+			board.getField(target_x, target_y).getChecker().promote();
+		}
 	}
 
 	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
@@ -160,9 +167,145 @@ public class Model {
 	}
 
 	private boolean makeQueenMove(int source_x, int source_y, int target_x, int target_y) {
-		// TODO Auto-generated method stub
+			ArrayList<Coordinate> coordinatesToDelete = new ArrayList<>();
+		
+			boolean correctMove = isQueenCheckerMoveCorrect(source_x, source_y, target_x, target_y,
+					coordinatesToDelete);
+			
+			if(correctMove) {
+				Field oldField = board.getField(source_x, source_y);
+				Checker checker = oldField.getChecker();
+				oldField.removeChecker();
+
+				Field newField = board.getField(target_x, target_y);
+				newField.setChecker(checker);
+				checker.setPositionOnBoard(target_x, target_y);
+
+
+				// usuwanie potencjalnych ofiar ruchu 
+				for(int i=0; i< coordinatesToDelete.size(); ++i) {
+					int x = coordinatesToDelete.get(i).getX();
+					int y = coordinatesToDelete.get(i).getY();
+					board.getField(x, y).removeChecker();
+				}
+				
+				
+				
+			}
+				
+			return correctMove;
+	}
+
+	/**
+	 * Sprawdza czy ruch damy jest poprawny.
+	 * 
+	 * @param source_x - wspolrzedna x poczatkowej pozycji
+	 * @param source_y - wspolrzedna y poczatkowej pozycji
+	 * @param target_x - wspolrzedna x koncowej pozycji
+	 * @param target_y - pozycja y koncowej pozycji
+	 * @return true gdy ruch poprawny
+	 */
+	private boolean isQueenCheckerMoveCorrect(final int source_x, final int source_y,
+			final int target_x, final int target_y, ArrayList<Coordinate> coordinatesToDelete) {
+		
+		// sprawdz czy docelowe pole jest puste
+		if(board.getField(target_x, target_y).getChecker() != null) {
+			return false;
+		}
+		
+		Checker checker = board.getField(source_x, source_y).getChecker();
+		CheckerColor color = checker.getColor();
+		boolean isTargetToTheLeft = target_x < source_x ? true : false;
+		boolean isTargetToTheTop = target_y < source_y ? true : false;
+		
+		int x = board.getField(source_x, source_y).getChecker().getPositionX();
+		int y = board.getField(source_x, source_y).getChecker().getPositionY();
+		
+		
+		// cel: lewy gorny rog
+		if(isTargetToTheLeft && isTargetToTheTop && color == CheckerColor.BLACK) {
+			--x;
+			++y;
+			for(; x >= target_x; --x, ++y) {
+				
+				Checker temp = board.getField(x, y).getChecker();
+				
+				if(temp != null && temp.getColor() == CheckerColor.BLACK) {
+					return false;
+				} else if(temp !=null && temp.getColor() == CheckerColor.WHITE) {
+					coordinatesToDelete.add(new Coordinate (x, y));
+				}
+				
+			}
+			
+			if(x == target_x && y == target_y) {
+				return true;
+			}
+			
+		// cel: lewy dolny rog
+		} else if(isTargetToTheLeft && !isTargetToTheTop && color == CheckerColor.WHITE) {
+			--x;
+			--y;
+			for(; x >= target_x; --x, --y) {
+				
+				Checker temp = board.getField(x, y).getChecker();
+				
+				if(temp != null && temp.getColor() == CheckerColor.WHITE) {
+					return false;
+				} else if(temp !=null && temp.getColor() == CheckerColor.BLACK) {
+					coordinatesToDelete.add(new Coordinate (x, y));
+				}
+				
+			}
+			
+			if(x == target_x && y == target_y) {
+				return true;
+			}
+			
+			
+		// cel: prawy gorny rog
+		} else if(!isTargetToTheLeft && isTargetToTheTop && color == CheckerColor.BLACK) {
+			++x;
+			--y;
+			for(; x <= target_x; ++x, --y) {
+				Checker temp = board.getField(x, y).getChecker();
+				
+				if(temp != null && temp.getColor() == CheckerColor.BLACK) {
+					return false;
+				} else if(temp !=null && temp.getColor() == CheckerColor.WHITE) {
+					coordinatesToDelete.add(new Coordinate (x, y));
+				}
+				
+			}
+			
+			if(x == target_x && y == target_y) {
+				return true;
+			}
+			
+			
+		// cel: prawy dolny rog
+		} else if(!isTargetToTheLeft && !isTargetToTheTop && color == CheckerColor.WHITE) {
+			++x;
+			++y;
+			for(; x <= target_x; ++x, ++y) {
+				Checker temp = board.getField(x, y).getChecker();
+				
+				if(temp != null && temp.getColor() == CheckerColor.WHITE) {
+					return false;
+				} else if(temp !=null && temp.getColor() == CheckerColor.BLACK) {
+					coordinatesToDelete.add(new Coordinate (x, y));
+				}
+			}
+			
+			if(x == target_x && y == target_y) {
+				return true;
+			}
+			
+		}
+		
 		return false;
 	}
+	
 
 	/**
 	 * Znajduje zaznaczony pionek
