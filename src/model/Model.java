@@ -17,16 +17,32 @@ public class Model {
 	/// odnosnik do planszy
 	private Board board;
 	
+	/// gracze
+	private Player players[];
+	
+	/// numer aktywnego gracze
+	private int active_player;
+	
 	public Model() {
 		this.board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
+		this.players = new Player[2];
 	}
 	
 	/**
 	 * @return true wtedy i tylko wtedy, gdy jakikolwiek pionek jest zaznaczony
 	 */
 	public final boolean isAnyCheckerSelected() {
-		// @TODO write me
-		throw new UnsupportedOperationException("Not yet implemented");
+		for(int x=0; x<8; ++x)
+		{
+			for(int y=0; y<8; ++y)
+			{
+				if(board.getField(x, y).isSelected())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -62,8 +78,39 @@ public class Model {
 	 * 		   wprowadzone do modelu
 	 */
 	public final boolean moveSelectedCheckerTo(int target_x, int target_y) {
-		// @TODO write me
-		throw new UnsupportedOperationException("Not yet implemented");
+		Coordinate source_coordinate = getSelectedCheckerCoordinate();
+		int source_x = source_coordinate.getX();
+		int source_y = source_coordinate.getY();
+		CheckerType checkerType = board.getField(source_x, source_y).getChecker().getType();
+		if(checkerType == CheckerType.QUEEN) {
+			// ruch dama
+			
+		} else {
+			// ruch normalny
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * 
+	 */
+	
+	/**
+	 * Znajduje zaznaczony pionek
+	 */
+	public final Coordinate getSelectedCheckerCoordinate() {
+		for(int x=0; x<8; ++x)
+		{
+			for(int y=0; y<8; ++y)
+			{
+				if(board.getField(x, y).isSelected())
+				{
+					return new Coordinate(x, y);
+				}
+			}
+		}
+		throw new RuntimeException("hm");
 	}
 	
 	/**
@@ -74,8 +121,18 @@ public class Model {
 	 * @throws RuntimeException jeżeli żaden pionek nie jest zaznaczony
 	 */
 	public final void unselectChecker() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not yet implemented");
+		for(int x=0; x<8; ++x)
+		{
+			for(int y=0; y<8; ++y)
+			{
+				if(board.getField(x, y).isSelected())
+				{
+					board.getField(x, y).unselect();
+					return;
+				}
+			}
+		}
+		throw new RuntimeException("unselect requested, but no checker was selected");
 	}
 
 	/**
@@ -99,8 +156,10 @@ public class Model {
 	 * @return true jeżeli na polu (x, y) znajduje się pionek aktywnego gracza.
 	 */
 	public final boolean isCurrentPlayerCheckerOnPosition(int x, int y) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not yet implemented");
+		Checker checker = board.getField(x, y).getChecker();
+		return checker != null && (
+			   (checker.getColor().isWhite() && active_player == 0) ||
+			   (checker.getColor().isBlack() && active_player == 1));
 	}
 
 	/**
@@ -113,9 +172,7 @@ public class Model {
 	 * @throws RuntimeException jeżeli jakiś pionek jest już zaznaczony
 	 */
 	public final void selectChecker(int x, int y) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not yet implemented");
-		
+		board.getField(x, y).select();
 	}
 
 	/**
@@ -156,7 +213,7 @@ public class Model {
 	 */
 	public boolean hasPlayer1Won() {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not yet implemented");
+		return false;
 	}
 
 	/**
@@ -169,7 +226,7 @@ public class Model {
 	 */
 	public boolean hasPlayer2Won() {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not yet implemented");
+		return false;
 	}
 	
 	/**

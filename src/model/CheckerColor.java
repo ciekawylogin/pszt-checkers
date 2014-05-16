@@ -19,4 +19,12 @@ enum CheckerColor {
 			return false;
 		}
 	}
+
+	public boolean isWhite() {
+		return CheckerColor.isWhite(this);
+	}
+	
+	public boolean isBlack() {
+		return CheckerColor.isBlack(this);
+	}
 }

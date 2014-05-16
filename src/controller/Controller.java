@@ -72,7 +72,10 @@ public class Controller {
             		model.moveSelectedCheckerTo(x, y);
             		model.unselectChecker();
             	} else {
-            		throw new RuntimeException("Controller received event of unexpected type");
+            		// kliknieto puste pole (?)
+            		// ignorujemy
+            		System.out.println("empty field clicked; ignoring");
+            		
             	}
             	if(model.hasPlayer1Won()) {
             		// @TODO czy trzeba to obsluzyc???
