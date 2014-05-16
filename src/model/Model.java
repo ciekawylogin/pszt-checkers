@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import common.FieldMockup;
 import common.GameStateMockup;
 import common.Mockup;
@@ -99,8 +102,8 @@ public class Model {
 	
 
 	private boolean makeNormalCheckerMove(int source_x, int source_y, int target_x, int target_y) {
-		boolean normalMove = isNormalCheckerMoveCorrect(source_x, source_y, target_x, target_y);
-		boolean captureMove = isCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y);
+		boolean normalMove = isNormalCheckerNormalMoveCorrect(source_x, source_y, target_x, target_y);
+		boolean captureMove = isNormalCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y);
 		boolean correctMove = normalMove || captureMove;
 		if(correctMove) {
 			Field oldField = board.getField(source_x, source_y);
@@ -121,11 +124,20 @@ public class Model {
 		return correctMove;
 	}
 
-	private boolean isCheckerCaptureMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
+	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
+		return (board.getField(target_x, target_y).getChecker() == null) &&
+			( 
+				isNormalCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y)
+				|| 
+				isNormalCheckerNormalMoveCorrect(source_x, source_y, target_x, target_y)
+			);
+	}
+	
+	private boolean isNormalCheckerCaptureMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
 		boolean isTargetToTheLeft = target_x == source_x - 2;
 		boolean isTargetToTheRight = target_x == source_x + 2;
-		boolean isTargetToTheTop = target_y == source_y + 2;
-		boolean isTargetToTheBottom = target_y == source_y - 2;
+		boolean isTargetToTheTop = target_y == source_y - 2;
+		boolean isTargetToTheBottom = target_y == source_y + 2;
 		
 		return (isTargetToTheLeft  && isTargetToTheTop)
 			|| (isTargetToTheLeft  && isTargetToTheBottom)
@@ -133,7 +145,7 @@ public class Model {
 			|| (isTargetToTheRight && isTargetToTheBottom);
 	}
 
-	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
+	private boolean isNormalCheckerNormalMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
 		Checker checker = board.getField(source_x, source_y).getChecker();
 		CheckerColor color = checker.getColor();
 		boolean isTargetToTheLeft = target_x == source_x - 1;
@@ -156,12 +168,9 @@ public class Model {
 	 * Znajduje zaznaczony pionek
 	 */
 	public final Coordinate getSelectedCheckerCoordinate() {
-		for(int x=0; x<8; ++x)
-		{
-			for(int y=0; y<8; ++y)
-			{
-				if(board.getField(x, y).isSelected())
-				{
+		for(int x=0; x<8; ++x) {
+			for(int y=0; y<8; ++y) {
+				if(board.getField(x, y).isSelected()) {
 					return new Coordinate(x, y);
 				}
 			}
@@ -177,12 +186,9 @@ public class Model {
 	 * @throws RuntimeException jeżeli żaden pionek nie jest zaznaczony
 	 */
 	public final void unselectChecker() {
-		for(int x=0; x<8; ++x)
-		{
-			for(int y=0; y<8; ++y)
-			{
-				if(board.getField(x, y).isSelected())
-				{
+		for(int x=0; x<8; ++x) {
+			for(int y=0; y<8; ++y) {
+				if(board.getField(x, y).isSelected()) {
 					board.getField(x, y).unselect();
 					return;
 				}
@@ -293,6 +299,39 @@ public class Model {
 		return BOARD_SIZE;
 	}
 
+	/**
+	 * Zwraca liste wszystkich dozwolonych ruchow dla danego gracza
+	 */
+	public ArrayList<Move> getAllPossibleMoves(CheckerColor color) {
+		ArrayList<Move> result = new ArrayList<Move>();
+		for(int x=0; x<8; ++x) {
+			for(int y=0; y<8; ++y) {
+				if(board.getField(x, y).getChecker().getColor() == color) {
+					result.addAll(getAllPossibleMovesFromPosition(x, y));
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Zwraca listę dozwolonych ruchół z danego pola
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private ArrayList<Move> getAllPossibleMovesFromPosition(int source_x, int source_y) {
+		ArrayList<Move> result = new ArrayList<Move>();
+		for(int target_x=0; target_x<8; ++target_x) {
+			for(int target_y=0; target_y<8; ++target_y) {
+				if(true) {
+					//result.add();
+				}
+			}
+		}
+		return result;
+	}
+	
 	
 }
  
