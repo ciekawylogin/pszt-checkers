@@ -6,6 +6,8 @@ import static model.CheckerColor.WHITE;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import common.FieldMockup;
+
 import model.Field;
 import model.CheckerColor;
 import model.CheckerType;
@@ -30,19 +32,6 @@ public class Board {
     
     /*  aktualny kolor pionka majacy prawo do ruchu */
     private CheckerColor actualMoveColor = WHITE;
-	
-    /**
-     * Konstruktor domyslny.
-     */
-    Board() {
-		this.SIZE = 8;
-		this.INIT_ROWS = 8;
-		fields = new Field[SIZE][SIZE];
-		
-		//blackCheckers = new ArrayList<>();
-        //whiteCheckers = new ArrayList<>();
-        //players = new ArrayList<>();
-	}
     
     /**
      * Konstruktor.
@@ -54,6 +43,14 @@ public class Board {
 		this.SIZE = size;
 		this.INIT_ROWS = init_rows;
 		fields = new Field[SIZE][SIZE];
+		
+		for(int i=0; i<8; ++i)
+		{
+			for(int j=0; j<8; ++j)
+			{
+				fields[i][j] = new Field();
+			}
+		}
 		
 		//blackCheckers = new ArrayList<>();
         //whiteCheckers = new ArrayList<>();
@@ -282,6 +279,11 @@ public class Board {
         //TODO
 
     }
+
+	public Field getField(int x, int y) {
+		// TODO Auto-generated method stub
+		return fields[x][y];
+	}
 	
 	
 	

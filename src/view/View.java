@@ -35,8 +35,20 @@ public class View {
 	 * ekran gry etc.) - patrz dokumentacja klasy GameStateMockup
 	 */
 	public void draw(Mockup mockup) {
-		System.out.print(mockup);
-		
+
+        // @TODO na razie jest wersja testowa, zmienic na cos docelowego
+        System.out.println("Stan gry: " + mockup.getGameState());
+        System.out.println("Gracz 1: " + mockup.getPlayer(0));      
+        System.out.println("Gracz 2: " + mockup.getPlayer(1));
+        System.out.println("Pola: ");       
+        for(int x=0; x<8; ++x)
+        {
+            for(int y=0; y<8; ++y)  
+            {
+                System.out.print(" " + mockup.getField(x, y));
+            }
+            System.out.print("\n");
+        }
 		// @TODO write me
 		Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, "test");
 		throw new UnsupportedOperationException("Not yet implemented");

@@ -141,7 +141,7 @@ public class Model {
 		mockup.setGameState(GameStateMockup.PLAYER_1_MOVE);
 		for(int i=0;i<8;++i)
 			for(int j=0;j<8;++j)
-				mockup.setField(FieldMockup.BLACK_QUEEN, i, j);
+				mockup.setField(board.getField(i, j).getMockup(), i, j);
 		mockup.setPlayers(PlayerMockup.HUMAN_PLAYER, 0);
 		mockup.setPlayers(PlayerMockup.AI_PLAYER, 1);
 		return mockup;
