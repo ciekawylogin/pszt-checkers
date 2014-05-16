@@ -133,4 +133,5 @@ public class Checker {
             type = CheckerType.QUEEN;
         }
     }
+    
 }

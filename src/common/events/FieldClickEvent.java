@@ -11,14 +11,14 @@ public class FieldClickEvent extends GameEvent {
 	 * @param field_x wspolrzedna x (czyli pozioma) klikniętego pola
 	 * @param field_y wspolrzedna y (czyli pionowa) klikniętego pola
 	 */
-	FieldClickEvent(int field_x, int field_y) {
+	public FieldClickEvent(int field_x, int field_y) {
 		this.field_x = field_x;
 		this.field_y = field_y;
 	}
 	
 	/**
 	 * Getter dla field_x
-	 * @return wspolrzedna x (czyli pozioma) klikniętego pola
+	 * @return wspolrzedna x (czyli pozioma) kliknietego pola
 	 */
 	public int getFieldX() {
 		return field_x;
@@ -26,7 +26,7 @@ public class FieldClickEvent extends GameEvent {
 	
 	/**
 	 * Getter dla field_y
-	 * @return wspolrzedna y (czyli pionowa) klikniętego pola
+	 * @return wspolrzedna y (czyli pionowa) kliknietego pola
 	 */
 	public int getFieldY() {
 		return field_x;

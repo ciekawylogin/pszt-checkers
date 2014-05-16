@@ -1,9 +1,11 @@
 package view;
 
+import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.Mockup;
 import model.Model;
 
+import java.io.IOException;
 import java.lang.UnsupportedOperationException;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
@@ -46,13 +48,21 @@ public class View {
 		System.out.println("board:");
 		for(int i=0; i < Model.getBoardSize(); ++i) {
 			for(int j=0; j< Model.getBoardSize(); ++j) {
-				System.out.println(mockup.getField(j, i));
+				System.out.print("\t" + mockup.getField(j, i).getCheckerMockup());
 			}
 			System.out.println();
 		}
 		
 		System.out.println("----------------");
 		
+		int x, y;
+		try {
+			x = System.in.read();
+			y = System.in.read();
+			blocking_queue.add(new FieldClickEvent(x, y));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -1,5 +1,6 @@
 package model;
 
+import common.CheckerMockup;
 import common.FieldMockup;
 
 
@@ -36,27 +37,34 @@ public class Field {
 	}
 	
 	/**
-	 * Tworzy i zwraca makietę zadanego pola
+	 * Tworzy makietę pola
 	 */
 	public FieldMockup getMockup() {
+		return new FieldMockup(getCheckerMockup(), false);
+	}
+	
+	/**
+	 * Tworzy i zwraca makietę pionka
+	 */
+	public CheckerMockup getCheckerMockup() {
 		if(checker == null) {
-			return FieldMockup.EMPTY_FIELD;
+			return CheckerMockup.EMPTY_FIELD;
 		} else if (
 				checker.getColor() == CheckerColor.BLACK && 
 				checker.getType() == CheckerType.NORMAL) {
-			return FieldMockup.BLACK_CHECKER;
+			return CheckerMockup.BLACK_CHECKER;
 		} else if (
 				checker.getColor() == CheckerColor.BLACK && 
 				checker.getType() == CheckerType.QUEEN) {
-			return FieldMockup.BLACK_QUEEN;
+			return CheckerMockup.BLACK_QUEEN;
 		} else if (
 				checker.getColor() == CheckerColor.WHITE && 
 				checker.getType() == CheckerType.NORMAL) {
-			return FieldMockup.WHITE_CHECKER;
+			return CheckerMockup.WHITE_CHECKER;
 		} else if (
 				checker.getColor() == CheckerColor.WHITE && 
 				checker.getType() == CheckerType.QUEEN) {
-			return FieldMockup.WHITE_QUEEN;
+			return CheckerMockup.WHITE_QUEEN;
 		}
 		else
 		{

@@ -42,7 +42,6 @@ public class Controller {
     	blocking_queue.add(new GameStartEvent());
     	
     	view.init();
-    	refreshView();
     	while(true) {
     		processEvents();
     	}
