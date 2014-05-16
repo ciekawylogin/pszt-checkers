@@ -18,7 +18,7 @@ public class Controller {
     /// Widok 
     private final View view;
     
-    /// Kolejka blokująca do przyjmowania zdarzeń od widoku
+    /// Kolejka blokujaca do przyjmowania zdarzen od widoku
     private final BlockingQueue <GameEvent> blocking_queue;
     
     /**
@@ -35,8 +35,8 @@ public class Controller {
     }
     
     /**
-     * Metoda inicjalizuje program (tj. inicjalizuje sterownik, a następnie, jeśli trzeba, 
-     * woła metody inicjalizujące model i widok), po czym wchodzi w główną pętlę programu.
+     * Metoda inicjalizuje program (tj. inicjalizuje sterownik, a nastepnie, jezli trzeba, 
+     * wola metody inicjalizujace model i widok), po czym wchodzi w g�owna pele programu.
      */
     public void go() {
     	blocking_queue.add(new GameStartEvent());
@@ -48,9 +48,9 @@ public class Controller {
     }
 
     /**
-     * Pobiera obiekt z kolejki zdarzeń (być może czekając na niego), po czym obsługuje go
+     * Pobiera obiekt z kolejki zdarzen (by  moze czekajac na niego), po czym obsluguje go
      * 
-     * @TODO zastosować wzorzec strategii
+     * @TODO zastosowac wzorzec strategii
      */
 	private void processEvents() {
 		try {
@@ -91,13 +91,13 @@ public class Controller {
         	refreshView();
 		}
 		catch(InterruptedException exception) {
-			// nie powinno sie zdarzyć
+			// nie powinno sie zdarzyc
 			throw new RuntimeException("unexpected exception");
 		}
 	}
 
 	/**
-	 * Każe widokowi się odświeżyć
+	 * Kaz widokowi sie odswiezyc
 	 */
 	private void refreshView() {
 		Mockup mockup = model.getMockup();
