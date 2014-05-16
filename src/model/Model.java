@@ -171,6 +171,14 @@ public class Model {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
+	
+	/**
+	 * Zwraca rozmiar planszy.
+	 * @return BOARD_SIZE
+	 */
+	public static int getBoardSize() {
+		return BOARD_SIZE;
+	}
 
 	
 }
