@@ -91,8 +91,10 @@ public class Model {
 	
 
 	private boolean makeNormalCheckerMove(int source_x, int source_y, int target_x, int target_y) {
-
-		if(isNormalCheckerMoveCorrect(source_x, source_y, target_x, target_y)) {
+		boolean normalMove = isNormalCheckerMoveCorrect(source_x, source_y, target_x, target_y);
+		boolean captureMove = isCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y);
+		boolean correctMove = normalMove || captureMove;
+		if(correctMove) {
 			Field oldField = board.getField(source_x, source_y);
 			Checker checker = oldField.getChecker();
 			oldField.removeChecker();
@@ -100,20 +102,15 @@ public class Model {
 			Field newField = board.getField(target_x, target_y);
 			newField.setChecker(checker);
 			checker.setPositionOnBoard(target_x, target_y);
-			
-			return true;
-			
-		} else if(isCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y)) {
+		}
+		if(captureMove) {
 			int checkerToRemoveX = (target_x + source_x) / 2;
 			int checkerToRemoveY = (target_y + source_y) / 2; 
 			
 			board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
-			
-			return true;
-			
 		}
 			
-		return false;
+		return correctMove;
 	}
 
 	private boolean isCheckerCaptureMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
@@ -123,7 +120,16 @@ public class Model {
 
 	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
 		Checker checker = board.getField(source_x, source_y).getChecker();
-		return true;
+		CheckerColor color = checker.getColor();
+		boolean isTargetToTheLeft = target_x == source_x - 1;
+		boolean isTargetToTheRight = target_x == source_x + 1;
+		boolean isTargetToTheTop = target_y == source_y + 1;
+		boolean isTargetToTheBottom = target_y == source_y - 1;
+		if(color == CheckerColor.WHITE) {
+			return (isTargetToTheLeft && isTargetToTheTop) || (isTargetToTheRight && isTargetToTheTop);
+		} else {
+			return (isTargetToTheLeft && isTargetToTheBottom) || (isTargetToTheRight && isTargetToTheBottom);
+		}
 	}
 
 	private boolean makeQueenMove(int source_x, int source_y, int target_x, int target_y) {
