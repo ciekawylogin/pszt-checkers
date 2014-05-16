@@ -158,7 +158,7 @@ public class Model {
 	 * @param target_y - wspolrzedna Y koncowej pozycji
 	 */
 	private void checkQueenCondition(final int target_x, final int target_y) {
-		if(target_y == 0 || target_y == BOARD_SIZE) {
+		if(target_y == 0 || target_y == BOARD_SIZE-1) {
 			board.getField(target_x, target_y).getChecker().promote();
 		}
 	}
