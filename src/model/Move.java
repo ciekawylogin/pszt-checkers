@@ -1,39 +1,36 @@
 package model;
 
-import java.util.ArrayList;
-
+/**
+ * Klasa reprezentujaca pojedynczy ruch gracza
+ *
+ */
 public class Move {
 	
-	/** poczatkowe pole pionka */
-    int start;
+	/** wspolrzedna X poczatkowego pola pionka */
+    int startX;
     
-    /** koncowe pole pionka */
-    int end;
+    /** wspolrzedna Y poczatkowego pola pionka */
+    int startY;
     
-    /** ilosc bic */
-    int captures;
+    /** wspolrzedna X koncowego pola pionka */
+    int endX;
     
-    /* flaga kasowania */
-    boolean toDelete = false;
-    
-    /* Tablica historii planszy */
-    ArrayList<Board> boards;
+    /** wspolrzedna Y koncowego pola pionka */
+    int endY;
 
     /**
-     * Konstruktor
-     *
-     * @param start - poczatkowa pozycja pionka
-     * @param end - koncowa pozycja pionka
-     * @param model - tablica po wykonaniu ruchu
+     * Konstruktor.
+     * 
+     * @param startX - wspolrzedna X poczatkowego pola pionka
+     * @param startY - wspolrzedna Y poczatkowego pola pionka
+     * @param endX - wspolrzedna X koncowego pola pionka
+     * @param endY - wspolrzedna Y koncowego pola pionka
      */
-    Move(final int start, final int end, final Board model) {
-    	boards = new ArrayList<>();
-        boards.add(model);
+    Move(final int startX, final int startY, final int endX, final int endY) {
     	
-        this.start = start;
-        this.end = end;
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
     }
-
-
-    //TODO
 }
