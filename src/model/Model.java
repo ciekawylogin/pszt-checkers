@@ -82,10 +82,18 @@ public class Model {
 		int source_x = source_coordinate.getX();
 		int source_y = source_coordinate.getY();
 		CheckerType checkerType = board.getField(source_x, source_y).getChecker().getType();
-		if(checkerType == CheckerType.QUEEN) {
-			return makeQueenMove(source_x, source_y, target_x, target_y);
-		} else {
-			return makeNormalCheckerMove(source_x, source_y, target_x, target_y);
+		if(board.getField(target_x, target_y).getChecker() == null)
+		{
+			if(checkerType == CheckerType.QUEEN) {
+				return makeQueenMove(source_x, source_y, target_x, target_y);
+			} else {
+				return makeNormalCheckerMove(source_x, source_y, target_x, target_y);
+			}
+		}
+		else
+		{
+			// docelowe pole jest zajete
+			return false;
 		}
 	}
 	
@@ -103,7 +111,7 @@ public class Model {
 			newField.setChecker(checker);
 			checker.setPositionOnBoard(target_x, target_y);
 		}
-		if(captureMove) {
+		if (captureMove) {
 			int checkerToRemoveX = (target_x + source_x) / 2;
 			int checkerToRemoveY = (target_y + source_y) / 2; 
 			
@@ -114,8 +122,15 @@ public class Model {
 	}
 
 	private boolean isCheckerCaptureMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean isTargetToTheLeft = target_x == source_x - 2;
+		boolean isTargetToTheRight = target_x == source_x + 2;
+		boolean isTargetToTheTop = target_y == source_y + 2;
+		boolean isTargetToTheBottom = target_y == source_y - 2;
+		
+		return (isTargetToTheLeft  && isTargetToTheTop)
+			|| (isTargetToTheLeft  && isTargetToTheBottom)
+			|| (isTargetToTheRight && isTargetToTheTop)
+			|| (isTargetToTheRight && isTargetToTheBottom);
 	}
 
 	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
@@ -123,12 +138,12 @@ public class Model {
 		CheckerColor color = checker.getColor();
 		boolean isTargetToTheLeft = target_x == source_x - 1;
 		boolean isTargetToTheRight = target_x == source_x + 1;
-		boolean isTargetToTheTop = target_y == source_y + 1;
-		boolean isTargetToTheBottom = target_y == source_y - 1;
+		boolean isTargetToTheTop = target_y == source_y - 1;
+		boolean isTargetToTheBottom = target_y == source_y + 1;
 		if(color == CheckerColor.WHITE) {
-			return (isTargetToTheLeft && isTargetToTheTop) || (isTargetToTheRight && isTargetToTheTop);
-		} else {
 			return (isTargetToTheLeft && isTargetToTheBottom) || (isTargetToTheRight && isTargetToTheBottom);
+		} else {
+			return (isTargetToTheLeft && isTargetToTheTop) || (isTargetToTheRight && isTargetToTheTop);
 		}
 	}
 
