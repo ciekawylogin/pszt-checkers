@@ -131,6 +131,19 @@ public class Model {
 		}
 	}
 
+	private boolean isMoveCorrect(int source_x, int source_y, int target_x, int target_y)
+	{
+		CheckerType type = board.getField(source_x, source_y).getChecker().getType();
+		if(type == CheckerType.NORMAL)
+		{
+			return isNormalCheckerMoveCorrect(source_x, source_y, target_x, target_y);
+		}
+		else
+		{
+			return isQueenCheckerMoveCorrect(source_x, source_y, target_x, target_y, null);
+		}
+	}
+	
 	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
 		return (board.getField(target_x, target_y).getChecker() == null) &&
 			( 
