@@ -412,7 +412,7 @@ public class Model {
 	}
 
 	/**
-	 * Generuje makietę
+	 * Generuje makiete
 	 * @return makieta obecnego stanu gry
 	 * @see #Mockup
 	 */
@@ -429,7 +429,7 @@ public class Model {
 	}
 
 	/**
-	 * Sprawdza, czy gracz 1 wygrał
+	 * Sprawdza, czy gracz 1 wygrac�
 	 * @return true wtedy i tylko wtedy, gdy spelnione są oba poniższe warunki:
 	 * 	+ Gracz 2 jest aktywny
 	 *  + Gracz 2 nie ma żadnego dozwolonego ruchu
