@@ -2,6 +2,7 @@ package view;
 
 import common.events.GameEvent;
 import common.Mockup;
+import model.Model;
 
 import java.lang.UnsupportedOperationException;
 import java.util.concurrent.BlockingQueue;
@@ -35,11 +36,25 @@ public class View {
 	 * ekran gry etc.) - patrz dokumentacja klasy GameStateMockup
 	 */
 	public void draw(Mockup mockup) {
-		System.out.print(mockup);
+		//System.out.print(mockup);
 		
 		// @TODO write me
-		Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, "test");
-		throw new UnsupportedOperationException("Not yet implemented");
+		//Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, "test");
+		//throw new UnsupportedOperationException("Not yet implemented");
+		
+		System.out.println("----------------");
+		System.out.println("game state: "+mockup.getGameState());
+		System.out.println("player 1: "+mockup.getPlayer(0)+" player 2: "+mockup.getPlayer(1));
+		System.out.println("board:");
+		for(int i=0; i < Model.getBoardSize(); ++i) {
+			for(int j=0; j< Model.getBoardSize(); ++j) {
+				System.out.println(mockup.getField(j, i));
+			}
+			System.out.println();
+		}
+		
+		System.out.println("----------------");
+		
 	}
 	
 }

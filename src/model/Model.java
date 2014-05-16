@@ -176,7 +176,7 @@ public class Model {
 	 * Zwraca rozmiar planszy.
 	 * @return BOARD_SIZE
 	 */
-	public int getBoardSize() {
+	public static int getBoardSize() {
 		return BOARD_SIZE;
 	}
 
