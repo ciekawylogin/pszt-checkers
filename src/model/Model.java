@@ -106,6 +106,7 @@ public class Model {
 			// docelowe pole jest zajete
 			correctMove = false;
 		}
+		unselectChecker();
 		if(correctMove)
 		{
 			changeActivePlayer();
@@ -488,6 +489,7 @@ public class Model {
 	 * @throws RuntimeException jezeli jakis pionek jest juz zaznaczony
 	 */
 	public final void selectChecker(int x, int y) {
+		
 		board.getField(x, y).select();
 	}
 
@@ -522,13 +524,8 @@ public class Model {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Sprawdza, czy gracz 1 wygrac�
-	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
-=======
-	 * Sprawdza, czy gracz 1 wygrac�
+	 * Sprawdza, czy gracz 1 wygral
 	 * @return true wtedy i tylko wtedy, gdy spelnione są oba poniższe warunki:
->>>>>>> ee09bca1ec744862cc236b0cd3227c90cf6760b3
 	 * 	+ Gracz 2 jest aktywny
 	 *  + Gracz 2 nie ma zadnego dozwolonego ruchu
 	 */
@@ -538,7 +535,7 @@ public class Model {
 	}
 
 	/**
-	 * Sprawdza, czy gracz 2 wygrac�
+	 * Sprawdza, czy gracz 2 wygral
 	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
 	 * 	+ Gracz 1 jest aktywny
 	 *  + Gracz 1 nie ma zadnego dozwolonego ruchu
@@ -603,6 +600,8 @@ public class Model {
 		System.out.println("liczba dozwolonych ruchow: " + movesCount);
 		int randomId = (int) Math.floor(Math.random() * movesCount);
 		Move selectedMove = moves.get(randomId);
+		System.out.println("wybrany ruch z ["+ selectedMove.startX + ", " + selectedMove.startY +
+						   "] na [" + selectedMove.endX + ", " + selectedMove.endY + "]");
 		selectChecker(selectedMove.startX, selectedMove.startY);
 		moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
 	}

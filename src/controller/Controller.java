@@ -36,7 +36,7 @@ public class Controller {
     
     /**
      * Metoda inicjalizuje program (tj. inicjalizuje sterownik, a nastepnie, jezli trzeba, 
-     * wola metody inicjalizujace model i widok), po czym wchodzi w g³owna pele programu.
+     * wola metody inicjalizujace model i widok), po czym wchodzi w gï¿½owna pele programu.
      */
     public void go() {
     	blocking_queue.add(new GameStartEvent());
@@ -70,7 +70,6 @@ public class Controller {
             		model.selectChecker(x, y);
             	} else if(model.isAnyCheckerSelected()) {
             		model.moveSelectedCheckerTo(x, y);
-            		model.unselectChecker();
             	} else {
             		// kliknieto puste pole (?)
             		// ignorujemy

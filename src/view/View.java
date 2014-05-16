@@ -109,7 +109,13 @@ public class View extends Application implements Runnable {
 		System.out.println("game state: "+mockup.getGameState());
 		System.out.println("player 1: "+mockup.getPlayer(0)+" player 2: "+mockup.getPlayer(1));
 		System.out.println("board:");
+		System.out.print("   ");
 		for(int i=0; i < Model.getBoardSize(); ++i) {
+			System.out.print(" "+i+"  ");
+		}
+		System.out.println();
+		for(int i=0; i < Model.getBoardSize(); ++i) {
+			System.out.print(" "+i+" ");
 			for(int j=0; j< Model.getBoardSize(); ++j) {
 				//System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
 				if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.EMPTY_FIELD) {
