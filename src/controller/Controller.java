@@ -7,6 +7,7 @@ import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.events.GameStartEvent;
 
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,6 +80,11 @@ public class Controller {
             	}
             	if(model.hasPlayer1Won()) {
             		// @TODO czy trzeba to obsluzyc???
+            	}
+            	refreshView();
+            	if(model.isAITurn())
+            	{
+            		model.makeAIMove();
             	}
             } else if(event_class == GameStartEvent.class) {
             	// kliknieto przycisk rozpoczecia gry

@@ -85,19 +85,25 @@ public class Model {
 		int source_x = source_coordinate.getX();
 		int source_y = source_coordinate.getY();
 		CheckerType checkerType = board.getField(source_x, source_y).getChecker().getType();
+		boolean correctMove;
 		if(board.getField(target_x, target_y).getChecker() == null)
 		{
 			if(checkerType == CheckerType.QUEEN) {
-				return makeQueenMove(source_x, source_y, target_x, target_y);
+				correctMove = makeQueenMove(source_x, source_y, target_x, target_y);
 			} else {
-				return makeNormalCheckerMove(source_x, source_y, target_x, target_y);
+				correctMove = makeNormalCheckerMove(source_x, source_y, target_x, target_y);
 			}
 		}
 		else
 		{
 			// docelowe pole jest zajete
-			return false;
+			correctMove = false;
 		}
+		if(correctMove)
+		{
+			changeActivePlayer();
+		}
+		return correctMove;
 	}
 	
 
@@ -201,9 +207,6 @@ public class Model {
 					int y = coordinatesToDelete.get(i).getY();
 					board.getField(x, y).removeChecker();
 				}
-				
-				
-				
 			}
 				
 			return correctMove;
@@ -358,6 +361,18 @@ public class Model {
 		throw new RuntimeException("unselect requested, but no checker was selected");
 	}
 
+	public final void changeActivePlayer()
+	{
+		if(active_player == 1)
+		{
+			active_player = 0;
+		}
+		else
+		{
+			active_player = 1;
+		}
+	}
+	
 	/**
 	 * Sprawdza, czy na danej pozycji znajduje się zaznaczony pionek.
 	 * @param x współrzędna x pozycji do sprawdzenia
@@ -476,7 +491,7 @@ public class Model {
 	}
 
 	/**
-	 * Zwraca listę dozwolonych ruchół z danego pola
+	 * Zwraca listę dozwolonych ruchów z danego pola
 	 * @param x
 	 * @param y
 	 * @return
@@ -485,12 +500,23 @@ public class Model {
 		ArrayList<Move> result = new ArrayList<Move>();
 		for(int target_x=0; target_x<8; ++target_x) {
 			for(int target_y=0; target_y<8; ++target_y) {
-				if(true) {
-					//result.add();
+				if(isMoveCorrect(source_x, source_y, target_x, target_y)) {
+					result.add(new Move(source_x, source_y, target_x, target_y));
 				}
 			}
 		}
 		return result;
+	}
+
+	public boolean isAITurn() {
+		return players[active_player].isCPU();
+	}
+
+	public void makeAIMove() {
+		ArrayList<Move> moves = getAllPossibleMoves(players[active_player].getPlayerColor());
+		int movesCount = moves.size();
+		int randomId = (int) Math.floor(Math.random() * movesCount + 1);
+		Move randomMove = moves.get(randomId);
 	}
 	
 	
