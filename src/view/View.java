@@ -12,16 +12,45 @@ import java.lang.UnsupportedOperationException;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 // tylko do debugu
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-public class View {
+public class View extends Application implements Runnable {
     private BlockingQueue<GameEvent> blocking_queue;
+    
+    public View() {}
     
     public View(BlockingQueue<GameEvent> blocking_queue) {
     	this.blocking_queue = blocking_queue;
     	// @TODO utworzyć elementy widoku
+    }
+    
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("Hello World!");
+        Button btn = new Button();
+        btn.setText("Say 'Hello World'");
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Hello World!");
+            }
+        });
+        
+        StackPane root = new StackPane();
+        root.getChildren().add(btn);
+        primaryStage.setScene(new Scene(root, 300, 250));
+        primaryStage.show();
     }
 
     /**
@@ -61,6 +90,12 @@ public class View {
 		int x = in.nextInt();
 		int y = in.nextInt();
 		blocking_queue.add(new FieldClickEvent(x, y));
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		launch();
 	}
 	
 }

@@ -14,9 +14,9 @@ public final class PsztCheckers {
         Model model = new Model();
         BlockingQueue<GameEvent> blocking_queue = new LinkedBlockingQueue<GameEvent>();
         View view = new View(blocking_queue);
+        Thread th = new Thread(view); 
+        th.start();// starting thread
         Controller controller = new Controller(model, view, blocking_queue);
-        
         controller.go();
 	}
-
 }
