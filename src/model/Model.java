@@ -123,7 +123,16 @@ public class Model {
 
 	private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
 		Checker checker = board.getField(source_x, source_y).getChecker();
-		return true;
+		CheckerColor color = checker.getColor();
+		boolean isTargetToTheLeft = target_x == source_x - 1;
+		boolean isTargetToTheRight = target_x == source_x + 1;
+		boolean isTargetToTheTop = target_y == source_y + 1;
+		boolean isTargetToTheBottom = target_y == source_y - 1;
+		if(color == CheckerColor.WHITE) {
+			return (isTargetToTheLeft && isTargetToTheTop) || (isTargetToTheRight && isTargetToTheTop);
+		} else {
+			return (isTargetToTheLeft && isTargetToTheBottom) || (isTargetToTheRight && isTargetToTheBottom);
+		}
 	}
 
 	private boolean makeQueenMove(int source_x, int source_y, int target_x, int target_y) {
