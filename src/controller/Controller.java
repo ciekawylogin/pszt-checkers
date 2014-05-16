@@ -1,10 +1,14 @@
 package controller;
 
+import model.CheckerColor;
+import model.GameLevel;
 import model.Model;
+import model.Player;
 import view.View;
 import common.Mockup;
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
+import common.events.GameFinishEvent;
 import common.events.GameStartEvent;
 
 import java.util.concurrent.BlockingQueue;
@@ -39,7 +43,8 @@ public class Controller {
      * wola metody inicjalizujace model i widok), po czym wchodzi w g�owna pele programu.
      */
     public void go() {
-    	blocking_queue.add(new GameStartEvent());
+    	//TODO
+    	blocking_queue.add(new GameStartEvent("default", CheckerColor.WHITE, GameLevel.EASY));
     	
     	view.init();
     	while(true) {
@@ -71,20 +76,32 @@ public class Controller {
             	} else if(model.isAnyCheckerSelected()) {
             		model.moveSelectedCheckerTo(x, y);
             	} else {
-            		// kliknieto puste pole (?)
-            		// ignorujemy
+            		// kliknieto puste pole, ignorujemy
             		System.out.println("empty field clicked; ignoring");
             		
             	}
-            	if(model.hasPlayer1Won()) {
-            		// @TODO czy trzeba to obsluzyc???
+            	
+            	// sprawdzenie warunku zwyciestwa przez jednego z graczy
+            	Player player = model.checkIfAnyPlayerWon();
+            	if (player != null) {
+            		blocking_queue.add(new GameFinishEvent(false, player));
+            	} 
+            	// sprawdzenie warunku remisu
+            	if (model.checkIfWithdraw()) {
+            		blocking_queue.add(new GameFinishEvent(false, null));
             	}
+            	
             } else if(event_class == GameStartEvent.class) {
             	// kliknieto przycisk rozpoczecia gry
-            	GameStartEvent game_start_event = (GameStartEvent) event;
+            	//GameStartEvent game_start_event = (GameStartEvent) event;
             	model.startGame();
+            	
+            } else if(event_class == GameFinishEvent.class) {
+            	//TODO
+            	// zakonczyc wszystko
+            	
             } else {
-            	/// ????
+            	throw new RuntimeException("unrecognized event taken from blockingQueue");
             }
             // po kazdym zdarzeniu odswiezamy
         	refreshView();

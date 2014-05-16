@@ -11,9 +11,21 @@ public final class GameStartEvent extends GameEvent {
 	/** poziom trudnosci */
 	private GameLevel gameLevel;
 	/** kolor pionkow ludzkiego gracza */
-	private CheckerColor checkerColor;
+	private CheckerColor playerColor;
 	/** nazwa ludzkiego gracza */
 	private String playerName;
+	
+	/**
+	 * Konstruktor
+	 * @param playerName - nazwa gracza
+	 * @param playerColor - kolor pionkow ludzkiego gracza
+	 * @param gameLevel - poziom trudnosci gry
+	 */
+	public GameStartEvent(final String playerName, final CheckerColor playerColor, final GameLevel gameLevel) {
+		this.playerName = playerName;
+		this.playerColor = playerColor;
+		this.gameLevel = gameLevel;
+	}
 	
 	
 	/**
@@ -29,7 +41,7 @@ public final class GameStartEvent extends GameEvent {
 	 * @return checkerColor
 	 */
 	public CheckerColor getCheckerColor() {
-		return checkerColor;
+		return playerColor;
 	}
 	
 	/**

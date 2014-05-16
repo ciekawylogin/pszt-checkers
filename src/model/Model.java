@@ -525,10 +525,33 @@ public class Model {
 		return mockup;
 		
 	}
+	
+	/**
+	 * Sprawdza warunek konca gry
+	 * @return wygrany zawodnik
+	 */
+	public Player checkIfAnyPlayerWon() {
+		if(hasPlayer1Won()) {
+			return getPlayer(0);
+		} else if(hasPlayer2Won()) {
+			return getPlayer(1);
+		}
+		return null;
+	}
+	
+	/**
+	 * Sprawdza czy nastapil warunek remisu
+	 * @return true jesli remis
+	 */
+	public boolean checkIfWithdraw() {
+		//TODO
+		return false;
+		
+	}
 
 	/**
 	 * Sprawdza, czy gracz 1 wygral
-	 * @return true wtedy i tylko wtedy, gdy spelnione są oba poniższe warunki:
+	 * @return true wtedy i tylko wtedy, gdy spelnione sa oba ponizsze warunki:
 	 * 	+ Gracz 2 jest aktywny
 	 *  + Gracz 2 nie ma zadnego dozwolonego ruchu
 	 */
@@ -556,6 +579,22 @@ public class Model {
 	 */
 	public static int getBoardSize() {
 		return BOARD_SIZE;
+	}
+	
+	/**
+	 * Zwraca tablice z graczami
+	 * @return players
+	 */
+	public Player[] getPlayers() {
+		return players;
+	}
+	
+	/**
+	 * Zwraca konkretnego gracza
+	 * @return player(index)
+	 */
+	public Player getPlayer(final int i) {
+		return players[i];
 	}
 
 	/**
@@ -608,6 +647,7 @@ public class Model {
 		selectChecker(selectedMove.startX, selectedMove.startY);
 		moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
 	}
+	
 	
 	
 }
