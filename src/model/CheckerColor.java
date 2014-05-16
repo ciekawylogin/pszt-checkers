@@ -1,6 +1,6 @@
 package model;
 
-enum CheckerColor {
+public enum CheckerColor {
 	WHITE,
 	BLACK;
 	
