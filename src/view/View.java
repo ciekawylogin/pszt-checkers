@@ -42,7 +42,7 @@ public class View extends Application implements Runnable {
     
     public View(BlockingQueue<GameEvent> blocking_queue) {
     	this.blocking_queue = blocking_queue;
-    	// @TODO utworzyć elementy widoku
+    	// @TODO utworzyc elementy widoku
     }
     
     @Override
@@ -95,17 +95,15 @@ public class View extends Application implements Runnable {
 	}
 	
 	/**
-	 * Wyświetla stan gry na podstawie podanej makiety
+	 * Wyswietla stan gry na podstawie podanej makiety
 	 * 
-	 * W zależności od stanu gry podanego w makiecie może rysować różne ekrany (ekran powitalny,
+	 * W zaleznosci od stanu gry podanego w makiecie moze rysowac rozne ekrany (ekran powitalny,
 	 * ekran gry etc.) - patrz dokumentacja klasy GameStateMockup
 	 */
 	public void draw(Mockup mockup) {
-		// @TODO write me
-		//Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, "test");
-		//throw new UnsupportedOperationException("Not yet implemented");
+		//TODO
 		
-		System.out.println("----------------");
+		System.out.println("--------------------------------");
 		System.out.println("game state: "+mockup.getGameState());
 		System.out.println("player 1: "+mockup.getPlayer(0)+" player 2: "+mockup.getPlayer(1));
 		System.out.println("board:");
@@ -148,7 +146,7 @@ public class View extends Application implements Runnable {
 			System.out.println();
 		}
 		
-		System.out.println("----------------");
+		System.out.println("--------------------------------");
 
 		Scanner in = new Scanner(System.in);
 		int x = in.nextInt();
