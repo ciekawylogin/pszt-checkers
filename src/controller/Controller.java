@@ -7,7 +7,6 @@ import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.events.GameStartEvent;
 
-import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,16 +69,8 @@ public class Controller {
             		}
             		model.selectChecker(x, y);
             	} else if(model.isAnyCheckerSelected()) {
-            		boolean correctMove = model.moveSelectedCheckerTo(x, y);
-            		if(correctMove)
-            		{
-                    	refreshView();
-                    	while(model.isAITurn())
-                    	{
-                    		model.makeAIMove();
-                    	}
-            		}
-                	model.unselectChecker();
+            		model.moveSelectedCheckerTo(x, y);
+            		model.unselectChecker();
             	} else {
             		// kliknieto puste pole (?)
             		// ignorujemy
