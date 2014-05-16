@@ -305,7 +305,9 @@ public class Model {
 			final int target_x, final int target_y, ArrayList<Coordinate> coordinatesToDelete) {
 		
 		// sprawdz czy docelowe pole jest puste
-		if(board.getField(target_x, target_y).getChecker() != null) {
+		if(board.getField(target_x, target_y).getChecker() != null &&
+				target_x < BOARD_SIZE && target_y < BOARD_SIZE &&
+				target_x >= 0 && target_y >= 0) {
 			return false;
 		}
 		
@@ -316,19 +318,20 @@ public class Model {
 		
 		int x = board.getField(source_x, source_y).getChecker().getPositionX();
 		int y = board.getField(source_x, source_y).getChecker().getPositionY();
+		CheckerColor colorSource = board.getField(x, y).getChecker().getColor();
 		
 		
 		// cel: lewy gorny rog
-		if(isTargetToTheLeft && isTargetToTheTop && color == CheckerColor.BLACK) {
+		if(isTargetToTheLeft && isTargetToTheTop) {
 			--x;
-			++y;
-			for(; x >= target_x; --x, ++y) {
+			--y;
+			for(; x > target_x; --x, --y) {
 				
 				Checker temp = board.getField(x, y).getChecker();
 				
-				if(temp != null && temp.getColor() == CheckerColor.BLACK) {
+				if(temp != null && temp.getColor() == colorSource) {
 					return false;
-				} else if(temp !=null && temp.getColor() == CheckerColor.WHITE
+				} else if(temp !=null && temp.getColor() != colorSource
 						&& coordinatesToDelete != null) {
 					coordinatesToDelete.add(new Coordinate (x, y));
 				}
@@ -340,16 +343,16 @@ public class Model {
 			}
 			
 		// cel: lewy dolny rog
-		} else if(isTargetToTheLeft && !isTargetToTheTop && color == CheckerColor.WHITE) {
+		} else if(isTargetToTheLeft && !isTargetToTheTop) {
 			--x;
-			--y;
-			for(; x >= target_x; --x, --y) {
+			++y;
+			for(; x > target_x; --x, ++y) {
 				
 				Checker temp = board.getField(x, y).getChecker();
 				
-				if(temp != null && temp.getColor() == CheckerColor.WHITE) {
+				if(temp != null && temp.getColor() == colorSource) {
 					return false;
-				} else if(temp !=null && temp.getColor() == CheckerColor.BLACK
+				} else if(temp !=null && temp.getColor() != colorSource
 						&& coordinatesToDelete != null) {
 					coordinatesToDelete.add(new Coordinate (x, y));
 				}
@@ -362,15 +365,15 @@ public class Model {
 			
 			
 		// cel: prawy gorny rog
-		} else if(!isTargetToTheLeft && isTargetToTheTop && color == CheckerColor.BLACK) {
+		} else if(!isTargetToTheLeft && isTargetToTheTop) {
 			++x;
 			--y;
-			for(; x <= target_x; ++x, --y) {
+			for(; x < target_x; ++x, --y) {
 				Checker temp = board.getField(x, y).getChecker();
 				
-				if(temp != null && temp.getColor() == CheckerColor.BLACK) {
+				if(temp != null && temp.getColor() == colorSource) {
 					return false;
-				} else if(temp !=null && temp.getColor() == CheckerColor.WHITE
+				} else if(temp !=null && temp.getColor() != colorSource
 						&& coordinatesToDelete != null) {
 					coordinatesToDelete.add(new Coordinate (x, y));
 				}
@@ -383,15 +386,15 @@ public class Model {
 			
 			
 		// cel: prawy dolny rog
-		} else if(!isTargetToTheLeft && !isTargetToTheTop && color == CheckerColor.WHITE) {
+		} else if(!isTargetToTheLeft && !isTargetToTheTop) {
 			++x;
 			++y;
-			for(; x <= target_x; ++x, ++y) {
+			for(; x < target_x; ++x, ++y) {
 				Checker temp = board.getField(x, y).getChecker();
 				
-				if(temp != null && temp.getColor() == CheckerColor.WHITE) {
+				if(temp != null && temp.getColor() == colorSource) {
 					return false;
-				} else if(temp !=null && temp.getColor() == CheckerColor.BLACK
+				} else if(temp !=null && temp.getColor() != colorSource
 						&& coordinatesToDelete != null) {
 					coordinatesToDelete.add(new Coordinate (x, y));
 				}
