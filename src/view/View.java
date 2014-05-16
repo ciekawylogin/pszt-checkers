@@ -35,6 +35,8 @@ public class View {
 	 * ekran gry etc.) - patrz dokumentacja klasy GameStateMockup
 	 */
 	public void draw(Mockup mockup) {
+		System.out.print(mockup);
+		
 		// @TODO write me
 		Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.SEVERE, "test");
 		throw new UnsupportedOperationException("Not yet implemented");

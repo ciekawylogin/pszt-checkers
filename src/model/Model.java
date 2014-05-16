@@ -1,6 +1,9 @@
 package model;
 
+import common.FieldMockup;
+import common.GameStateMockup;
 import common.Mockup;
+import common.PlayerMockup;
 
 public class Model {
 
@@ -135,8 +138,14 @@ public class Model {
 	 */
 	public final Mockup getMockup() {
 		Mockup mockup = new Mockup(); // wypelnij mnie
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not yet implemented");
+		mockup.setGameState(GameStateMockup.PLAYER_1_MOVE);
+		for(int i=0;i<8;++i)
+			for(int j=0;j<8;++j)
+				mockup.setField(FieldMockup.BLACK_QUEEN, i, j);
+		mockup.setPlayers(PlayerMockup.HUMAN_PLAYER, 0);
+		mockup.setPlayers(PlayerMockup.AI_PLAYER, 1);
+		return mockup;
+		
 	}
 
 	/**
