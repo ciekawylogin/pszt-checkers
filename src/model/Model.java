@@ -87,6 +87,10 @@ public class Model {
 		Coordinate source_coordinate = getSelectedCheckerCoordinate();
 		int source_x = source_coordinate.getX();
 		int source_y = source_coordinate.getY();
+		System.out.println("a" + players[active_player].isCpu());
+		System.out.println("b" + players[active_player].getPlayerColor());
+		System.out.println("c" + source_x + " " + source_y);
+		System.out.println("d" + target_x + " " + target_y);
 		CheckerType checkerType = board.getField(source_x, source_y).getChecker().getType();
 		boolean correctMove;
 		if(board.getField(target_x, target_y).getChecker() == null)
@@ -105,6 +109,10 @@ public class Model {
 		if(correctMove)
 		{
 			changeActivePlayer();
+			while(isAITurn())
+			{
+				makeAIMove();
+			}
 		}
 		return correctMove;
 	}
@@ -167,11 +175,19 @@ public class Model {
 		boolean isTargetToTheRight = target_x == source_x + 2;
 		boolean isTargetToTheTop = target_y == source_y - 2;
 		boolean isTargetToTheBottom = target_y == source_y + 2;
+
+		int checkerToRemoveX = (target_x + source_x) / 2;
+		int checkerToRemoveY = (target_y + source_y) / 2; 
+
+		Checker MovingChecker = board.getField(source_x, source_y).getChecker();
+		Checker CheckerToRemove = board.getField(checkerToRemoveX, checkerToRemoveY).getChecker();
 		
-		return (isTargetToTheLeft  && isTargetToTheTop)
+		return((isTargetToTheLeft  && isTargetToTheTop)
 			|| (isTargetToTheLeft  && isTargetToTheBottom)
 			|| (isTargetToTheRight && isTargetToTheTop)
-			|| (isTargetToTheRight && isTargetToTheBottom);
+			|| (isTargetToTheRight && isTargetToTheBottom))
+			&& MovingChecker != null && CheckerToRemove != null 
+			&& CheckerToRemove.getColor() != MovingChecker.getColor();
 	}
 
 	private boolean isNormalCheckerNormalMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
@@ -485,7 +501,8 @@ public class Model {
 		ArrayList<Move> result = new ArrayList<Move>();
 		for(int x=0; x<8; ++x) {
 			for(int y=0; y<8; ++y) {
-				if(board.getField(x, y).getChecker().getColor() == color) {
+				if(board.getField(x, y).getChecker() != null && 
+				   board.getField(x, y).getChecker().getColor() == color) {
 					result.addAll(getAllPossibleMovesFromPosition(x, y));
 				}
 			}
@@ -504,6 +521,7 @@ public class Model {
 		for(int target_x=0; target_x<8; ++target_x) {
 			for(int target_y=0; target_y<8; ++target_y) {
 				if(isMoveCorrect(source_x, source_y, target_x, target_y)) {
+					System.out.println("dodaje: " + source_x + " " + source_y + " " + target_x + " " + target_y);
 					result.add(new Move(source_x, source_y, target_x, target_y));
 				}
 			}
@@ -516,14 +534,13 @@ public class Model {
 	}
 
 	public void makeAIMove() {
-		throw new RuntimeException();
-//		ArrayList<Move> moves = getAllPossibleMoves(players[active_player].getPlayerColor());
-//		int movesCount = moves.size();
-//		System.out.println("liczba dozwolonych ruchow: " + movesCount);
-//		int randomId = (int) Math.floor(Math.random() * movesCount + 1);
-//		Move selectedMove = moves.get(randomId);
-//		selectChecker(selectedMove.startX, selectedMove.startY);
-//		moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
+		ArrayList<Move> moves = getAllPossibleMoves(players[active_player].getPlayerColor());
+		int movesCount = moves.size();
+		System.out.println("liczba dozwolonych ruchow: " + movesCount);
+		int randomId = (int) Math.floor(Math.random() * movesCount + 1);
+		Move selectedMove = moves.get(randomId);
+		selectChecker(selectedMove.startX, selectedMove.startY);
+		moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
 	}
 	
 	
