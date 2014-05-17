@@ -25,8 +25,8 @@ public class Model {
     public Model() {
         this.board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
         this.players = new Player[2];
-        players[0] = new Player("player", CheckerColor.WHITE, false, null);
-        players[1] = new Player("CPU", CheckerColor.BLACK, true, GameLevel.EASY);
+        //players[0] = new Player("player", CheckerColor.WHITE, false, null);
+        //players[1] = new Player("CPU", CheckerColor.BLACK, true, GameLevel.EASY);
         this.active_player = 0;
     }
 
@@ -430,10 +430,19 @@ public class Model {
      * @return true jezeli na polu (x, y) znajduje sie pionek aktywnego gracza
      */
     public final boolean isCurrentPlayerCheckerOnPosition(int x, int y) {
+
         Checker checker = board.getField(x, y).getChecker();
-        return checker != null && (
-               (checker.getColor().isWhite() && active_player == 0) ||
-               (checker.getColor().isBlack() && active_player == 1));
+        if(checker == null) {
+            return false;
+        }
+        
+        if(active_player == 0 && checker.getColor() == players[0].getPlayerColor()
+                || active_player == 1 && checker.getColor() == players[1].getPlayerColor() ) {
+            return true;
+        }
+        return false;
+        
+  
     }
 
     /**
@@ -455,12 +464,10 @@ public class Model {
      */
     public final void startGame(final String playerName, 
             final GameLevel gameLevel, final CheckerColor checkerColor) {
+
+        players[0] = new Player("player", checkerColor, false, gameLevel);
+        players[1] = new Player("CPU", CheckerColor.getOppositeColor(checkerColor), true, null);
         // rozstaw pionki
-        if(players[1] != null) {
-            players[1].setName(playerName);
-            players[1].setPlayerColor(checkerColor);
-            players[0].setPlayerColor(CheckerColor.getOppositeColor(checkerColor));
-        }
         board.setUp();
         
         // TODO - trzeba cos zrobic z poziomem trudnosci i kolorem

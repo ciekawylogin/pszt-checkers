@@ -41,7 +41,7 @@ public class Controller {
 
     /**
      * Metoda inicjalizuje program (tj. inicjalizuje sterownik, a nastepnie, jezli trzeba,
-     * wola metody inicjalizujace model i widok), po czym wchodzi w g�owna pele programu.
+     * wola metody inicjalizujace model i widok), po czym wchodzi w glowna pele programu.
      */
     public void go() {
         //TODO
@@ -100,6 +100,7 @@ public class Controller {
                     fieldClickEvent = null;
                     System.out.println("empty field clicked; ignoring");
                 }
+                
                 // sprawdzenie warunku zwyciestwa przez jednego z graczy
                 Player player = model.checkIfAnyPlayerWon();
                 if (player != null) {
