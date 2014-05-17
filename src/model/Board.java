@@ -16,9 +16,6 @@ public class Board {
     // @see #Model.INITIAL_CHECKERS_ROWS
     final int INIT_ROWS;
 
-    /** aktualny kolor pionka majacy prawo do ruchu */
-    private CheckerColor actualMoveColor = WHITE;
-
     /**
      * Konstruktor.
      *
@@ -87,18 +84,8 @@ public class Board {
         return (x + y) % 2 == 0;
     }
 
-
-    /**
-     * Wykonanie ruchu.
-     */
-    void makeMove() {
-        //TODO
-    }
-
     public Field getField(int x, int y) {
         // TODO Auto-generated method stub
         return fields[x][y];
     }
-
-    // @TODO dokonczyc
 }

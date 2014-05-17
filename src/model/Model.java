@@ -402,12 +402,11 @@ public class Model {
         throw new RuntimeException("unselect requested, but no checker was selected");
     }
 
+    /**
+     * Zmiana gracza wykonujacego ruch.
+     */
     public final void changeActivePlayer() {
-        if(active_player == 1) {
-            active_player = 0;
-        } else {
-            active_player = 1;
-        }
+        active_player = active_player == 1 ? 0 : 1;
     }
 
     /**
@@ -454,10 +453,17 @@ public class Model {
      * Rozpoczyna nowa gre, tj. tworzy plansze, ustawia pionki i ustawia bialego gracza
      * jako aktywnego
      */
-    public final void startGame() {
+    public final void startGame(final String playerName, 
+            final GameLevel gameLevel, final CheckerColor checkerColor) {
         // rozstaw pionki
+        if(players[1] != null) {
+            players[1].setName(playerName);
+            players[1].setPlayerColor(checkerColor);
+            players[0].setPlayerColor(CheckerColor.getOppositeColor(checkerColor));
+        }
         board.setUp();
-        // TODO 
+        
+        // TODO - trzeba cos zrobic z poziomem trudnosci i kolorem
     }
 
     /**

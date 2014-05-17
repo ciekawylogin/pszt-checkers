@@ -12,8 +12,6 @@ public class Player {
     private boolean isCpu;
     // poziom trudnosci
     private GameLevel gameLevel;
-    // flaga mowiaca o wygranej gracza
-    private boolean isVictory;
 
     /**
      * Konstruktor
@@ -23,7 +21,6 @@ public class Player {
         this.playerColor = playerColor;
         this.isCpu = isCpu;
         this.gameLevel = gameLevel;
-        this.isVictory = false;
     }
 
     /**
@@ -37,7 +34,6 @@ public class Player {
         this.playerColor = playerColor;
         this.isCpu = isCpu;
         this.gameLevel = gameLevel;
-        this.isVictory = false;
     }
 
     /**
@@ -59,29 +55,19 @@ public class Player {
     }
 
     /**
-     * Ustawia flage zwyciestwa
-     *
-     * @param isVictory
-     */
-    public void setVictorious(final boolean isVictory) {
-        this.isVictory = isVictory;
-    }
-
-    /**
-     * Sprawdza czy gracz wygral
-     *
-     * @return isVictory
-     */
-    public boolean isVictorious() {
-        return isVictory;
-    }
-
-    /**
      * Zwraca kolor pionkow gracza
      * @return playerColor
      */
     public CheckerColor getPlayerColor() {
         return playerColor;
+    }
+    
+    /**
+     * Ustawia kolor pionkow gracza
+     * @param playerColor - kolor do ustawienia
+     */
+    public void setPlayerColor(final CheckerColor playerColor) {
+        this.playerColor = playerColor;
     }
 
     /**

@@ -13,7 +13,6 @@ import model.GameLevel;
 import model.Model;
 
 import java.util.concurrent.BlockingQueue;
-//import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -26,6 +25,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jfx.messagebox.MessageBox;
+
 
 // tylko do debugu
 import java.util.logging.Logger;
@@ -50,26 +50,42 @@ public class View extends Application implements Runnable {
                 "Warning", 
                 MessageBox.OK);
             System.out.println("pusto");
+            
         } else if(blocking_queue != null) {
-            switch ((String)color.getValue()) {
-            case "white":
+            
+            StringIdentificator stringId = StringIdentificator.getId((String)color.getValue());
+            
+            switch (stringId) {
+            case WHITE_COLOR:
                 checkerColor = CheckerColor.WHITE;
-            case "black":
+                break;
+            case BLACK_COLOR:
                 checkerColor = CheckerColor.BLACK;
+                break;
+            default:
+                throw new RuntimeException("unrecognized color");
             }
             
-            switch ((String)difficulty.getValue()) {
-            case "easy"  :
+            stringId = StringIdentificator.getId((String)difficulty.getValue());
+            
+            switch (stringId) {
+            case EASY_LEVEL  :
                 gameLevel = GameLevel.EASY;
-            case "medium":
+                break;
+            case MEDIUM_LEVEL:
                 gameLevel = GameLevel.MEDIUM;
-            case "hard"  :
+                break;
+            case HARD_LEVEL  :
                 gameLevel = GameLevel.HARD;
+                break;
+            default:
+                throw new RuntimeException("unrecognized game level");
             }
             blocking_queue.add(new GameStartEvent(name.getText(), checkerColor, gameLevel));
             System.out.println(name.getText());
             System.out.println(color.getValue());
             System.out.println(difficulty.getValue());
+            
         } else {
             throw new RuntimeException("View.beginGame - blockingQueue is null");
         }
@@ -92,22 +108,15 @@ public class View extends Application implements Runnable {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        try {
-            AnchorPane page = (AnchorPane) FXMLLoader.load(View.class.getResource("menu.fxml"));
-            Scene scene = new Scene(page);
-            scene.getStylesheets().add(View.class.getResource("stylesheet.css").toExternalForm());
-            primaryStage.initStyle(StageStyle.DECORATED);
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("Checkers");
-            primaryStage.setMinHeight(page.getMinHeight()+8+30);
-            primaryStage.setMaxHeight(page.getMaxHeight()+8+30);
-            primaryStage.setMinWidth(page.getMinWidth()+8+8);
-            primaryStage.setMaxWidth(page.getMaxWidth()+8+8);
-            primaryStage.show();
-        }
-        catch (Exception ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        AnchorPane page = (AnchorPane) FXMLLoader.load(View.class.getResource("source/menu.fxml"));
+        Scene scene = new Scene(page, 390, 390);
+        scene.getStylesheets().add(View.class.getResource("source/stylesheet.css").toExternalForm());
+        primaryStage.initStyle(StageStyle.DECORATED);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Checkers");
+        primaryStage.setResizable(false);
+        primaryStage.show();
+        
     }
 
     /**

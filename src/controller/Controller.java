@@ -67,7 +67,9 @@ public class Controller {
             
             case GAME_START:
                 // kliknieto przycisk rozpoczecia gry
-                model.startGame();
+                GameStartEvent gameStartEvent = (GameStartEvent)event;
+                model.startGame(gameStartEvent.getPlayerName(), gameStartEvent.getGameLevel(), 
+                        gameStartEvent.getCheckerColor());
                 break;
                 
             case GAME_FINISH:
@@ -81,9 +83,9 @@ public class Controller {
                 
             case FIELD_CLICK:
                 // kliknieto pole
-                FieldClickEvent field_click_event = (FieldClickEvent)event;
-                int x = field_click_event.getFieldX();
-                int y = field_click_event.getFieldY();
+                FieldClickEvent fieldClickEvent = (FieldClickEvent)event;
+                final int x = fieldClickEvent.getFieldX();
+                final int y = fieldClickEvent.getFieldY();
                 if(model.isCheckerSelected(x, y)) {
                     model.unselectChecker();
                 } else if(model.isCurrentPlayerCheckerOnPosition(x, y)) {
@@ -95,7 +97,7 @@ public class Controller {
                     model.moveSelectedCheckerTo(x, y);
                 } else {
                     // kliknieto puste pole, ignorujemy
-                    field_click_event = null;
+                    fieldClickEvent = null;
                     System.out.println("empty field clicked; ignoring");
                 }
                 // sprawdzenie warunku zwyciestwa przez jednego z graczy
