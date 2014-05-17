@@ -4,12 +4,17 @@ import java.util.Scanner;
 
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
+import common.events.GameStartEvent;
 import common.CheckerMockup;
 import common.Mockup;
+import model.CheckerColor;
+import model.GameLevel;
 import model.Model;
 
 import java.util.concurrent.BlockingQueue;
 //import java.util.logging.Logger;
+
+
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -20,12 +25,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+
+
 // tylko do debugu
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class View extends Application implements Runnable {
-    private BlockingQueue<GameEvent> blocking_queue;
+    static private BlockingQueue<GameEvent> blocking_queue;
     @FXML private Button start;
     @FXML private Button exit;
     @FXML private ChoiceBox difficulty;
@@ -34,6 +41,11 @@ public class View extends Application implements Runnable {
 
     @FXML
     protected void beginGame(ActionEvent event) {
+        if(blocking_queue != null) {
+            blocking_queue.add(new GameStartEvent("default", CheckerColor.WHITE, GameLevel.EASY));
+        } else {
+            throw new RuntimeException("View.beginGame - blockingQueue is null");
+        }
         System.out.println("Start game");
     }
 
@@ -46,7 +58,7 @@ public class View extends Application implements Runnable {
 
     public View(BlockingQueue<GameEvent> blocking_queue) {
         this.blocking_queue = blocking_queue;
-        // @TODO utworzyc elementy widoku
+        //TODO utworzyc elementy widoku
     }
 
     @Override

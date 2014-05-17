@@ -10,6 +10,7 @@ import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.events.GameStartEvent;
 import common.events.GameFinishEvent;
+import common.events.ProgramQuitEvent;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
@@ -44,7 +45,6 @@ public class Controller {
      */
     public void go() {
         //TODO
-        blocking_queue.add(new GameStartEvent("default", CheckerColor.WHITE, GameLevel.EASY));
         view.init();
         while(true) {
             processEvents();
@@ -60,7 +60,26 @@ public class Controller {
         try {
             GameEvent event = this.blocking_queue.take();
             Class<? extends GameEvent> event_class = event.getClass();
-            if(event_class == FieldClickEvent.class) {
+            
+            EventClassIdentificator classId = (EventClassIdentificator) controller.EventClassIdentificator.getId(event_class);
+            
+            switch(classId) {
+            
+            case GAME_START:
+                // kliknieto przycisk rozpoczecia gry
+                model.startGame();
+                break;
+                
+            case GAME_FINISH:
+                //TODO
+                // powrot do glownego menu
+                
+                // tymczasowo:
+                System.out.println("koniec.");
+                System.exit(0);
+                break;
+                
+            case FIELD_CLICK:
                 // kliknieto pole
                 FieldClickEvent field_click_event = (FieldClickEvent)event;
                 int x = field_click_event.getFieldX();
@@ -88,19 +107,18 @@ public class Controller {
                 if (model.checkIfWithdraw()) {
                     blocking_queue.add(new GameFinishEvent(false, null));
                 }
-
-            // podjecie eventu startu gry
-            } else if(event_class == GameStartEvent.class) {
-                // kliknieto przycisk rozpoczecia gry
-                GameStartEvent game_start_event = (GameStartEvent) event;
-                model.startGame();
-            // podjecie eventu zakonczenia rozgrywki
-            } else if(event_class == GameFinishEvent.class) {
-                //TODO
-                // powrot do glownego menu
-            } else {
+                
+                break;
+                
+            case PROGRAM_QUIT:
+                System.exit(0);
+                break;
+                
+            default:
                 throw new RuntimeException("unrecognized event taken from blockingQueue");
+            
             }
+            
             // po kazdym zdarzeniu odswiezamy
             System.out.println("refresh");
             refreshView();
