@@ -1,11 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collection;
-
-import com.sun.media.jfxmedia.events.PlayerStateEvent.PlayerState;
-
-import common.FieldMockup;
 import common.GameStateMockup;
 import common.Mockup;
 import common.PlayerMockup;
@@ -85,10 +80,10 @@ public class Model {
         Coordinate source_coordinate = getSelectedCheckerCoordinate();
         int source_x = source_coordinate.getX();
         int source_y = source_coordinate.getY();
-        System.out.println("a" + players[active_player].isCpu());
-        System.out.println("b" + players[active_player].getPlayerColor());
-        System.out.println("c" + source_x + " " + source_y);
-        System.out.println("d" + target_x + " " + target_y);
+        System.out.println("a " + players[active_player].isCpu());
+        System.out.println("b " + players[active_player].getPlayerColor());
+        System.out.println("c " + source_x + " " + source_y);
+        System.out.println("d " + target_x + " " + target_y);
         CheckerType checkerType = board.getField(source_x, source_y).getChecker().getType();
         boolean correctMove;
         if(board.getField(target_x, target_y).getChecker() == null) {
@@ -297,7 +292,6 @@ public class Model {
         }
 
         Checker checker = board.getField(source_x, source_y).getChecker();
-        CheckerColor color = checker.getColor();
         boolean isTargetToTheLeft = target_x < source_x ? true : false;
         boolean isTargetToTheTop = target_y < source_y ? true : false;
 
@@ -461,8 +455,7 @@ public class Model {
     public final void startGame() {
         // rozstaw pionki
         board.setUp();
-        // TODO Auto-generated method stub
-        //throw new UnsupportedOperationException("Not yet implemented");
+        // TODO 
     }
 
     /**
@@ -501,8 +494,13 @@ public class Model {
      * @return true jesli remis
      */
     public boolean checkIfWithdraw() {
-        //TODO
         // sprawdzenie czy jeden i drugi gracz nie maja mozliwosci ruchu
+        
+        if( checkAllPossibleMoves(CheckerColor.BLACK, null) && 
+                checkAllPossibleMoves(CheckerColor.WHITE, null)) {
+            return true;
+        }
+        
         return false;
     }
 
@@ -565,7 +563,6 @@ public class Model {
                    board.getField(x, y).getChecker().getColor() == color) {
                     if(result != null) {
                         checkAllPossibleMovesFromPosition(x, y, result);
-                        result.addAll(result);
                     }
                     
                     isAnyPossibleMove = true;
