@@ -11,7 +11,6 @@ import model.Model;
 import java.util.concurrent.BlockingQueue;
 //import java.util.logging.Logger;
 
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,7 +53,9 @@ public class View extends Application implements Runnable {
     public void start(Stage primaryStage) throws Exception {
         try {
             AnchorPane page = (AnchorPane) FXMLLoader.load(View.class.getResource("menu.fxml"));
-            primaryStage.setScene(new Scene(page));
+            Scene scene = new Scene(page);
+            scene.getStylesheets().add(View.class.getResource("stylesheet.css").toExternalForm());
+            primaryStage.setScene(scene);
             primaryStage.setTitle("Checkers");
             primaryStage.show();
         }
@@ -129,7 +130,7 @@ public class View extends Application implements Runnable {
             }
             System.out.println();
         }
-        System.out.println("--------------------------------");
+        System.out.println("----------------------------------");
         Scanner in = new Scanner(System.in);
         int x = in.nextInt();
         int y = in.nextInt();
@@ -138,7 +139,6 @@ public class View extends Application implements Runnable {
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         launch();
     }
 
