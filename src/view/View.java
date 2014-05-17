@@ -5,6 +5,7 @@ import java.util.Scanner;
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.events.GameStartEvent;
+import common.events.ProgramQuitEvent;
 import common.CheckerMockup;
 import common.Mockup;
 import model.CheckerColor;
@@ -16,6 +17,7 @@ import java.util.concurrent.BlockingQueue;
 
 
 
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 
 
 
@@ -51,6 +54,7 @@ public class View extends Application implements Runnable {
 
     @FXML
     protected void exitProgram(ActionEvent event) {
+        blocking_queue.add(new ProgramQuitEvent());
         System.out.println("Exit");
     }
 
