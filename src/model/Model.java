@@ -496,8 +496,8 @@ public class Model {
     public boolean checkIfWithdraw() {
         // sprawdzenie czy jeden i drugi gracz nie maja mozliwosci ruchu
         
-        if( checkAllPossibleMoves(CheckerColor.BLACK, null) && 
-                checkAllPossibleMoves(CheckerColor.WHITE, null)) {
+        if( !checkAllPossibleMoves(CheckerColor.BLACK, null) && 
+                !checkAllPossibleMoves(CheckerColor.WHITE, null)) {
             return true;
         }
         

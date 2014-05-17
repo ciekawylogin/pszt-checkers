@@ -76,6 +76,7 @@ public class Controller {
                     model.moveSelectedCheckerTo(x, y);
                 } else {
                     // kliknieto puste pole, ignorujemy
+                    field_click_event = null;
                     System.out.println("empty field clicked; ignoring");
                 }
                 // sprawdzenie warunku zwyciestwa przez jednego z graczy
@@ -101,6 +102,7 @@ public class Controller {
                 throw new RuntimeException("unrecognized event taken from blockingQueue");
             }
             // po kazdym zdarzeniu odswiezamy
+            System.out.println("refresh");
             refreshView();
         }
         catch(InterruptedException exception) {
