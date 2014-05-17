@@ -15,27 +15,24 @@ import model.Model;
 import java.util.concurrent.BlockingQueue;
 //import java.util.logging.Logger;
 
-
-
-
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
-
-
+import javafx.stage.StageStyle;
+import jfx.messagebox.MessageBox;
 
 // tylko do debugu
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class View extends Application implements Runnable {
-    static private BlockingQueue<GameEvent> blocking_queue;
+    static private BlockingQueue<GameEvent> blocking_queue = null;
     @FXML private Button start;
     @FXML private Button exit;
     @FXML private ChoiceBox difficulty;
@@ -44,8 +41,35 @@ public class View extends Application implements Runnable {
 
     @FXML
     protected void beginGame(ActionEvent event) {
-        if(blocking_queue != null) {
-            blocking_queue.add(new GameStartEvent("default", CheckerColor.WHITE, GameLevel.EASY));
+        CheckerColor checkerColor = null;
+        GameLevel gameLevel = null;
+        
+        if (name.getText().equals("")) {
+            MessageBox.show(new Stage(),
+                "Your name must not be empty",
+                "Warning", 
+                MessageBox.OK);
+            System.out.println("pusto");
+        } else if(blocking_queue != null) {
+            switch ((String)color.getValue()) {
+            case "white":
+                checkerColor = CheckerColor.WHITE;
+            case "black":
+                checkerColor = CheckerColor.BLACK;
+            }
+            
+            switch ((String)difficulty.getValue()) {
+            case "easy"  :
+                gameLevel = GameLevel.EASY;
+            case "medium":
+                gameLevel = GameLevel.MEDIUM;
+            case "hard"  :
+                gameLevel = GameLevel.HARD;
+            }
+            blocking_queue.add(new GameStartEvent(name.getText(), checkerColor, gameLevel));
+            System.out.println(name.getText());
+            System.out.println(color.getValue());
+            System.out.println(difficulty.getValue());
         } else {
             throw new RuntimeException("View.beginGame - blockingQueue is null");
         }
@@ -55,6 +79,7 @@ public class View extends Application implements Runnable {
     @FXML
     protected void exitProgram(ActionEvent event) {
         blocking_queue.add(new ProgramQuitEvent());
+        Platform.exit();
         System.out.println("Exit");
     }
 
@@ -71,8 +96,13 @@ public class View extends Application implements Runnable {
             AnchorPane page = (AnchorPane) FXMLLoader.load(View.class.getResource("menu.fxml"));
             Scene scene = new Scene(page);
             scene.getStylesheets().add(View.class.getResource("stylesheet.css").toExternalForm());
+            primaryStage.initStyle(StageStyle.DECORATED);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Checkers");
+            primaryStage.setMinHeight(page.getMinHeight()+8+30);
+            primaryStage.setMaxHeight(page.getMaxHeight()+8+30);
+            primaryStage.setMinWidth(page.getMinWidth()+8+8);
+            primaryStage.setMaxWidth(page.getMaxWidth()+8+8);
             primaryStage.show();
         }
         catch (Exception ex) {
@@ -112,31 +142,31 @@ public class View extends Application implements Runnable {
             System.out.print(" "+i+" ");
             for(int j=0; j< Model.getBoardSize(); ++j) {
                 //System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
-                if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.EMPTY_FIELD) {
+                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
                     if(mockup.getField(j, i).isSelected()) {
                         System.out.print("]_[ ");
                     } else {
                         System.out.print("[_] ");
                     }
-                } else if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.BLACK_CHECKER) {
+                } else if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
                     if(mockup.getField(j, i).isSelected()) {
                         System.out.print("]@[ ");
                     } else {
                         System.out.print("[@] ");
                     }
-                } else if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.BLACK_QUEEN) {
+                } else if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
                     if(mockup.getField(j, i).isSelected()) {
                         System.out.print("]2[ ");
                     } else {
                         System.out.print("[2] ");
                     }
-                } else if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.WHITE_CHECKER) {
+                } else if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
                     if(mockup.getField(j, i).isSelected()) {
                         System.out.print("]#[ ");
                     } else {
                         System.out.print("[#] ");
                     }
-                } else if(mockup.getField(j, i).getCheckerMockup()== CheckerMockup.WHITE_QUEEN) {
+                } else if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
                     if(mockup.getField(j, i).isSelected()) {
                         System.out.print("]3[ ");
                     } else {
@@ -150,6 +180,7 @@ public class View extends Application implements Runnable {
         Scanner in = new Scanner(System.in);
         int x = in.nextInt();
         int y = in.nextInt();
+        //System.out.println("przed wyslaniem: x: "+x+", y: "+y);
         blocking_queue.add(new FieldClickEvent(x, y));
     }
 
