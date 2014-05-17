@@ -1,20 +1,18 @@
 package model;
 
-import static model.CheckerColor.WHITE;
-
 import model.Field;
 import model.CheckerColor;
 import model.CheckerType;
 
-public class Board {
+class Board {
     // pola planszy
-    Field fields[][];
+    private Field fields[][];
 
     // @see #Model.BOARD_SIZE
-    final int SIZE;
+    private final int SIZE;
 
     // @see #Model.INITIAL_CHECKERS_ROWS
-    final int INIT_ROWS;
+    private final int INIT_ROWS;
 
     /**
      * Konstruktor.
@@ -37,7 +35,7 @@ public class Board {
     /**
      * Rozstawia pionki na planszy
      */
-    public void setUp() {
+    void setUp() {
         // zmienna pomocnicza
         Field field;
 
@@ -84,7 +82,7 @@ public class Board {
         return (x + y) % 2 == 0;
     }
 
-    public Field getField(int x, int y) {
+    Field getField(int x, int y) {
         // TODO Auto-generated method stub
         return fields[x][y];
     }

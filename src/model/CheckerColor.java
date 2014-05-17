@@ -20,15 +20,15 @@ public enum CheckerColor {
         }
     }
 
-    public static CheckerColor getOppositeColor(final CheckerColor color) {
+    static CheckerColor getOppositeColor(final CheckerColor color) {
         return color == CheckerColor.WHITE ? CheckerColor.BLACK : CheckerColor.WHITE;
     }
 
-    public boolean isWhite() {
+    boolean isWhite() {
         return CheckerColor.isWhite(this);
     }
 
-    public boolean isBlack() {
+    boolean isBlack() {
         return CheckerColor.isBlack(this);
     }
 }

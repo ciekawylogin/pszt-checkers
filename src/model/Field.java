@@ -3,7 +3,7 @@ package model;
 import common.CheckerMockup;
 import common.FieldMockup;
 
-public class Field {
+class Field {
     /** pionek na tym polu */
     private Checker checker;
     /** czy pole jest zaznaczone */
@@ -17,7 +17,7 @@ public class Field {
      * Ustawia zadanego pionka na polu
      * @param checker pionek do ustawienia
      */
-    public void setChecker(Checker checker) {
+    void setChecker(Checker checker) {
         this.checker = checker;
     }
 
@@ -25,7 +25,7 @@ public class Field {
      * Zwraca pionek.
      * @return checker
      */
-    public Checker getChecker() {
+    Checker getChecker() {
         return checker;
     }
 
@@ -33,7 +33,7 @@ public class Field {
      * Kasuje pionek z pola
      * @return
      */
-    public void removeChecker()
+    void removeChecker()
     {
         this.checker = null;
     }
@@ -41,14 +41,14 @@ public class Field {
     /**
      * Tworzy makietę pola
      */
-    public FieldMockup getMockup() {
+    FieldMockup getMockup() {
         return new FieldMockup(getCheckerMockup(), is_selected);
     }
 
     /**
      * Tworzy i zwraca makietę pionka
      */
-    public CheckerMockup getCheckerMockup() {
+    private CheckerMockup getCheckerMockup() {
         if(checker == null) {
             return CheckerMockup.EMPTY_FIELD;
         } else if (
@@ -72,15 +72,15 @@ public class Field {
         }
     }
 
-    public boolean isSelected() {
+    boolean isSelected() {
         return is_selected;
     }
 
-    public void select() {
+    void select() {
         this.is_selected = true;
     }
 
-    public void unselect() {
+    void unselect() {
         this.is_selected = false;
     }
 }

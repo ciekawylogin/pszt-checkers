@@ -16,7 +16,7 @@ public class Player {
     /**
      * Konstruktor
      */
-    public Player(final CheckerColor playerColor, final boolean isCpu, final GameLevel gameLevel) {
+    Player(final CheckerColor playerColor, final boolean isCpu, final GameLevel gameLevel) {
         this.playerName = "CPU";
         this.playerColor = playerColor;
         this.isCpu = isCpu;
@@ -28,7 +28,7 @@ public class Player {
      *
      * @param name player's name
      */
-    public Player(final String playerName, final CheckerColor playerColor,
+    Player(final String playerName, final CheckerColor playerColor,
             final boolean isCpu, final GameLevel gameLevel) {
         this.playerName = playerName.trim();
         this.playerColor = playerColor;
@@ -41,7 +41,7 @@ public class Player {
      *
      * @return playerName
      */
-    public String getName() {
+    String getName() {
         return playerName;
     }
 
@@ -50,7 +50,7 @@ public class Player {
      *
      * @param name - nowa nazwa gracza
      */
-    public void setName(final String name) {
+    void setName(final String name) {
         playerName = name;
     }
 
@@ -58,7 +58,7 @@ public class Player {
      * Zwraca kolor pionkow gracza
      * @return playerColor
      */
-    public CheckerColor getPlayerColor() {
+    CheckerColor getPlayerColor() {
         return playerColor;
     }
     
@@ -66,7 +66,7 @@ public class Player {
      * Ustawia kolor pionkow gracza
      * @param playerColor - kolor do ustawienia
      */
-    public void setPlayerColor(final CheckerColor playerColor) {
+    void setPlayerColor(final CheckerColor playerColor) {
         this.playerColor = playerColor;
     }
 
@@ -74,7 +74,7 @@ public class Player {
      * Zwraca informacje czy gracz jest komputerem
      * @return true jesli komputer
      */
-    public boolean isCpu() {
+    boolean isCpu() {
         return isCpu;
     }
 
@@ -82,7 +82,7 @@ public class Player {
      * Zwraca poziom trudnosci gry
      * @return gameLevel
      */
-    public GameLevel getGameLevel() {
+    GameLevel getGameLevel() {
         return gameLevel;
     }
 }

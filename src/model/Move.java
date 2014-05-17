@@ -3,18 +3,18 @@ package model;
 /**
  * Klasa reprezentujaca pojedynczy ruch gracza
  */
-public class Move {
+class Move {
     // wspolrzedna X poczatkowego pola pionka
-    int startX;
+    private int startX;
 
     // wspolrzedna Y poczatkowego pola pionka
-    int startY;
+    private int startY;
 
     // wspolrzedna X koncowego pola pionka
-    int endX;
+    private int endX;
 
     // wspolrzedna Y koncowego pola pionka
-    int endY;
+    private int endY;
 
     /**
      * Konstruktor.
@@ -29,5 +29,21 @@ public class Move {
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
+    }
+
+    int getStartX() {
+        return startX;
+    }
+
+    int getStartY() {
+        return startY;
+    }
+    
+    int getEndX() {
+        return endX;
+    }
+    
+    int getEndY() {
+        return endY;
     }
 }

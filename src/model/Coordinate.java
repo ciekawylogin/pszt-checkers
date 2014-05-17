@@ -1,6 +1,6 @@
 package model;
 
-public class Coordinate {
+class Coordinate {
     final private int x;
     final private int y;
 

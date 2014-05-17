@@ -44,7 +44,7 @@ public class Checker {
      * @param position - pozycja na planszy
      * @param type - rodzaj pionka
      */
-    public Checker(final int position, final CheckerType type) {
+    Checker(final int position, final CheckerType type) {
         this.type = CheckerType.NORMAL;
         this.color = CheckerColor.WHITE;
         positionX = position % 8;
@@ -84,20 +84,11 @@ public class Checker {
     }
 
     /**
-     * Zwraca numer pola na ktorym znajduje sie pionek
-     *
-     * @return position on board
-     */
-    public int getPositionOnBoard() {
-        return positionY * 8 + positionX;
-    }
-
-    /**
      * Zwraca pozycje x pionka
      *
      * @return positionX
      */
-    public int getPositionX() {
+    int getPositionX() {
         return positionX;
     }
 
@@ -106,7 +97,7 @@ public class Checker {
      *
      * @return positionY
      */
-    public int getPositionY() {
+    int getPositionY() {
         return positionY;
     }
 
@@ -115,14 +106,14 @@ public class Checker {
      *
      * @return color
      */
-    public CheckerColor getColor() {
+    CheckerColor getColor() {
         return color;
     }
 
     /**
      * Awans pionka na dame
      */
-    public void promote() {
+    void promote() {
         if (color == CheckerColor.WHITE && positionY == 7) {
             type = CheckerType.QUEEN;
         } else if (color == CheckerColor.BLACK && positionY == 0) {

@@ -372,7 +372,7 @@ public class Model {
     /**
      * Znajduje zaznaczony pionek
      */
-    public final Coordinate getSelectedCheckerCoordinate() {
+    private final Coordinate getSelectedCheckerCoordinate() {
         for(int x=0; x<8; ++x) {
             for(int y=0; y<8; ++y) {
                 if(board.getField(x, y).isSelected()) {
@@ -469,8 +469,6 @@ public class Model {
         players[1] = new Player("CPU", CheckerColor.getOppositeColor(checkerColor), true, null);
         // rozstaw pionki
         board.setUp();
-        
-        // TODO - trzeba cos zrobic z poziomem trudnosci i kolorem
     }
 
     /**
@@ -525,7 +523,7 @@ public class Model {
      * @param player - gracz dla ktorego sprawdzamy warunek zwyciestwa
      * @return true jesli gracz wygral
      */
-    public boolean hasPlayerWon(final Player player) {
+    private boolean hasPlayerWon(final Player player) {
         CheckerColor color = player.getPlayerColor();
 
         // sprawdzenie czy przeciwnik ma mozliwosc ruchu (moze rowniez nie miec pionkow)
@@ -548,7 +546,7 @@ public class Model {
      * Zwraca konkretnego gracza
      * @return player(index)
      */
-    public Player getPlayer(final int i) {
+    private Player getPlayer(final int i) {
         return players[i];
     }
 
@@ -560,10 +558,10 @@ public class Model {
      * @param result - tablica ruchow do uzupelnienia
      * @return true jesli istnieje chociaz 1 dozwolony ruch
      */
-    public boolean checkAllPossibleMoves(CheckerColor color, ArrayList<Move> result) {
+    private boolean checkAllPossibleMoves(CheckerColor color, ArrayList<Move> result) {
         boolean isAnyPossibleMove = false;
-        for(int x=0; x<8; ++x) {
-            for(int y=0; y<8; ++y) {
+        for(int x=0; x<BOARD_SIZE; ++x) {
+            for(int y=0; y<BOARD_SIZE; ++y) {
                 if(board.getField(x, y).getChecker() != null &&
                    board.getField(x, y).getChecker().getColor() == color) {
                     if(result != null) {
@@ -602,21 +600,30 @@ public class Model {
         return isAnyPossibleMove;
     }
 
-    public boolean isAITurn() {
+    /**
+     * Sprawdza czy w obecnej turze ruch nalezy do komputera
+     * @return true jesli tura komputera
+     */
+    private boolean isAITurn() {
         return players[active_player].isCpu();
     }
 
-    public void makeAIMove(ArrayList<Move> moves) {
+    /**
+     * Wykonanie ruchu gracza komputerowego
+     * 
+     * @param moves - tablica mozliwych ruchow
+     */
+    private void makeAIMove(ArrayList<Move> moves) {
         
         int movesCount = moves.size();
         System.out.println("liczba dozwolonych ruchow: " + movesCount);
         int randomId = (int) Math.floor(Math.random() * movesCount);
         if(!moves.isEmpty()) {
             Move selectedMove = moves.get(randomId);
-            System.out.println("wybrany ruch z ["+ selectedMove.startX + ", " + selectedMove.startY +
-                               "] na [" + selectedMove.endX + ", " + selectedMove.endY + "]");
-            selectChecker(selectedMove.startX, selectedMove.startY);
-            moveSelectedCheckerTo(selectedMove.endX, selectedMove.endY);
+            System.out.println("wybrany ruch z ["+ selectedMove.getStartX() + ", " + selectedMove.getStartY() +
+                               "] na [" + selectedMove.getEndX() + ", " + selectedMove.getEndY() + "]");
+            selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
+            moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY());
         }
     }
 }

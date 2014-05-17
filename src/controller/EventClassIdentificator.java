@@ -11,7 +11,7 @@ import common.events.ProgramQuitEvent;
  * Dla czytelnosci kodu.
  *
  */
-public enum EventClassIdentificator {
+enum EventClassIdentificator {
     
     FIELD_CLICK,
     GAME_START,
@@ -25,7 +25,7 @@ public enum EventClassIdentificator {
      * @param event_class - klasa do zidentyfikowania
      * @return identyfikator
      */
-    public static EventClassIdentificator getId(Class<? extends GameEvent> event_class) {
+    static EventClassIdentificator getId(Class<? extends GameEvent> event_class) {
         if(event_class == FieldClickEvent.class) {
             return FIELD_CLICK;
         } else if(event_class == GameStartEvent.class) {

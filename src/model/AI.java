@@ -1,5 +1,5 @@
 package model;
 
-public class AI {
+class AI {
     
 }
