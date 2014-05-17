@@ -99,8 +99,10 @@ public class Model {
         unselectChecker();
         if(correctMove) {
             changeActivePlayer();
-            while(isAITurn()) {
-                makeAIMove();
+            
+            ArrayList<Move> AIMoves = new ArrayList<Move>();
+            while(isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves)) {
+                makeAIMove(AIMoves);
             }
         }
         return correctMove;
@@ -513,17 +515,7 @@ public class Model {
     public boolean hasPlayerWon(final Player player) {
         CheckerColor color = player.getPlayerColor();
 
-        // przeszukujemy cala plansze w poszukiwaniu chociaz jednego pionka przeciwnika
-        for(int i = 0; i< BOARD_SIZE; ++i) {
-            for(int j = 0; j< BOARD_SIZE; ++j) {
-                if(board.getField(j, i).getChecker() != null &&
-                        board.getField(j, i).getChecker().getColor() != color) {
-                    return false;
-                }
-            }
-        }
-
-        // sprawdzenie czy, mimo posiadania pionkow, przeciwnik ma mozliwosc ruchu
+        // sprawdzenie czy przeciwnik ma mozliwosc ruchu (moze rowniez nie miec pionkow)
         if(checkAllPossibleMoves(CheckerColor.getOppositeColor(color), null) ) {
             return false;
         }
@@ -601,9 +593,7 @@ public class Model {
         return players[active_player].isCpu();
     }
 
-    public void makeAIMove() {
-        ArrayList<Move> moves = new ArrayList<Move>();
-        checkAllPossibleMoves(players[active_player].getPlayerColor(), moves);
+    public void makeAIMove(ArrayList<Move> moves) {
         
         int movesCount = moves.size();
         System.out.println("liczba dozwolonych ruchow: " + movesCount);

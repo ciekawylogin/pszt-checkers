@@ -134,7 +134,6 @@ public class View extends Application implements Runnable {
         Scanner in = new Scanner(System.in);
         int x = in.nextInt();
         int y = in.nextInt();
-        System.out.println("przed wyslaniem: x: "+x+", y: "+y);
         blocking_queue.add(new FieldClickEvent(x, y));
     }
 
