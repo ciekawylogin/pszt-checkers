@@ -384,7 +384,7 @@ public class Model {
                 }
             }
         }
-        throw new RuntimeException("hm");
+        throw new RuntimeException("haven't found any selected checker");
     }
 
     /**
@@ -526,8 +526,7 @@ public class Model {
         }
 
         // sprawdzenie czy, mimo posiadania pionkow, przeciwnik ma mozliwosc ruchu
-        ArrayList<Move> list = getAllPossibleMoves(CheckerColor.getOppositeColor(color));
-        if(list.size() != 0) {
+        if(checkAllPossibleMoves(CheckerColor.getOppositeColor(color), null) ) {
             return false;
         }
 
@@ -550,39 +549,55 @@ public class Model {
         return players[i];
     }
 
+   
     /**
-     * Zwraca liste wszystkich dozwolonych ruchow dla danego gracza
+     * Sprawdza czy gracz posiada dozwolony ruch i wpisuje liste ruchow
+     * 
+     * @param color - sprawdzany kolor pionkow
+     * @param result - tablica ruchow do uzupelnienia
+     * @return true jesli istnieje chociaz 1 dozwolony ruch
      */
-    public ArrayList<Move> getAllPossibleMoves(CheckerColor color) {
-        ArrayList<Move> result = new ArrayList<Move>();
+    public boolean checkAllPossibleMoves(CheckerColor color, ArrayList<Move> result) {
+        boolean isAnyPossibleMove = false;
         for(int x=0; x<8; ++x) {
             for(int y=0; y<8; ++y) {
                 if(board.getField(x, y).getChecker() != null &&
                    board.getField(x, y).getChecker().getColor() == color) {
-                    result.addAll(getAllPossibleMovesFromPosition(x, y));
+                    if(result != null) {
+                        checkAllPossibleMovesFromPosition(x, y, result);
+                        result.addAll(result);
+                    }
+                    
+                    isAnyPossibleMove = true;
                 }
             }
         }
-        return result;
+        return isAnyPossibleMove;
     }
 
+   
     /**
-     * Zwraca liste dozwolonych ruchow z danego pola
-     * @param x
-     * @param y
-     * @return
+     * Sprawdza czy istnieje dozwolony ruch z danego pola i wpisuje ich liste
+     * 
+     * @param source_x - wspolrzedna x pola sprawdzanego
+     * @param source_y - wspolrzedna y pola sprawdzanego
+     * @param result - tablica ruchow do uzupelnienia
+     * @return true jesli istnieje chociaz 1 dozwolony ruch
      */
-    private ArrayList<Move> getAllPossibleMovesFromPosition(int source_x, int source_y) {
-        ArrayList<Move> result = new ArrayList<Move>();
+    private boolean checkAllPossibleMovesFromPosition(int source_x, int source_y, ArrayList<Move> result) {
+        boolean isAnyPossibleMove = false;
         for(int target_x=0; target_x<8; ++target_x) {
             for(int target_y=0; target_y<8; ++target_y) {
                 if(isMoveCorrect(source_x, source_y, target_x, target_y)) {
                     System.out.println("dodaje: " + source_x + " " + source_y + " " + target_x + " " + target_y);
-                    result.add(new Move(source_x, source_y, target_x, target_y));
+                    if(result != null) {
+                        result.add(new Move(source_x, source_y, target_x, target_y));
+                    }
+                    isAnyPossibleMove = true;
                 }
             }
         }
-        return result;
+        return isAnyPossibleMove;
     }
 
     public boolean isAITurn() {
@@ -590,7 +605,9 @@ public class Model {
     }
 
     public void makeAIMove() {
-        ArrayList<Move> moves = getAllPossibleMoves(players[active_player].getPlayerColor());
+        ArrayList<Move> moves = new ArrayList<Move>();
+        checkAllPossibleMoves(players[active_player].getPlayerColor(), moves);
+        
         int movesCount = moves.size();
         System.out.println("liczba dozwolonych ruchow: " + movesCount);
         int randomId = (int) Math.floor(Math.random() * movesCount);
