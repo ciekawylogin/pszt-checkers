@@ -53,9 +53,9 @@ public class View extends Application implements Runnable {
             
         } else if(blocking_queue != null) {
             
-            StringIdentificator stringId = StringIdentificator.getId((String)color.getValue());
+            ColorIdentificator colorId = ColorIdentificator.getId((String)color.getValue());
             
-            switch (stringId) {
+            switch (colorId) {
             case WHITE_COLOR:
                 checkerColor = CheckerColor.WHITE;
                 break;
@@ -66,9 +66,9 @@ public class View extends Application implements Runnable {
                 throw new RuntimeException("unrecognized color");
             }
             
-            stringId = StringIdentificator.getId((String)difficulty.getValue());
+            LevelIdentificator levelId = LevelIdentificator.getId((String)difficulty.getValue());
             
-            switch (stringId) {
+            switch (levelId) {
             case EASY_LEVEL  :
                 gameLevel = GameLevel.EASY;
                 break;
