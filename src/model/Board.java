@@ -86,4 +86,8 @@ class Board {
         // TODO Auto-generated method stub
         return fields[x][y];
     }
+    
+    Field[][] getFields() {
+        return fields;
+    }
 }

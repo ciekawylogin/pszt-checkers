@@ -73,7 +73,7 @@ public class Model {
      *
      * @param targetX wspolrzedna x docelowego pola
      * @param targetY wspolrzedna y docelowego pola
-     * @return true jezeli ruch jest dozwolony i zostac� wykonany
+     * @return true jezeli ruch jest dozwolony i zostac wykonany
      *            false jezeli ruch jest niedozwolony; w takim wypadku zadne zmiany nie zostaja
      *            wprowadzone do modelu
      */
@@ -171,7 +171,7 @@ public class Model {
         if(type == CheckerType.NORMAL) {
             return isNormalCheckerMoveCorrect(sourceX, sourceY, targetX, targetY);
         } else {
-            return isQueenCheckerMoveCorrect(sourceX, sourceY, targetX, targetY, null);
+            return checkQueenMove(sourceX, sourceY, targetX, targetY, null);
         }
     }
 
@@ -256,10 +256,10 @@ public class Model {
      */
     private boolean makeQueenMove(int sourceX, int sourceY, int targetX, int targetY) {
         ArrayList<Coordinate> coordinatesToDelete = new ArrayList<>();
-        boolean correctMove = isQueenCheckerMoveCorrect(sourceX, sourceY, targetX, targetY, coordinatesToDelete);
+        boolean correctMove = checkQueenMove(sourceX, sourceY, targetX, targetY, coordinatesToDelete);
 
         if(correctMove) {
-            setQueenCheckerOnPosition(sourceX, sourceY, targetX, targetY);
+            setQueenOnPosition(sourceX, sourceY, targetX, targetY);
             
             // usuwanie potencjalnych ofiar ruchu
             removeCapturedCheckers(coordinatesToDelete);
@@ -277,7 +277,7 @@ public class Model {
      * @param targetX
      * @param targetY
      */
-    private void setQueenCheckerOnPosition(final int sourceX, final int sourceY, 
+    private void setQueenOnPosition(final int sourceX, final int sourceY, 
             final int targetX, final int targetY) {
         Field oldField = board.getField(sourceX, sourceY);
         Checker checker = oldField.getChecker();
@@ -310,7 +310,7 @@ public class Model {
      * @param coordinatesToDelete - tablica zbitych po drodze pionkow
      * @return true gdy ruch poprawny
      */
-    private boolean isQueenCheckerMoveCorrect(final int sourceX, final int sourceY,
+    private boolean checkQueenMove(final int sourceX, final int sourceY,
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         // sprawdz czy docelowe pole jest puste badz poza plansza
@@ -324,22 +324,22 @@ public class Model {
 
         // cel: lewy gorny rog
         if(isTargetToTheLeft && isTargetToTheTop) {
-            return isQueenMoveCorrectToTheLeftTopCorner(sourceX, sourceY, 
+            return checkQueenMoveToTheLeftTopCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
             
         // cel: lewy dolny rog
         } else if(isTargetToTheLeft && !isTargetToTheTop) {
-            return isQueenMoveCorrectToTheLeftBottomCorner(sourceX, sourceY, 
+            return checkQueenMoveToTheLeftBottomCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
             
         // cel: prawy gorny rog
         } else if(!isTargetToTheLeft && isTargetToTheTop) {
-            return isQueenMoveCorrectToTheRightTopCorner(sourceX, sourceY, 
+            return checkQueenMoveToTheRightTopCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
             
         // cel: prawy dolny rog
         } else if(!isTargetToTheLeft && !isTargetToTheTop) {
-            return isQueenMoveCorrectToTheRightBottomCorner(sourceX, sourceY, 
+            return checkQueenMoveToTheRightBottomCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
         }
         return false;
@@ -356,7 +356,7 @@ public class Model {
      * @param coordinatesToDelete
      * @return true jesli ruch poprawny
      */
-    private boolean isQueenMoveCorrectToTheLeftTopCorner(final int sourceX, final int sourceY, 
+    private boolean checkQueenMoveToTheLeftTopCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         int x = sourceX -1;
@@ -389,7 +389,7 @@ public class Model {
      * @param coordinatesToDelete
      * @return true jesli ruch poprawny
      */
-    private boolean isQueenMoveCorrectToTheRightTopCorner(final int sourceX, final int sourceY, 
+    private boolean checkQueenMoveToTheRightTopCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         int x = sourceX +1;
@@ -423,7 +423,7 @@ public class Model {
      * @param coordinatesToDelete
      * @return true jesli ruch poprawny
      */
-    private boolean isQueenMoveCorrectToTheRightBottomCorner(final int sourceX, final int sourceY, 
+    private boolean checkQueenMoveToTheRightBottomCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         int x = sourceX +1;
@@ -457,7 +457,7 @@ public class Model {
      * @param coordinatesToDelete
      * @return true jesli ruch poprawny
      */
-    private boolean isQueenMoveCorrectToTheLeftBottomCorner(final int sourceX, final int sourceY, 
+    private boolean checkQueenMoveToTheLeftBottomCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         int x = sourceX -1;
@@ -709,6 +709,248 @@ public class Model {
             }
         }
         return isAnyPossibleMove;
+    }
+    
+    /**
+     * Sprawdza czy podany ruch jest biciem.
+     * @param moveToCheck
+     * @return true jesli ruch jest biciem
+     */
+    private boolean isMoveACapture(final Move moveToCheck) {
+        
+        Checker sourceChecker = board.getField(moveToCheck.getStartX(), 
+                moveToCheck.getStartY()).getChecker();
+        
+        // jesli pionek jest dama
+        if(sourceChecker.getType() == CheckerType.QUEEN) {
+            return isMoveAQueenCapture(moveToCheck);
+            
+        // jesli pionek jest zwyklym pionkiem
+        } else {
+            return isMoveANormalCheckerCapture(moveToCheck);
+        }
+    }
+    
+    /**
+     * Sprawdza czy ruch jest biciem za pomoca zwyklego pionka
+     * @param moveToCheck
+     * @return true jesli jest to bicie zwyklego pionka
+     */
+    private boolean isMoveANormalCheckerCapture(final Move moveToCheck) {
+        boolean isTargetToTheLeft = moveToCheck.getEndX() == moveToCheck.getStartX() - 2;
+        boolean isTargetToTheRight = moveToCheck.getEndX() == moveToCheck.getStartX() + 2;
+        boolean isTargetToTheTop = moveToCheck.getEndY() == moveToCheck.getStartY() - 2;
+        boolean isTargetToTheBottom = moveToCheck.getEndY() == moveToCheck.getStartY() + 2;
+        Checker sourceChecker = board.getField(moveToCheck.getStartX(),
+                moveToCheck.getStartY()).getChecker();
+        
+        // sprawdzenie dla normalnych pionkow
+        if(isTargetToTheLeft && isTargetToTheTop && 
+                isPossibleNormalCheckerCaptureToTheLeftTopCorner(sourceChecker, null)) {
+            return true;
+            
+        } else if(isTargetToTheRight && isTargetToTheTop && 
+                isPossibleNormalCheckerCaptureToTheRightTopCorner(sourceChecker, null)) {
+            return true;
+            
+        } else if(isTargetToTheLeft && isTargetToTheBottom && 
+                isPossibleNormalCheckerCaptureToTheLeftBottomCorner(sourceChecker, null)) {
+            return true;
+            
+        } else if(isTargetToTheRight && isTargetToTheBottom && 
+                isPossibleNormalCheckerCaptureToTheRightBottomCorner(sourceChecker, null)) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Sprawdza czy ruch jest biciem za pomoca damy
+     * @param moveToCheck
+     * @return true jesli jest to bicie damy
+     */
+    private boolean isMoveAQueenCapture(final Move moveToCheck) {
+        //TODO
+        return false;
+    }
+    
+    /**
+     * Sprawdza czy jest mozliwe bicie dla pionkow danego koloru.
+     * Jesli sa mozliwe bicia, wpisuje do tablicy wspolrzedne pionkow mozliwych do zbicia
+     * @param color
+     * @param coordinatesToCapture
+     * @return true jesli bicie mozliwe
+     */
+    private boolean checkPossibleCapturesForColor(final CheckerColor color, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        
+        boolean isPossibleCapture = checkPossibleNormalCheckerCapturesForColor(color, coordinatesToCapture);
+        isPossibleCapture |= checkPossibleQueenCapturesForColor(color, coordinatesToCapture);
+        
+        return isPossibleCapture;
+    }
+    
+    /**
+     * Sprawdza czy jest mozliwe bicie dla zwyklych pionkow danego koloru.
+     * Jesli sa mozliwe bicia, wpisuje do tablicy wspolrzedne pionkow mozliwych do zbicia
+     * @param color
+     * @param coordinatesToCapture
+     * @return true jesli bicie mozliwe
+     */
+    private boolean checkPossibleNormalCheckerCapturesForColor(final CheckerColor color, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        
+        Field fields [][];
+        fields = board.getFields();
+        Checker checkerOnField;
+        boolean isPossibleCapture = false;
+        
+        for(Field[] boardRow : fields) {
+            for(Field field : boardRow) {
+                checkerOnField = field.getChecker();
+                
+                if(checkerOnField != null && checkerOnField.getColor() == color && 
+                        checkPossibleCapturesFromNormalChecker(checkerOnField, coordinatesToCapture)) {
+                    isPossibleCapture = true;
+                    
+                }
+            }
+        }
+        
+        return isPossibleCapture;
+    }
+    
+    /**
+     * Sprawdza czy jest mozliwe bicie dla dam danego koloru.
+     * Jesli sa mozliwe bicia, wpisuje do tablicy wspolrzedne pionkow mozliwych do zbicia
+     * @param color
+     * @param coordinatesToCapture
+     * @return true jesli bicie jest mozliwe
+     */
+    private boolean checkPossibleQueenCapturesForColor(final CheckerColor color, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        
+        //TODO
+        return false;
+    }
+    
+    /**
+     * Sprawdza czy jest mozliwe jakiekolwiek bicie z danego zwyklego pionka.
+     * Jesli sa mozliwe bicia, wpisuje do tablicy wspolrzedne pionkow mozliwych do zbicia
+     * @param sourceChecker
+     * @return true jesli bicie mozliwe
+     */
+    private boolean checkPossibleCapturesFromNormalChecker(final Checker sourceChecker, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        
+        if(sourceChecker == null) {
+            return false;
+        }
+        // sprawdzenie lewego gornego rogu
+        if(isPossibleNormalCheckerCaptureToTheLeftTopCorner(sourceChecker, coordinatesToCapture)) {
+            return true;
+        }
+        // sprawdzenie prawego gornego rogu
+        if(isPossibleNormalCheckerCaptureToTheRightTopCorner(sourceChecker, coordinatesToCapture)) {
+            return true;
+        }
+        // sprawdzenie lewego dolnego rogu
+        if(isPossibleNormalCheckerCaptureToTheLeftBottomCorner(sourceChecker, coordinatesToCapture)) {
+            return true;
+        }
+        // sprawdzenie prawego dolnego rogu
+        if(isPossibleNormalCheckerCaptureToTheRightBottomCorner(sourceChecker, coordinatesToCapture)) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Sprawdza czy jest mozliwe bicie pionka w kierunku gornego lewego rogu.
+     * Jesli jest mozliwe bicie, wpisuje do tablicy wspolrzedne pionka mozliwego do zbicia
+     * @param sourceChecker
+     * @param coordinatesToCapture
+     * @return
+     */
+    private boolean isPossibleNormalCheckerCaptureToTheLeftTopCorner(final Checker sourceChecker, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        int neighbourX = sourceChecker.getX() - 1;
+        int neighbourY = sourceChecker.getX() + 1;
+        
+        Checker neighbourChecker = board.getField(neighbourX, neighbourY).getChecker();
+        Field targetField = board.getField(neighbourX - 1, neighbourY + 1);
+        if(neighbourChecker != null && neighbourChecker.getColor() != sourceChecker.getColor()
+                && targetField != null) {
+            coordinatesToCapture.add(new Coordinate (neighbourX-1, neighbourY+1));
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Sprawdza czy jest mozliwe bicie pionka w kierunku gornego prawego rogu.
+     * Jesli jest mozliwe bicie, wpisuje do tablicy wspolrzedne pionka mozliwego do zbicia
+     * @param sourceChecker
+     * @param coordinatesToCapture
+     * @return true jesli bicie mozliwe
+     */
+    private boolean isPossibleNormalCheckerCaptureToTheRightTopCorner(final Checker sourceChecker, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        int neighbourX = sourceChecker.getX() + 1;
+        int neighbourY = sourceChecker.getX() + 1;
+        
+        Checker neighbourChecker = board.getField(neighbourX, neighbourY).getChecker();
+        Field targetField = board.getField(neighbourX+1, neighbourY+1);
+        if(neighbourChecker != null && neighbourChecker.getColor() != sourceChecker.getColor()
+                && targetField != null) {
+            coordinatesToCapture.add(new Coordinate (neighbourX+1, neighbourY+1));
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Sprawdza czy jest mozliwe bicie pionka w kierunku dolnego lewego rogu.
+     * Jesli jest mozliwe bicie, wpisuje do tablicy wspolrzedne pionka mozliwego do zbicia
+     * @param sourceChecker
+     * @param coordinatesToCapture
+     * @return true jesli bicie mozliwe
+     */
+    private boolean isPossibleNormalCheckerCaptureToTheLeftBottomCorner(final Checker sourceChecker, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        int neighbourX = sourceChecker.getX() - 1;
+        int neighbourY = sourceChecker.getX() - 1;
+        
+        Checker neighbourChecker = board.getField(neighbourX, neighbourY).getChecker();
+        Field targetField = board.getField(neighbourX-1, neighbourX-1);
+        if(neighbourChecker != null && neighbourChecker.getColor() != sourceChecker.getColor()
+                && targetField != null) {
+            coordinatesToCapture.add(new Coordinate (neighbourX-1, neighbourY-1));
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Sprawdza czy jest mozliwe bicie pionka w kierunku dolnego prawego rogu.
+     * Jesli jest mozliwe bicie, wpisuje do tablicy wspolrzedne pionka mozliwego do zbicia
+     * @param sourceChecker
+     * @param coordinatesToCapture
+     * @return true jesli bicie mozliwe
+     */
+    private boolean isPossibleNormalCheckerCaptureToTheRightBottomCorner(final Checker sourceChecker, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        int neighbourX = sourceChecker.getX() + 1;
+        int neighbourY = sourceChecker.getX() - 1;
+        
+        Checker neighbourChecker = board.getField(neighbourX, neighbourY).getChecker();
+        Field targetField = board.getField(neighbourX+1, neighbourY-1);
+        if(neighbourChecker != null && neighbourChecker.getColor() != sourceChecker.getColor()
+                && targetField != null) {
+            coordinatesToCapture.add(new Coordinate (neighbourX+1, neighbourY-1));
+            return true;
+        }
+        return false;
     }
 
     /**

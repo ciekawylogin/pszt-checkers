@@ -88,7 +88,7 @@ public class Checker {
      *
      * @return positionX
      */
-    int getPositionX() {
+    int getX() {
         return positionX;
     }
 
@@ -97,7 +97,7 @@ public class Checker {
      *
      * @return positionY
      */
-    int getPositionY() {
+    int getY() {
         return positionY;
     }
 
