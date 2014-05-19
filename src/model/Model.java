@@ -85,10 +85,16 @@ public class Model {
         System.out.println("b " + players[active_player].getPlayerColor());
         System.out.println("c " + sourceX + " " + sourceY);
         System.out.println("d " + targetX + " " + targetY);
-        CheckerType checkerType = board.getField(sourceX, sourceY).getChecker().getType();
-        boolean correctMove;
+        Checker sourceChecker = board.getField(sourceX, sourceY).getChecker();
+        boolean correctMove = true;;
+        boolean forcedCapture = false;
+        
+        if(checkAllPossibleCaptures(sourceChecker.getColor(), null)) {
+            forcedCapture = true;
+        }
+        
         if(board.getField(targetX, targetY).getChecker() == null) {
-            if(checkerType == CheckerType.QUEEN) {
+            if(sourceChecker.getType() == CheckerType.QUEEN) {
                 correctMove = makeQueenMove(sourceX, sourceY, targetX, targetY);
             } else {
                 correctMove = makeNormalCheckerMove(sourceX, sourceY, targetX, targetY);
@@ -97,6 +103,11 @@ public class Model {
             // docelowe pole jest zajete
             correctMove = false;
         }
+        
+        if(forcedCapture && correctMove) {
+            correctMove = isMoveACapture(new Move(sourceX, sourceY, targetX, targetY));
+        }
+        
         unselectChecker();
         if(correctMove) {
             changeActivePlayer();
@@ -722,13 +733,14 @@ public class Model {
                 moveToCheck.getStartY()).getChecker();
         
         // jesli pionek jest dama
-        if(sourceChecker.getType() == CheckerType.QUEEN) {
+        if(sourceChecker != null && sourceChecker.getType() == CheckerType.QUEEN) {
             return isMoveAQueenCapture(moveToCheck);
             
         // jesli pionek jest zwyklym pionkiem
-        } else {
+        } else if(sourceChecker !=null) {
             return isMoveANormalCheckerCapture(moveToCheck);
         }
+        return false;
     }
     
     /**
@@ -770,7 +782,15 @@ public class Model {
      * @return true jesli jest to bicie damy
      */
     private boolean isMoveAQueenCapture(final Move moveToCheck) {
-        //TODO
+        ArrayList<Coordinate> coordinatesToDelete = new ArrayList<Coordinate>();
+        checkQueenMove(moveToCheck.getStartX(), moveToCheck.getStartY(),
+                moveToCheck.getEndX(), moveToCheck.getEndY(), coordinatesToDelete);
+        if(coordinatesToDelete.size() != 0) {
+            coordinatesToDelete = null;
+            return true;
+        }
+        
+        coordinatesToDelete = null;
         return false;
     }
     
@@ -781,11 +801,11 @@ public class Model {
      * @param coordinatesToCapture
      * @return true jesli bicie mozliwe
      */
-    private boolean checkPossibleCapturesForColor(final CheckerColor color, 
+    private boolean checkAllPossibleCaptures(final CheckerColor color, 
             ArrayList<Coordinate> coordinatesToCapture) {
         
-        boolean isPossibleCapture = checkPossibleNormalCheckerCapturesForColor(color, coordinatesToCapture);
-        isPossibleCapture |= checkPossibleQueenCapturesForColor(color, coordinatesToCapture);
+        boolean isPossibleCapture = checkPossibleNormalCheckerCaptures(color, coordinatesToCapture);
+        isPossibleCapture |= checkPossibleQueenCaptures(color, coordinatesToCapture);
         
         return isPossibleCapture;
     }
@@ -797,7 +817,7 @@ public class Model {
      * @param coordinatesToCapture
      * @return true jesli bicie mozliwe
      */
-    private boolean checkPossibleNormalCheckerCapturesForColor(final CheckerColor color, 
+    private boolean checkPossibleNormalCheckerCaptures(final CheckerColor color, 
             ArrayList<Coordinate> coordinatesToCapture) {
         
         Field fields [][];
@@ -808,7 +828,6 @@ public class Model {
         for(Field[] boardRow : fields) {
             for(Field field : boardRow) {
                 checkerOnField = field.getChecker();
-                
                 if(checkerOnField != null && checkerOnField.getColor() == color && 
                         checkPossibleCapturesFromNormalChecker(checkerOnField, coordinatesToCapture)) {
                     isPossibleCapture = true;
@@ -827,10 +846,41 @@ public class Model {
      * @param coordinatesToCapture
      * @return true jesli bicie jest mozliwe
      */
-    private boolean checkPossibleQueenCapturesForColor(final CheckerColor color, 
+    private boolean checkPossibleQueenCaptures(final CheckerColor color, 
             ArrayList<Coordinate> coordinatesToCapture) {
         
-        //TODO
+        Checker checkerOnField;
+        
+        for(Field[] rows : board.getFields()) {
+            
+            for(Field field : rows) {
+                checkerOnField = field.getChecker();
+                if(checkerOnField!= null && checkerOnField.getType() == CheckerType.QUEEN && 
+                        checkerOnField.getColor() == color) {
+                    
+                    for(Field[] rowsToCheck : board.getFields()) {
+                        
+                        for(Field fieldToCheck : rowsToCheck) {
+                            if(fieldToCheck.getChecker() == null) {
+                                
+                                checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+                                        fieldToCheck.getX(), fieldToCheck.getY(), coordinatesToCapture);
+                            }
+                            
+                            
+                        }
+                    }
+                }
+                
+                
+            }
+        }
+        
+        if(coordinatesToCapture!= null && coordinatesToCapture.size() != 0) {
+            return true;
+        }
+        
+        
         return false;
     }
     
@@ -874,14 +924,19 @@ public class Model {
      */
     private boolean isPossibleNormalCheckerCaptureToTheLeftTopCorner(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
-        int neighbourX = sourceChecker.getX() - 1;
-        int neighbourY = sourceChecker.getX() + 1;
+        int targetX = sourceChecker.getX() - 2;
+        int targetY = sourceChecker.getY() + 2;
         
-        Checker neighbourChecker = board.getField(neighbourX, neighbourY).getChecker();
-        Field targetField = board.getField(neighbourX - 1, neighbourY + 1);
+        if(targetX < 0 || targetY >= BOARD_SIZE) {
+            return false;
+        }
+        Checker neighbourChecker = board.getField(targetX+1, targetY-1).getChecker();
+        Field targetField = board.getField(targetX, targetY);
         if(neighbourChecker != null && neighbourChecker.getColor() != sourceChecker.getColor()
                 && targetField != null) {
-            coordinatesToCapture.add(new Coordinate (neighbourX-1, neighbourY+1));
+            if(coordinatesToCapture != null) {
+                coordinatesToCapture.add(new Coordinate (targetX, targetY));
+            }
             return true;
         }
         return false;
@@ -896,14 +951,19 @@ public class Model {
      */
     private boolean isPossibleNormalCheckerCaptureToTheRightTopCorner(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
-        int neighbourX = sourceChecker.getX() + 1;
-        int neighbourY = sourceChecker.getX() + 1;
+        int targetX = sourceChecker.getX() + 2;
+        int targetY = sourceChecker.getY() + 2;
         
-        Checker neighbourChecker = board.getField(neighbourX, neighbourY).getChecker();
-        Field targetField = board.getField(neighbourX+1, neighbourY+1);
+        if(targetX >= BOARD_SIZE || targetY >= BOARD_SIZE) {
+            return false;
+        }
+        Checker neighbourChecker = board.getField(targetX-1, targetY-1).getChecker();
+        Field targetField = board.getField(targetX, targetY);
         if(neighbourChecker != null && neighbourChecker.getColor() != sourceChecker.getColor()
                 && targetField != null) {
-            coordinatesToCapture.add(new Coordinate (neighbourX+1, neighbourY+1));
+            if(coordinatesToCapture != null) {
+                coordinatesToCapture.add(new Coordinate (targetX, targetY));
+            }
             return true;
         }
         return false;
@@ -918,14 +978,19 @@ public class Model {
      */
     private boolean isPossibleNormalCheckerCaptureToTheLeftBottomCorner(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
-        int neighbourX = sourceChecker.getX() - 1;
-        int neighbourY = sourceChecker.getX() - 1;
+        int targetX = sourceChecker.getX() - 2;
+        int targetY = sourceChecker.getY() - 2;
         
-        Checker neighbourChecker = board.getField(neighbourX, neighbourY).getChecker();
-        Field targetField = board.getField(neighbourX-1, neighbourX-1);
+        if(targetX < 0 || targetY < 0) {
+            return false;
+        }
+        Checker neighbourChecker = board.getField(targetX+1, targetY+1).getChecker();
+        Field targetField = board.getField(targetX, targetY);
         if(neighbourChecker != null && neighbourChecker.getColor() != sourceChecker.getColor()
                 && targetField != null) {
-            coordinatesToCapture.add(new Coordinate (neighbourX-1, neighbourY-1));
+            if(coordinatesToCapture != null) {
+                coordinatesToCapture.add(new Coordinate (targetX, targetY));
+            }
             return true;
         }
         return false;
@@ -940,14 +1005,19 @@ public class Model {
      */
     private boolean isPossibleNormalCheckerCaptureToTheRightBottomCorner(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
-        int neighbourX = sourceChecker.getX() + 1;
-        int neighbourY = sourceChecker.getX() - 1;
+        int targetX = sourceChecker.getX() + 2;
+        int targetY = sourceChecker.getY() - 2;
         
-        Checker neighbourChecker = board.getField(neighbourX, neighbourY).getChecker();
-        Field targetField = board.getField(neighbourX+1, neighbourY-1);
+        if(targetX >= BOARD_SIZE || targetY < 0) {
+            return false;
+        }
+        Checker neighbourChecker = board.getField(targetX-1, targetY+1).getChecker();
+        Field targetField = board.getField(targetX, targetY);
         if(neighbourChecker != null && neighbourChecker.getColor() != sourceChecker.getColor()
                 && targetField != null) {
-            coordinatesToCapture.add(new Coordinate (neighbourX+1, neighbourY-1));
+            if(coordinatesToCapture != null) {
+                coordinatesToCapture.add(new Coordinate (targetX, targetY));
+            }
             return true;
         }
         return false;

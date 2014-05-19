@@ -8,9 +8,15 @@ class Field {
     private Checker checker;
     /** czy pole jest zaznaczone */
     private boolean is_selected;
+    /** pozycja x pola */
+    private int positionX;
+    /** pozycja y pola */
+    private int positionY;
 
-    Field() {
+    Field(final int positionX, final int positionY) {
         this.checker = null;
+        this.positionX = positionX;
+        this.positionY = positionY;
     }
 
     /**
@@ -82,5 +88,13 @@ class Field {
 
     void unselect() {
         this.is_selected = false;
+    }
+    
+    int getX() {
+        return positionX;
+    }
+    
+    int getY() {
+        return positionY;
     }
 }

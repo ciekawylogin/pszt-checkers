@@ -27,7 +27,7 @@ class Board {
 
         for(int i=0; i<8; ++i) {
             for(int j=0; j<8; ++j) {
-                fields[i][j] = new Field();
+                fields[j][i] = new Field(j, i);
             }
         }
     }
@@ -43,9 +43,9 @@ class Board {
             for(int y=0; y<SIZE; ++y) {
                 field = fields[x][y];
                 if(isWhiteStartingPosition(x, y)) {
-                    field.setChecker(new Checker(CheckerColor.WHITE, CheckerType.NORMAL));
+                    field.setChecker(new Checker(x, y, CheckerColor.WHITE, CheckerType.NORMAL));
                 } else if(isBlackStartingPosition(x, y)) {
-                    field.setChecker(new Checker(CheckerColor.BLACK, CheckerType.NORMAL));
+                    field.setChecker(new Checker(x, y, CheckerColor.BLACK, CheckerType.NORMAL));
                 }
             }
         }

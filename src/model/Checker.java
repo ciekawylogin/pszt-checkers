@@ -13,42 +13,18 @@ public class Checker {
     // pozycja Y pionka
     private int positionY;
 
-    /**
-     * Konstruktor.
-     *
-     * @param color - tworzony kolor
-     * @param type - tworzony typ
-     */
-    Checker(final CheckerColor color, final CheckerType type) {
-        this.type = type;
-        this.color = color;
-        positionX = -1;
-        positionY = -1;
-    }
-
-    /**
-     * Konstruktor.
-     *
-     * @param color - tworzony kolor
-     */
-    Checker(final CheckerColor color) {
-        this.type = CheckerType.NORMAL;
-        this.color = color;
-        positionX = -1;
-        positionY = -1;
-    }
-
+    
     /**
      * Konstruktor.
      *
      * @param position - pozycja na planszy
      * @param type - rodzaj pionka
      */
-    Checker(final int position, final CheckerType type) {
+    Checker(final int positionX, final int positionY, final CheckerColor color,final CheckerType type) {
         this.type = CheckerType.NORMAL;
-        this.color = CheckerColor.WHITE;
-        positionX = position % 8;
-        positionY = position / 8;
+        this.color = color;
+        this.positionX = positionX;
+        this.positionY = positionY;
     }
 
     /**
