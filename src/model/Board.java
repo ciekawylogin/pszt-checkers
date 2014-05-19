@@ -6,7 +6,7 @@ import model.CheckerType;
 
 class Board {
     // pola planszy
-    private Field fields[][];
+    private static Field fields[][];
 
     // @see #Model.BOARD_SIZE
     private final int SIZE;

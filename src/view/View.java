@@ -162,37 +162,12 @@ public class View extends Application implements Runnable {
             System.out.print(" "+i+" ");
             for(int j=0; j< Model.getBoardSize(); ++j) {
                 //System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
-                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
-                    if(mockup.getField(j, i).isSelected()) {
-                        System.out.print("]_[ ");
-                    } else {
-                        System.out.print("[_] ");
-                    }
-                } else if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
-                    if(mockup.getField(j, i).isSelected()) {
-                        System.out.print("]@[ ");
-                    } else {
-                        System.out.print("[@] ");
-                    }
-                } else if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
-                    if(mockup.getField(j, i).isSelected()) {
-                        System.out.print("]2[ ");
-                    } else {
-                        System.out.print("[2] ");
-                    }
-                } else if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
-                    if(mockup.getField(j, i).isSelected()) {
-                        System.out.print("]#[ ");
-                    } else {
-                        System.out.print("[#] ");
-                    }
-                } else if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
-                    if(mockup.getField(j, i).isSelected()) {
-                        System.out.print("]3[ ");
-                    } else {
-                        System.out.print("[3] ");
-                    }
-                }
+                checkIsEmptyField(mockup, i, j);
+                
+                checkIsBlackChecker(mockup, i,  j);
+                checkIsBlackQueen(mockup, i, j);
+                checkIsWhiteChecker(mockup, i, j);
+                checkIsWhiteQueen(mockup, i, j);
             }
             System.out.println();
         }
@@ -202,6 +177,56 @@ public class View extends Application implements Runnable {
         int y = in.nextInt();
         //System.out.println("przed wyslaniem: x: "+x+", y: "+y);
         blocking_queue.add(new FieldClickEvent(x, y));
+    }
+    
+    private void checkIsEmptyField(final Mockup mockup, final int i, final int j) {
+        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
+            if(mockup.getField(j, i).isSelected()) {
+                System.out.print("]_[ ");
+            } else {
+                System.out.print("[_] ");
+            }
+        }
+    }
+    
+    private void checkIsBlackChecker(final Mockup mockup, final int i, final int j) {
+        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
+            if(mockup.getField(j, i).isSelected()) {
+                System.out.print("]@[ ");
+            } else {
+                System.out.print("[@] ");
+            }
+        }
+    }
+    
+    private void checkIsBlackQueen(final Mockup mockup, final int i, final int j) {
+        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
+            if(mockup.getField(j, i).isSelected()) {
+                System.out.print("]2[ ");
+            } else {
+                System.out.print("[2] ");
+            }
+        }
+    }
+    
+    private void checkIsWhiteChecker(final Mockup mockup, final int i, final int j) {
+        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
+            if(mockup.getField(j, i).isSelected()) {
+                System.out.print("]#[ ");
+            } else {
+                System.out.print("[#] ");
+            }
+        }
+    }
+    
+    private void checkIsWhiteQueen(final Mockup mockup, final int i, final int j) {
+        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
+            if(mockup.getField(j, i).isSelected()) {
+                System.out.print("]3[ ");
+            } else {
+                System.out.print("[3] ");
+            }
+        }
     }
 
     @Override

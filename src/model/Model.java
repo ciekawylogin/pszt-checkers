@@ -21,6 +21,9 @@ public class Model {
 
     /* numer aktywnego gracze */
     private int active_player;
+    
+    /* gracz komputerowy */
+    private AI cpuPlayer;
 
     /**
      * Konstruktor.
@@ -29,14 +32,15 @@ public class Model {
         this.board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
         this.players = new Player[2];
         this.active_player = 0;
+        cpuPlayer = new AI();
     }
 
     /**
      * @return true wtedy i tylko wtedy, gdy jakikolwiek pionek jest zaznaczony
      */
     public final boolean isAnyCheckerSelected() {
-        for(int x=0; x<8; ++x) {
-            for(int y=0; y<8; ++y) {
+        for(int x = 0; x < BOARD_SIZE; ++x) {
+            for(int y = 0; y < BOARD_SIZE; ++y) {
                 if(board.getField(x, y).isSelected()) {
                     return true;
                 }
@@ -77,7 +81,7 @@ public class Model {
      *            false jezeli ruch jest niedozwolony; w takim wypadku zadne zmiany nie zostaja
      *            wprowadzone do modelu
      */
-    public final boolean moveSelectedCheckerTo(int targetX, int targetY) {
+    public final boolean moveSelectedCheckerTo(final int targetX, final int targetY) {
         Coordinate source_coordinate = getSelectedCheckerCoordinate();
         int sourceX = source_coordinate.getX();
         int sourceY = source_coordinate.getY();
@@ -109,7 +113,10 @@ public class Model {
             
             ArrayList<Move> AIMoves = new ArrayList<Move>();
             while(isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves)) {
-                makeAIMove(AIMoves);
+                //makeAIMove(AIMoves);
+                Move selectedMove = cpuPlayer.makeAIMove(AIMoves);
+                selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
+                moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY());
                 AIMoves.clear();
             }
         }
@@ -178,7 +185,8 @@ public class Model {
      * @param targetY - wspolrzedna Y koncowej pozycji
      * @return
      */
-    private boolean isMoveCorrect(int sourceX, int sourceY, int targetX, int targetY)
+    private boolean isMoveCorrect(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY)
     {
         CheckerType type = board.getField(sourceX, sourceY).getChecker().getType();
         if(type == CheckerType.NORMAL) {
@@ -197,7 +205,8 @@ public class Model {
      * @param targetY - wspolrzedna Y koncowej pozycji
      * @return true jesli ruch jest dozwolony
      */
-    private boolean isNormalCheckerMoveCorrect(int sourceX, int sourceY, int targetX, int targetY) {
+    private boolean isNormalCheckerMoveCorrect(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY) {
         return (board.getField(targetX, targetY).getChecker() == null) &&
             (
                 isNormalCheckerCaptureMoveCorrect(sourceX, sourceY, targetX, targetY)
@@ -215,7 +224,8 @@ public class Model {
      * @param targetY - wspolrzedna Y koncowej pozycji
      * @return
      */
-    private boolean isNormalCheckerCaptureMoveCorrect(int sourceX, int sourceY, int targetX, int targetY) {
+    private boolean isNormalCheckerCaptureMoveCorrect(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY) {
         boolean isTargetToTheLeft = targetX == sourceX - 2;
         boolean isTargetToTheRight = targetX == sourceX + 2;
         boolean isTargetToTheTop = targetY == sourceY - 2;
@@ -244,7 +254,8 @@ public class Model {
      * @param targetY - wspolrzedna Y koncowej pozycji
      * @return true jesli ruch jest dozwolony
      */
-    private boolean isNormalCheckerNormalMoveCorrect(int sourceX, int sourceY, int targetX, int targetY) {
+    private boolean isNormalCheckerNormalMoveCorrect(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY) {
         Checker checker = board.getField(sourceX, sourceY).getChecker();
         CheckerColor color = checker.getColor();
         boolean isTargetToTheLeft = targetX == sourceX - 1;
@@ -782,7 +793,7 @@ public class Model {
         boolean isTargetToTheBottom = moveToCheck.getEndY() == moveToCheck.getStartY() + 2;
         Checker sourceChecker = board.getField(moveToCheck.getStartX(),
                 moveToCheck.getStartY()).getChecker();
-        // sprawdzenie dla normalnych pionkow
+        
         if(isTargetToTheLeft && isTargetToTheTop && 
                 isPossibleNormalCheckerCaptureToTheLeftTopCorner(sourceChecker, null)) {
             return true;
@@ -831,7 +842,7 @@ public class Model {
             ArrayList<Coordinate> coordinatesToCapture) {
         
         boolean isPossibleCapture = checkPossibleNormalCheckerCaptures(color, coordinatesToCapture);
-        isPossibleCapture |= checkPossibleQueenCaptures(color, coordinatesToCapture);
+        isPossibleCapture |= checkQueenCaptures(color, coordinatesToCapture);
         
         return isPossibleCapture;
     }
@@ -871,7 +882,7 @@ public class Model {
      * @param coordinatesToCapture
      * @return true jesli bicie jest mozliwe
      */
-    private boolean checkPossibleQueenCaptures(final CheckerColor color, 
+    private boolean checkQueenCaptures(final CheckerColor color, 
             ArrayList<Coordinate> coordinatesToCapture) {
         
         Checker checkerOnField;
@@ -882,59 +893,23 @@ public class Model {
                 checkerOnField = field.getChecker();
                 if(checkerOnField!= null && checkerOnField.getType() == CheckerType.QUEEN && 
                         checkerOnField.getColor() == color) {
-                    /*
-                    for(Field[] rowsToCheck : board.getFields()) {
-                        
-                        for(Field fieldToCheck : rowsToCheck) {
-                            if(fieldToCheck.getChecker() == null) {
-                                System.out.println("/debug cPQC: sX: "+checkerOnField.getX()+" sY: "+checkerOnField.getY()+" tX: "+fieldToCheck.getX()+" tY: "+fieldToCheck.getY());
-                                checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
-                                        fieldToCheck.getX(), fieldToCheck.getY(), coordinatesToCapture);
-                            }
-                            
-                            
-                        }
-                    }*/
-                    
-                    int x = checkerOnField.getX()+1;
-                    int y = checkerOnField.getY()+1;
                     
                     // cel: prawy dolny rog
-                    for(; x < BOARD_SIZE && y < BOARD_SIZE; ++x, ++y) {
-                        checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
-                                x, y, coordinatesToCapture);
-                    }
+                    checkQueenCapturesToTheBottomRightCorner(checkerOnField, coordinatesToCapture);
                     
                     // cel: prawy gorny rog
-                    x = checkerOnField.getX()+1;
-                    y = checkerOnField.getY()-1;
-                    for(; x < BOARD_SIZE && y >= 0; ++x, --y) {
-                        checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
-                                x, y, coordinatesToCapture);
-                    }
+                    checkQueenCapturesToTheTopRightCorner(checkerOnField, coordinatesToCapture);
                     
                     // cel: lewy dolny rog
-                    x = checkerOnField.getX()-1;
-                    y = checkerOnField.getY()+1;
-                    for(; x >= 0 && y < BOARD_SIZE; --x, ++y) {
-                        checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
-                                x, y, coordinatesToCapture);
-                    }
+                    checkQueenCapturesToTheBottomLeftCorner(checkerOnField, coordinatesToCapture);
                     
                     // cel: lewy gorny rog
-                    x = checkerOnField.getX()-1;
-                    y = checkerOnField.getY()-1;
-                    for(; x >=0 && y >= 0; --x, --y) {
-                        checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
-                                x, y, coordinatesToCapture);
+                    checkQueenCapturesToTheTopLeftCorner(checkerOnField, coordinatesToCapture);
                     }
-                    
-                    
                 }
                 
-                
-            }
         }
+        
         
         if(coordinatesToCapture!= null && coordinatesToCapture.size() != 0) {
             return true;
@@ -942,6 +917,70 @@ public class Model {
         
         
         return false;
+    }
+    
+    /**
+     * Sprawdza mozliwe bicia w kierunku prawego dolnego rogu
+     * @param checkerOnField
+     * @param coordinatesToCapture
+     */
+    private void checkQueenCapturesToTheBottomRightCorner(final Checker checkerOnField, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        int x = checkerOnField.getX()+1;
+        int y = checkerOnField.getY()+1;
+        
+        for(; x < BOARD_SIZE && y < BOARD_SIZE; ++x, ++y) {
+            checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+                    x, y, coordinatesToCapture);
+        }
+    }
+    
+    /**
+     * Sprawdza mozliwe bicia w kierunku prawego gornego rogu
+     * @param checkerOnField
+     * @param coordinatesToCapture
+     */
+    private void checkQueenCapturesToTheTopRightCorner(final Checker checkerOnField, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        int x = checkerOnField.getX()+1;
+        int y = checkerOnField.getY()-1;
+        
+        for(; x < BOARD_SIZE && y < BOARD_SIZE; ++x, ++y) {
+            checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+                    x, y, coordinatesToCapture);
+        }
+    }
+    
+    /**
+     * Sprawdza mozliwe bicia w kierunku lewego dolnego rogu
+     * @param checkerOnField
+     * @param coordinatesToCapture
+     */
+    private void checkQueenCapturesToTheBottomLeftCorner(final Checker checkerOnField, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        int x = checkerOnField.getX()-1;
+        int y = checkerOnField.getY()+1;
+        
+        for(; x < BOARD_SIZE && y < BOARD_SIZE; ++x, ++y) {
+            checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+                    x, y, coordinatesToCapture);
+        }
+    }
+    
+    /**
+     * Sprawdza mozliwe bicia w kierunku lewego gornego rogu
+     * @param checkerOnField
+     * @param coordinatesToCapture
+     */
+    private void checkQueenCapturesToTheTopLeftCorner(final Checker checkerOnField, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        int x = checkerOnField.getX()-1;
+        int y = checkerOnField.getY()-1;
+        
+        for(; x < BOARD_SIZE && y < BOARD_SIZE; ++x, ++y) {
+            checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+                    x, y, coordinatesToCapture);
+        }
     }
     
     /**
@@ -1090,24 +1129,5 @@ public class Model {
      */
     private boolean isAITurn() {
         return players[active_player].isCpu();
-    }
-
-    /**
-     * Wykonanie ruchu gracza komputerowego
-     * 
-     * @param moves - tablica mozliwych ruchow
-     */
-    private void makeAIMove(ArrayList<Move> moves) {
-        
-        int movesCount = moves.size();
-        System.out.println("liczba dozwolonych ruchow: " + movesCount);
-        int randomId = (int) Math.floor(Math.random() * movesCount);
-        if(!moves.isEmpty()) {
-            Move selectedMove = moves.get(randomId);
-            System.out.println("wybrany ruch z ["+ selectedMove.getStartX() + ", " + selectedMove.getStartY() +
-                               "] na [" + selectedMove.getEndX() + ", " + selectedMove.getEndY() + "]");
-            selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
-            moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY());
-        }
     }
 }
