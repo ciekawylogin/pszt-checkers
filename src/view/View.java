@@ -46,41 +46,14 @@ public class View extends Application implements Runnable {
         
         if (name.getText().equals("")) {
             MessageBox.show(new Stage(),
-                "Your name must not be empty",
-                "Warning", 
-                MessageBox.OK);
+                "Your name must not be empty", "Warning", MessageBox.OK);
             System.out.println("pusto");
             
         } else if(blocking_queue != null) {
             
-            ColorIdentificator colorId = ColorIdentificator.getId((String)color.getValue());
+            checkerColor = getCheckerColorFromChoiceBox();
+            gameLevel = getGameLevelFromChoiceBox();
             
-            switch (colorId) {
-            case WHITE_COLOR:
-                checkerColor = CheckerColor.WHITE;
-                break;
-            case BLACK_COLOR:
-                checkerColor = CheckerColor.BLACK;
-                break;
-            default:
-                throw new RuntimeException("unrecognized color");
-            }
-            
-            LevelIdentificator levelId = LevelIdentificator.getId((String)difficulty.getValue());
-            
-            switch (levelId) {
-            case EASY_LEVEL  :
-                gameLevel = GameLevel.EASY;
-                break;
-            case MEDIUM_LEVEL:
-                gameLevel = GameLevel.MEDIUM;
-                break;
-            case HARD_LEVEL  :
-                gameLevel = GameLevel.HARD;
-                break;
-            default:
-                throw new RuntimeException("unrecognized game level");
-            }
             blocking_queue.add(new GameStartEvent(name.getText(), checkerColor, gameLevel));
             System.out.println(name.getText());
             System.out.println(color.getValue());
@@ -90,6 +63,44 @@ public class View extends Application implements Runnable {
             throw new RuntimeException("View.beginGame - blockingQueue is null");
         }
         System.out.println("Start game");
+    }
+    
+    /**
+     * Zwraca kolor ze stringa ChoiceBoxa
+     * @return CheckerColor
+     */
+    private CheckerColor getCheckerColorFromChoiceBox() {
+        
+        ColorIdentificator colorId = ColorIdentificator.getId((String)color.getValue());
+        
+        switch (colorId) {
+        case WHITE_COLOR:
+            return CheckerColor.WHITE;
+        case BLACK_COLOR:
+            return CheckerColor.BLACK;
+        default:
+            throw new RuntimeException("unrecognized color");
+        }
+    }
+    
+    /**
+     * Zwraca poziom gry ze stringa ChoiceBoxa
+     * @return GameLevel
+     */
+    private GameLevel getGameLevelFromChoiceBox() {
+        
+        LevelIdentificator levelId = LevelIdentificator.getId((String)difficulty.getValue());
+        
+        switch (levelId) {
+        case EASY_LEVEL  :
+            return GameLevel.EASY;
+        case MEDIUM_LEVEL:
+            return GameLevel.MEDIUM;
+        case HARD_LEVEL  :
+            return GameLevel.HARD;
+        default:
+            throw new RuntimeException("unrecognized game level");
+        }
     }
 
     @FXML

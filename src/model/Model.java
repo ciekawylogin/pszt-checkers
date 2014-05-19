@@ -6,27 +6,28 @@ import common.Mockup;
 import common.PlayerMockup;
 
 public class Model {
-    // rozmiar planszy
+    /* rozmiar planszy */
     private final static int BOARD_SIZE = 8;
 
-    // po ile rzedow pionkow rozstawic na starcie (dla wymiaru 8 jest to najczesciej
-    // 3, dla wymiaru 10 - 4)
+    /* po ile rzedow pionkow rozstawic na starcie (dla wymiaru 8 jest to najczesciej
+    3, dla wymiaru 10 - 4) */
     private final static int INITIAL_CHECKERS_ROWS = 3;
 
-    // odnosnik do planszy
+    /* odnosnik do planszy */
     private Board board;
 
-    // gracze
+    /* gracze */
     private Player players[];
 
-    // numer aktywnego gracze
+    /* numer aktywnego gracze */
     private int active_player;
 
+    /**
+     * Konstruktor.
+     */
     public Model() {
         this.board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
         this.players = new Player[2];
-        //players[0] = new Player("player", CheckerColor.WHITE, false, null);
-        //players[1] = new Player("CPU", CheckerColor.BLACK, true, GameLevel.EASY);
         this.active_player = 0;
     }
 
@@ -45,7 +46,7 @@ public class Model {
     }
 
     /**
-     * Przemieszcza zaznaczony pionek na pole o wspolrzednych (target_x, target_y)
+     * Przemieszcza zaznaczony pionek na pole o wspolrzednych (targetX, targetY)
      *
      * Mozliwe warianty wykonania ruchu:
      * + jezeli jakis pionek jest zaznaczony, a docelowe pole znajduje sie 1 pole
@@ -70,27 +71,27 @@ public class Model {
      *   za niepoprawny; funkcja rzuca wyjatek, nie zostajz wprowadzone zadne zmiany
      *   w modelu
      *
-     * @param target_x wspolrzedna x docelowego pola
-     * @param target_y wspolrzedna y docelowego pola
+     * @param targetX wspolrzedna x docelowego pola
+     * @param targetY wspolrzedna y docelowego pola
      * @return true jezeli ruch jest dozwolony i zostac� wykonany
      *            false jezeli ruch jest niedozwolony; w takim wypadku zadne zmiany nie zostaja
      *            wprowadzone do modelu
      */
-    public final boolean moveSelectedCheckerTo(int target_x, int target_y) {
+    public final boolean moveSelectedCheckerTo(int targetX, int targetY) {
         Coordinate source_coordinate = getSelectedCheckerCoordinate();
-        int source_x = source_coordinate.getX();
-        int source_y = source_coordinate.getY();
+        int sourceX = source_coordinate.getX();
+        int sourceY = source_coordinate.getY();
         System.out.println("a " + players[active_player].isCpu());
         System.out.println("b " + players[active_player].getPlayerColor());
-        System.out.println("c " + source_x + " " + source_y);
-        System.out.println("d " + target_x + " " + target_y);
-        CheckerType checkerType = board.getField(source_x, source_y).getChecker().getType();
+        System.out.println("c " + sourceX + " " + sourceY);
+        System.out.println("d " + targetX + " " + targetY);
+        CheckerType checkerType = board.getField(sourceX, sourceY).getChecker().getType();
         boolean correctMove;
-        if(board.getField(target_x, target_y).getChecker() == null) {
+        if(board.getField(targetX, targetY).getChecker() == null) {
             if(checkerType == CheckerType.QUEEN) {
-                correctMove = makeQueenMove(source_x, source_y, target_x, target_y);
+                correctMove = makeQueenMove(sourceX, sourceY, targetX, targetY);
             } else {
-                correctMove = makeNormalCheckerMove(source_x, source_y, target_x, target_y);
+                correctMove = makeNormalCheckerMove(sourceX, sourceY, targetX, targetY);
             }
         } else {
             // docelowe pole jest zajete
@@ -111,33 +112,33 @@ public class Model {
     /**
      * Wykonuje ruch zwyklego pionka, sprawdzajac jego poprawnosc
      *
-     * @param source_x - wspolrzedna X poczatkowej pozycji
-     * @param source_y - wspolrzedna Y poczatkowej pozycji
-     * @param target_x - wspolrzedna X koncowej pozycji
-     * @param target_y - wspolrzedna Y koncowej pozycji
+     * @param sourceX - wspolrzedna X poczatkowej pozycji
+     * @param sourceY - wspolrzedna Y poczatkowej pozycji
+     * @param targetX - wspolrzedna X koncowej pozycji
+     * @param targetY - wspolrzedna Y koncowej pozycji
      * @return true jesli ruch zostal wykonany
      */
-    private boolean makeNormalCheckerMove(int source_x, int source_y, int target_x, int target_y) {
-        if(target_x >= BOARD_SIZE || target_y >= BOARD_SIZE ||
-                target_x < 0 || target_y < 0) {
+    private boolean makeNormalCheckerMove(int sourceX, int sourceY, int targetX, int targetY) {
+        if(targetX >= BOARD_SIZE || targetY >= BOARD_SIZE ||
+                targetX < 0 || targetY < 0) {
             return false;
         }
 
-        boolean normalMove = isNormalCheckerNormalMoveCorrect(source_x, source_y, target_x, target_y);
-        boolean captureMove = isNormalCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y);
+        boolean normalMove = isNormalCheckerNormalMoveCorrect(sourceX, sourceY, targetX, targetY);
+        boolean captureMove = isNormalCheckerCaptureMoveCorrect(sourceX, sourceY, targetX, targetY);
         boolean correctMove = normalMove || captureMove;
         if(correctMove) {
-            Field oldField = board.getField(source_x, source_y);
+            Field oldField = board.getField(sourceX, sourceY);
             Checker checker = oldField.getChecker();
             oldField.removeChecker();
-            Field newField = board.getField(target_x, target_y);
+            Field newField = board.getField(targetX, targetY);
             newField.setChecker(checker);
-            checker.setPositionOnBoard(target_x, target_y);
-            checkQueenCondition(target_x, target_y);
+            checker.setPositionOnBoard(targetX, targetY);
+            checkQueenCondition(targetX, targetY);
         }
         if (captureMove) {
-            int checkerToRemoveX = (target_x + source_x) / 2;
-            int checkerToRemoveY = (target_y + source_y) / 2;
+            int checkerToRemoveX = (targetX + sourceX) / 2;
+            int checkerToRemoveY = (targetY + sourceY) / 2;
             board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
         }
         return correctMove;
@@ -146,71 +147,71 @@ public class Model {
     /**
      * Sprawdza czy zwykly pionek moze stac sie dama
      *
-     * @param target_x - wspolrzedna X koncowej pozycji
-     * @param target_y - wspolrzedna Y koncowej pozycji
+     * @param targetX - wspolrzedna X koncowej pozycji
+     * @param targetY - wspolrzedna Y koncowej pozycji
      */
-    private void checkQueenCondition(final int target_x, final int target_y) {
-        if(target_y == 0 || target_y == BOARD_SIZE-1) {
-            board.getField(target_x, target_y).getChecker().promote();
+    private void checkQueenCondition(final int targetX, final int targetY) {
+        if(targetY == 0 || targetY == BOARD_SIZE-1) {
+            board.getField(targetX, targetY).getChecker().promote();
         }
     }
 
     /**
      * Ogolna metoda sprawdzajaca czy dany ruch jest poprawny dla pionka dowolnego typu
      *
-     * @param source_x - wspolrzedna X poczatkowej pozycji
-     * @param source_y - wspolrzedna Y poczatkowej pozycji
-     * @param target_x - wspolrzedna X koncowej pozycji
-     * @param target_y - wspolrzedna Y koncowej pozycji
+     * @param sourceX - wspolrzedna X poczatkowej pozycji
+     * @param sourceY - wspolrzedna Y poczatkowej pozycji
+     * @param targetX - wspolrzedna X koncowej pozycji
+     * @param targetY - wspolrzedna Y koncowej pozycji
      * @return
      */
-    private boolean isMoveCorrect(int source_x, int source_y, int target_x, int target_y)
+    private boolean isMoveCorrect(int sourceX, int sourceY, int targetX, int targetY)
     {
-        CheckerType type = board.getField(source_x, source_y).getChecker().getType();
+        CheckerType type = board.getField(sourceX, sourceY).getChecker().getType();
         if(type == CheckerType.NORMAL) {
-            return isNormalCheckerMoveCorrect(source_x, source_y, target_x, target_y);
+            return isNormalCheckerMoveCorrect(sourceX, sourceY, targetX, targetY);
         } else {
-            return isQueenCheckerMoveCorrect(source_x, source_y, target_x, target_y, null);
+            return isQueenCheckerMoveCorrect(sourceX, sourceY, targetX, targetY, null);
         }
     }
 
     /**
      * Sprawdza czy ruch normalnego pionka jest poprawny
      *
-     * @param source_x - wspolrzedna X poczatkowej pozycji
-     * @param source_y - wspolrzedna Y poczatkowej pozycji
-     * @param target_x - wspolrzedna X koncowej pozycji
-     * @param target_y - wspolrzedna Y koncowej pozycji
+     * @param sourceX - wspolrzedna X poczatkowej pozycji
+     * @param sourceY - wspolrzedna Y poczatkowej pozycji
+     * @param targetX - wspolrzedna X koncowej pozycji
+     * @param targetY - wspolrzedna Y koncowej pozycji
      * @return true jesli ruch jest dozwolony
      */
-    private boolean isNormalCheckerMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
-        return (board.getField(target_x, target_y).getChecker() == null) &&
+    private boolean isNormalCheckerMoveCorrect(int sourceX, int sourceY, int targetX, int targetY) {
+        return (board.getField(targetX, targetY).getChecker() == null) &&
             (
-                isNormalCheckerCaptureMoveCorrect(source_x, source_y, target_x, target_y)
+                isNormalCheckerCaptureMoveCorrect(sourceX, sourceY, targetX, targetY)
                 ||
-                isNormalCheckerNormalMoveCorrect(source_x, source_y, target_x, target_y)
+                isNormalCheckerNormalMoveCorrect(sourceX, sourceY, targetX, targetY)
             );
     }
 
     /**
      * Sprawdza czy dane bicie jest poprawne dla normalnego pionka
      *
-     * @param source_x - wspolrzedna X poczatkowej pozycji
-     * @param source_y - wspolrzedna Y poczatkowej pozycji
-     * @param target_x - wspolrzedna X koncowej pozycji
-     * @param target_y - wspolrzedna Y koncowej pozycji
+     * @param sourceX - wspolrzedna X poczatkowej pozycji
+     * @param sourceY - wspolrzedna Y poczatkowej pozycji
+     * @param targetX - wspolrzedna X koncowej pozycji
+     * @param targetY - wspolrzedna Y koncowej pozycji
      * @return
      */
-    private boolean isNormalCheckerCaptureMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
-        boolean isTargetToTheLeft = target_x == source_x - 2;
-        boolean isTargetToTheRight = target_x == source_x + 2;
-        boolean isTargetToTheTop = target_y == source_y - 2;
-        boolean isTargetToTheBottom = target_y == source_y + 2;
+    private boolean isNormalCheckerCaptureMoveCorrect(int sourceX, int sourceY, int targetX, int targetY) {
+        boolean isTargetToTheLeft = targetX == sourceX - 2;
+        boolean isTargetToTheRight = targetX == sourceX + 2;
+        boolean isTargetToTheTop = targetY == sourceY - 2;
+        boolean isTargetToTheBottom = targetY == sourceY + 2;
 
-        int checkerToRemoveX = (target_x + source_x) / 2;
-        int checkerToRemoveY = (target_y + source_y) / 2;
+        int checkerToRemoveX = (targetX + sourceX) / 2;
+        int checkerToRemoveY = (targetY + sourceY) / 2;
 
-        Checker MovingChecker = board.getField(source_x, source_y).getChecker();
+        Checker MovingChecker = board.getField(sourceX, sourceY).getChecker();
         Checker CheckerToRemove = board.getField(checkerToRemoveX, checkerToRemoveY).getChecker();
 
         return((isTargetToTheLeft  && isTargetToTheTop)
@@ -224,19 +225,19 @@ public class Model {
     /**
      * Sprawdza czy dany ruch zwyklego pionka jest poprawny
      *
-     * @param source_x - wspolrzedna X poczatkowej pozycji
-     * @param source_y - wspolrzedna Y poczatkowej pozycji
-     * @param target_x - wspolrzedna X koncowej pozycji
-     * @param target_y - wspolrzedna Y koncowej pozycji
+     * @param sourceX - wspolrzedna X poczatkowej pozycji
+     * @param sourceY - wspolrzedna Y poczatkowej pozycji
+     * @param targetX - wspolrzedna X koncowej pozycji
+     * @param targetY - wspolrzedna Y koncowej pozycji
      * @return true jesli ruch jest dozwolony
      */
-    private boolean isNormalCheckerNormalMoveCorrect(int source_x, int source_y, int target_x, int target_y) {
-        Checker checker = board.getField(source_x, source_y).getChecker();
+    private boolean isNormalCheckerNormalMoveCorrect(int sourceX, int sourceY, int targetX, int targetY) {
+        Checker checker = board.getField(sourceX, sourceY).getChecker();
         CheckerColor color = checker.getColor();
-        boolean isTargetToTheLeft = target_x == source_x - 1;
-        boolean isTargetToTheRight = target_x == source_x + 1;
-        boolean isTargetToTheTop = target_y == source_y - 1;
-        boolean isTargetToTheBottom = target_y == source_y + 1;
+        boolean isTargetToTheLeft = targetX == sourceX - 1;
+        boolean isTargetToTheRight = targetX == sourceX + 1;
+        boolean isTargetToTheTop = targetY == sourceY - 1;
+        boolean isTargetToTheBottom = targetY == sourceY + 1;
         if(color == CheckerColor.WHITE) {
             return (isTargetToTheLeft && isTargetToTheBottom) || (isTargetToTheRight && isTargetToTheBottom);
         } else {
@@ -247,126 +248,236 @@ public class Model {
     /**
      * Wykonuje dany ruch dla damy, sprawdzajac czy ten ruch jest poprawny
      *
-     * @param source_x - wspolrzedna X poczatkowej pozycji
-     * @param source_y - wspolrzedna Y poczatkowej pozycji
-     * @param target_x - wspolrzedna X koncowej pozycji
-     * @param target_y - wspolrzedna Y koncowej pozycji
+     * @param sourceX - wspolrzedna X poczatkowej pozycji
+     * @param sourceY - wspolrzedna Y poczatkowej pozycji
+     * @param targetX - wspolrzedna X koncowej pozycji
+     * @param targetY - wspolrzedna Y koncowej pozycji
      * @return true, jesli ruch zostal wykonany
      */
-    private boolean makeQueenMove(int source_x, int source_y, int target_x, int target_y) {
+    private boolean makeQueenMove(int sourceX, int sourceY, int targetX, int targetY) {
         ArrayList<Coordinate> coordinatesToDelete = new ArrayList<>();
-        boolean correctMove = isQueenCheckerMoveCorrect(source_x, source_y, target_x, target_y, coordinatesToDelete);
+        boolean correctMove = isQueenCheckerMoveCorrect(sourceX, sourceY, targetX, targetY, coordinatesToDelete);
 
         if(correctMove) {
-            Field oldField = board.getField(source_x, source_y);
-            Checker checker = oldField.getChecker();
-            oldField.removeChecker();
-            Field newField = board.getField(target_x, target_y);
-            newField.setChecker(checker);
-            checker.setPositionOnBoard(target_x, target_y);
+            setQueenCheckerOnPosition(sourceX, sourceY, targetX, targetY);
+            
             // usuwanie potencjalnych ofiar ruchu
-            for(int i=0; i< coordinatesToDelete.size(); ++i) {
-                int x = coordinatesToDelete.get(i).getX();
-                int y = coordinatesToDelete.get(i).getY();
-                board.getField(x, y).removeChecker();
-            }
+            removeCapturedCheckers(coordinatesToDelete);
+            
+        } else {
+            coordinatesToDelete.clear();
         }
         return correctMove;
+    }
+    
+    /**
+     * Ustawia pionek damy na wskazanej pozycji usuwajac go ze starej pozycji.
+     * @param sourceX
+     * @param sourceY
+     * @param targetX
+     * @param targetY
+     */
+    private void setQueenCheckerOnPosition(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY) {
+        Field oldField = board.getField(sourceX, sourceY);
+        Checker checker = oldField.getChecker();
+        oldField.removeChecker();
+        Field newField = board.getField(targetX, targetY);
+        newField.setChecker(checker);
+        checker.setPositionOnBoard(targetX, targetY);
+    }
+    
+    /**
+     * Usuwa zbite podczas ruchu pionki
+     * @param coordinatesToDelete
+     */
+    private void removeCapturedCheckers(ArrayList<Coordinate> coordinatesToDelete) {
+        for(Coordinate coordToDelete: coordinatesToDelete) {
+            int x = coordToDelete.getX();
+            int y = coordToDelete.getY();
+            board.getField(x, y).removeChecker();
+        }
+        coordinatesToDelete.clear();
     }
 
     /**
      * Sprawdza czy ruch damy jest poprawny
      *
-     * @param source_x - wspolrzedna x poczatkowej pozycji
-     * @param source_y - wspolrzedna y poczatkowej pozycji
-     * @param target_x - wspolrzedna x koncowej pozycji
-     * @param target_y - pozycja y koncowej pozycji
+     * @param sourceX - wspolrzedna x poczatkowej pozycji
+     * @param sourceY - wspolrzedna y poczatkowej pozycji
+     * @param targetX - wspolrzedna x koncowej pozycji
+     * @param targetY - pozycja y koncowej pozycji
      * @param coordinatesToDelete - tablica zbitych po drodze pionkow
      * @return true gdy ruch poprawny
      */
-    private boolean isQueenCheckerMoveCorrect(final int source_x, final int source_y,
-            final int target_x, final int target_y, ArrayList<Coordinate> coordinatesToDelete) {
-        // sprawdz czy docelowe pole jest puste
-        if(board.getField(target_x, target_y).getChecker() != null &&
-                target_x < BOARD_SIZE && target_y < BOARD_SIZE &&
-                target_x >= 0 && target_y >= 0) {
+    private boolean isQueenCheckerMoveCorrect(final int sourceX, final int sourceY,
+            final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
+        
+        // sprawdz czy docelowe pole jest puste badz poza plansza
+        if(board.getField(targetX, targetY).getChecker() != null &&
+                targetX < BOARD_SIZE && targetY < BOARD_SIZE &&
+                targetX >= 0 && targetY >= 0) {
             return false;
         }
-
-        Checker checker = board.getField(source_x, source_y).getChecker();
-        boolean isTargetToTheLeft = target_x < source_x ? true : false;
-        boolean isTargetToTheTop = target_y < source_y ? true : false;
-
-        int x = board.getField(source_x, source_y).getChecker().getPositionX();
-        int y = board.getField(source_x, source_y).getChecker().getPositionY();
-        CheckerColor colorSource = board.getField(x, y).getChecker().getColor();
+        boolean isTargetToTheLeft = targetX < sourceX ? true : false;
+        boolean isTargetToTheTop = targetY < sourceY ? true : false;
 
         // cel: lewy gorny rog
         if(isTargetToTheLeft && isTargetToTheTop) {
-            --x;
-            --y;
-            for(; x > target_x; --x, --y) {
-                Checker temp = board.getField(x, y).getChecker();
-                if(temp != null && temp.getColor() == colorSource) {
-                    return false;
-                } else if(temp !=null && temp.getColor() != colorSource
-                          && coordinatesToDelete != null) {
-                    coordinatesToDelete.add(new Coordinate (x, y));
-                }
-            }
-            if(x == target_x && y == target_y) {
-                return true;
-            }
+            return isQueenMoveCorrectToTheLeftTopCorner(sourceX, sourceY, 
+                    targetX, targetY, coordinatesToDelete);
+            
         // cel: lewy dolny rog
         } else if(isTargetToTheLeft && !isTargetToTheTop) {
-            --x;
-            ++y;
-            for(; x > target_x; --x, ++y) {
-                Checker temp = board.getField(x, y).getChecker();
-                if(temp != null && temp.getColor() == colorSource) {
-                    return false;
-                } else if(temp !=null && temp.getColor() != colorSource
-                          && coordinatesToDelete != null) {
-                    coordinatesToDelete.add(new Coordinate (x, y));
-                }
-            }
-            if(x == target_x && y == target_y) {
-                return true;
-            }
+            return isQueenMoveCorrectToTheLeftBottomCorner(sourceX, sourceY, 
+                    targetX, targetY, coordinatesToDelete);
+            
         // cel: prawy gorny rog
         } else if(!isTargetToTheLeft && isTargetToTheTop) {
-            ++x;
-            --y;
-            for(; x < target_x; ++x, --y) {
-                Checker temp = board.getField(x, y).getChecker();
-                if(temp != null && temp.getColor() == colorSource) {
-                    return false;
-                } else if(temp !=null && temp.getColor() != colorSource
-                          && coordinatesToDelete != null) {
-                    coordinatesToDelete.add(new Coordinate (x, y));
-                }
-            }
-            if(x == target_x && y == target_y) {
-                return true;
-            }
+            return isQueenMoveCorrectToTheRightTopCorner(sourceX, sourceY, 
+                    targetX, targetY, coordinatesToDelete);
+            
         // cel: prawy dolny rog
         } else if(!isTargetToTheLeft && !isTargetToTheTop) {
-            ++x;
-            ++y;
-            for(; x < target_x; ++x, ++y) {
-                Checker temp = board.getField(x, y).getChecker();
-                if(temp != null && temp.getColor() == colorSource) {
-                    return false;
-                } else if(temp !=null && temp.getColor() != colorSource
-                          && coordinatesToDelete != null) {
-                    coordinatesToDelete.add(new Coordinate (x, y));
-                }
-            }
-            if(x == target_x && y == target_y) {
-                return true;
-            }
+            return isQueenMoveCorrectToTheRightBottomCorner(sourceX, sourceY, 
+                    targetX, targetY, coordinatesToDelete);
         }
         return false;
+    }
+    
+    /**
+     * Sprawdza czy ruch damy w kierunku lewego gornego rogu jest poprawny.
+     * Jesli tak, zapisuje wspolrzedne zbitych po drodze pionkow
+     * 
+     * @param sourceX
+     * @param sourceY
+     * @param targetX
+     * @param targetY
+     * @param coordinatesToDelete
+     * @return true jesli ruch poprawny
+     */
+    private boolean isQueenMoveCorrectToTheLeftTopCorner(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
+        
+        int x = sourceX -1;
+        int y = sourceY -1;
+        CheckerColor colorSource = board.getField(sourceX, sourceY).getChecker().getColor();
+        
+        for(; x > targetX; --x, --y) {
+            Checker temp = board.getField(x, y).getChecker();
+            if(temp != null && temp.getColor() == colorSource) {
+                return false;
+            } else if(temp !=null && temp.getColor() != colorSource
+                      && coordinatesToDelete != null) {
+                coordinatesToDelete.add(new Coordinate (x, y));
+            }
+        }
+        if(x == targetX && y == targetY) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Sprawdza czy ruch damy w kierunku prawego gornego rogu jest poprawny.
+     * Jesli tak, zapisuje wspolrzedne zbitych po drodze pionkow
+     * 
+     * @param sourceX
+     * @param sourceY
+     * @param targetX
+     * @param targetY
+     * @param coordinatesToDelete
+     * @return true jesli ruch poprawny
+     */
+    private boolean isQueenMoveCorrectToTheRightTopCorner(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
+        
+        int x = sourceX +1;
+        int y = sourceY -1;
+        CheckerColor colorSource = board.getField(sourceX, sourceY).getChecker().getColor();
+        
+        for(; x < targetX; ++x, --y) {
+            Checker temp = board.getField(x, y).getChecker();
+            if(temp != null && temp.getColor() == colorSource) {
+                return false;
+            } else if(temp !=null && temp.getColor() != colorSource
+                      && coordinatesToDelete != null) {
+                coordinatesToDelete.add(new Coordinate (x, y));
+            }
+        }
+        if(x == targetX && y == targetY) {
+            return true;
+        }
+        return false;
+        
+    }
+    
+    /**
+     * Sprawdza czy ruch damy w kierunku prawego dolnego rogu jest poprawny.
+     * Jesli tak, zapisuje wspolrzedne zbitych po drodze pionkow
+     * 
+     * @param sourceX
+     * @param sourceY
+     * @param targetX
+     * @param targetY
+     * @param coordinatesToDelete
+     * @return true jesli ruch poprawny
+     */
+    private boolean isQueenMoveCorrectToTheRightBottomCorner(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
+        
+        int x = sourceX +1;
+        int y = sourceY +1;
+        CheckerColor colorSource = board.getField(sourceX, sourceY).getChecker().getColor();
+        
+        for(; x < targetX; ++x, ++y) {
+            Checker temp = board.getField(x, y).getChecker();
+            if(temp != null && temp.getColor() == colorSource) {
+                return false;
+            } else if(temp !=null && temp.getColor() != colorSource
+                      && coordinatesToDelete != null) {
+                coordinatesToDelete.add(new Coordinate (x, y));
+            }
+        }
+        if(x == targetX && y == targetY) {
+            return true;
+        }
+        return false;
+        
+    }
+    
+    /**
+     * Sprawdza czy ruch damy w kierunku lewego dolnego rogu jest poprawny.
+     * Jesli tak, zapisuje wspolrzedne zbitych po drodze pionkow
+     * 
+     * @param sourceX
+     * @param sourceY
+     * @param targetX
+     * @param targetY
+     * @param coordinatesToDelete
+     * @return true jesli ruch poprawny
+     */
+    private boolean isQueenMoveCorrectToTheLeftBottomCorner(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
+        
+        int x = sourceX -1;
+        int y = sourceY +1;
+        CheckerColor colorSource = board.getField(sourceX, sourceY).getChecker().getColor();
+        
+        for(; x > targetX; --x, ++y) {
+            Checker temp = board.getField(x, y).getChecker();
+            if(temp != null && temp.getColor() == colorSource) {
+                return false;
+            } else if(temp !=null && temp.getColor() != colorSource
+                      && coordinatesToDelete != null) {
+                coordinatesToDelete.add(new Coordinate (x, y));
+            }
+        }
+        if(x == targetX && y == targetY) {
+            return true;
+        }
+        return false;
+        
     }
 
     /**
@@ -579,19 +690,19 @@ public class Model {
     /**
      * Sprawdza czy istnieje dozwolony ruch z danego pola i wpisuje ich liste
      * 
-     * @param source_x - wspolrzedna x pola sprawdzanego
-     * @param source_y - wspolrzedna y pola sprawdzanego
+     * @param sourceX - wspolrzedna x pola sprawdzanego
+     * @param sourceY - wspolrzedna y pola sprawdzanego
      * @param result - tablica ruchow do uzupelnienia
      * @return true jesli istnieje chociaz 1 dozwolony ruch
      */
-    private boolean checkAllPossibleMovesFromPosition(int source_x, int source_y, ArrayList<Move> result) {
+    private boolean checkAllPossibleMovesFromPosition(int sourceX, int sourceY, ArrayList<Move> result) {
         boolean isAnyPossibleMove = false;
-        for(int target_x=0; target_x<8; ++target_x) {
-            for(int target_y=0; target_y<8; ++target_y) {
-                if(isMoveCorrect(source_x, source_y, target_x, target_y)) {
-                    System.out.println("dodaje: " + source_x + " " + source_y + " " + target_x + " " + target_y);
+        for(int targetX=0; targetX<8; ++targetX) {
+            for(int targetY=0; targetY<8; ++targetY) {
+                if(isMoveCorrect(sourceX, sourceY, targetX, targetY)) {
+                    System.out.println("dodaje: " + sourceX + " " + sourceY + " " + targetX + " " + targetY);
                     if(result != null) {
-                        result.add(new Move(source_x, source_y, target_x, target_y));
+                        result.add(new Move(sourceX, sourceY, targetX, targetY));
                     }
                     isAnyPossibleMove = true;
                 }
