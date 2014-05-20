@@ -1,6 +1,10 @@
 package model;
 import java.util.ArrayList;
 
+/**
+ * Statyczna klasa zawierajaca metody dla zwyklego pionka.
+ *
+ */
 abstract class NormalChecker {
     
     /**

@@ -93,9 +93,11 @@ public class Model {
         boolean correctMove = true;
         boolean forcedCapture = false;
         
-        if(checkAllPossibleCaptures(sourceChecker.getColor(), null)) {
+        ArrayList<Coordinate> coordinatesToCapture = new ArrayList<Coordinate>();
+        if(checkAllPossibleCaptures(sourceChecker.getColor(), coordinatesToCapture)) {
             forcedCapture = true;
         }
+        coordinatesToCapture = null;
         
         if(board.getField(targetX, targetY).getChecker() == null) {
             if(sourceChecker.getType() == CheckerType.QUEEN) {
@@ -408,7 +410,6 @@ public class Model {
         
         boolean isPossibleCapture = NormalChecker.checkPossibleCaptures(color, coordinatesToCapture);
         isPossibleCapture |= Queen.checkPossibleCaptures(color, coordinatesToCapture);
-        
         return isPossibleCapture;
     }
 

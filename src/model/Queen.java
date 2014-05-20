@@ -34,7 +34,7 @@ abstract class Queen {
         int x = checkerOnField.getX()+1;
         int y = checkerOnField.getY()-1;
         
-        for(; x < Model.BOARD_SIZE && y < Model.BOARD_SIZE; ++x, ++y) {
+        for(; x < Model.BOARD_SIZE && y >= 0; ++x, --y) {
             checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
@@ -50,7 +50,7 @@ abstract class Queen {
         int x = checkerOnField.getX()-1;
         int y = checkerOnField.getY()+1;
         
-        for(; x < Model.BOARD_SIZE && y < Model.BOARD_SIZE; ++x, ++y) {
+        for(; x >= 0 && y < Model.BOARD_SIZE; --x, ++y) {
             checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
@@ -66,7 +66,7 @@ abstract class Queen {
         int x = checkerOnField.getX()-1;
         int y = checkerOnField.getY()-1;
         
-        for(; x < Model.BOARD_SIZE && y < Model.BOARD_SIZE; ++x, ++y) {
+        for(; x >= 0 && y >=0; --x, --y) {
             checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
@@ -395,8 +395,6 @@ abstract class Queen {
                 }
                 
         }
-        
-        
         if(coordinatesToCapture!= null && coordinatesToCapture.size() != 0) {
             return true;
         }
