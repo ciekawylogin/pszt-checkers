@@ -62,7 +62,6 @@ public class Controller {
             Class<? extends GameEvent> event_class = event.getClass();
             
             EventClassIdentificator classId = (EventClassIdentificator) controller.EventClassIdentificator.getId(event_class);
-            
             switch(classId) {
             
             case GAME_START:
@@ -104,7 +103,7 @@ public class Controller {
             
             // po kazdym zdarzeniu odswiezamy
             refreshView();
-            view.getFieldFromKeyboard();
+            //view.getFieldFromKeyboard();
             
         }
         catch(InterruptedException exception) {

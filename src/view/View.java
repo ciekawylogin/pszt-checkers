@@ -21,17 +21,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jfx.messagebox.MessageBox;
-
-// tylko do debugu
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 public class View extends Application implements Runnable {
     static private BlockingQueue<GameEvent> blocking_queue = null;
@@ -51,7 +46,6 @@ public class View extends Application implements Runnable {
         if (name.getText().equals("")) {
             MessageBox.show(new Stage(),
                 "Your name must not be empty", "Warning", MessageBox.OK);
-            System.out.println("pusto");
             
         } else if(blocking_queue != null) {
             
