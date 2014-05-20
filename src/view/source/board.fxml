@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="610.0" maxWidth="400.0" minHeight="610.0" minWidth="400.0" prefHeight="610.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.View">
+	<children>
+		<Button fx:id="back" layoutX="286.0" layoutY="571.0" mnemonicParsing="false" onAction="#showMenu" prefWidth="100.0" text="Back to menu" />
+	</children>
+</AnchorPane>

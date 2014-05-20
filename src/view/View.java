@@ -1,5 +1,6 @@
 package view;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import common.events.FieldClickEvent;
@@ -19,6 +20,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -26,13 +28,14 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jfx.messagebox.MessageBox;
 
-
 // tylko do debugu
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class View extends Application implements Runnable {
     static private BlockingQueue<GameEvent> blocking_queue = null;
+    static private Stage stage;
+    /*@FXML*/ private GridPane board;
     @FXML private Button start;
     @FXML private Button exit;
     @FXML private ChoiceBox difficulty;
@@ -59,11 +62,64 @@ public class View extends Application implements Runnable {
             System.out.println(color.getValue());
             System.out.println(difficulty.getValue());
             
+            showBoard();
         } else {
             throw new RuntimeException("View.beginGame - blockingQueue is null");
         }
         System.out.println("Start game");
     }
+
+    @FXML
+    protected void showMenu(ActionEvent event) {
+        AnchorPane page;
+        try {
+            page = (AnchorPane) FXMLLoader.load(View.class.getResource("source/menu.fxml"));
+            Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
+            scene.getStylesheets().add(View.class.getResource("source/menu.css").toExternalForm());
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    protected void showBoard() {
+        AnchorPane page;
+        try {
+            page = (AnchorPane) FXMLLoader.load(View.class.getResource("source/board.fxml"));
+            board = new GridPane();
+            page.getChildren().addAll(board);
+            board.setPrefSize(400, 400);
+            board.setGridLinesVisible(true);
+            
+            for(int i=0; i < Model.getBoardSize(); ++i) {
+                board.getColumnConstraints().add(new ColumnConstraints(50));
+                board.getRowConstraints().add(new RowConstraints(50));
+            }
+
+            for(int i=0; i < Model.getBoardSize(); ++i) {
+                for(int j=0; j < Model.getBoardSize(); ++j) {
+                    Button b = new Button();
+                    b.setPrefSize(50, 50);
+                    if ((i+j) % 2 == 0)
+                        b.setStyle("-fx-background-color: white;");
+                    else
+                        b.setStyle("-fx-background-color: black;");
+                    board.add(b, j, i);
+                }
+            }
+
+            Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
+            scene.getStylesheets().add(View.class.getResource("source/board.css").toExternalForm());
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     
     /**
      * Zwraca kolor ze stringa ChoiceBoxa
@@ -119,15 +175,15 @@ public class View extends Application implements Runnable {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        stage = primaryStage;
         AnchorPane page = (AnchorPane) FXMLLoader.load(View.class.getResource("source/menu.fxml"));
         Scene scene = new Scene(page, page.getMaxWidth()-10, page.getMaxHeight()-10);
-        scene.getStylesheets().add(View.class.getResource("source/stylesheet.css").toExternalForm());
-        primaryStage.initStyle(StageStyle.DECORATED);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Checkers");
-        primaryStage.setResizable(false);
-        primaryStage.show();
-        
+        scene.getStylesheets().add(View.class.getResource("source/menu.css").toExternalForm());
+        stage.initStyle(StageStyle.DECORATED);
+        stage.setScene(scene);
+        stage.setTitle("Checkers");
+        stage.setResizable(false);
+        stage.show();
     }
 
     /**
