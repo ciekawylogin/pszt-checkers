@@ -18,6 +18,7 @@ import java.util.concurrent.BlockingQueue;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class View extends Application implements Runnable {
-    static private BlockingQueue<GameEvent> blocking_queue = null;
+    static private BlockingQueue < GameEvent> blocking_queue = null;
     static private Stage stage;
     /*@FXML*/ private GridPane board;
     @FXML private Button start;
@@ -93,19 +94,27 @@ public class View extends Application implements Runnable {
             board.setPrefSize(400, 400);
             board.setGridLinesVisible(true);
             
-            for(int i=0; i < Model.getBoardSize(); ++i) {
+            for(int i = 0; i < Model.getBoardSize(); ++i) {
                 board.getColumnConstraints().add(new ColumnConstraints(50));
                 board.getRowConstraints().add(new RowConstraints(50));
             }
 
-            for(int i=0; i < Model.getBoardSize(); ++i) {
-                for(int j=0; j < Model.getBoardSize(); ++j) {
-                    Button b = new Button();
+            for(int i = 0; i < Model.getBoardSize(); ++i) {
+                for(int j = 0; j < Model.getBoardSize(); ++j) {
+                    final Button b = new Button();
                     b.setPrefSize(50, 50);
                     if ((i+j) % 2 == 0)
                         b.setStyle("-fx-background-color: white;");
                     else
                         b.setStyle("-fx-background-color: black;");
+                    b.setOnAction(new EventHandler<ActionEvent>() {
+                        
+                        @Override
+                        public void handle(ActionEvent event) {
+                            blocking_queue.add(new FieldClickEvent(board.getColumnIndex(b), board.getRowIndex(b)));
+                            System.out.println(board.getColumnIndex(b) + " " + board.getRowIndex(b));
+                        }
+                    });
                     board.add(b, j, i);
                 }
             }
@@ -168,7 +177,7 @@ public class View extends Application implements Runnable {
 
     public View() {}
 
-    public View(BlockingQueue<GameEvent> blocking_queue) {
+    public View(BlockingQueue < GameEvent> blocking_queue) {
         this.blocking_queue = blocking_queue;
         //TODO utworzyc elementy widoku
     }
@@ -209,14 +218,14 @@ public class View extends Application implements Runnable {
         System.out.println("player 1: "+mockup.getPlayer(0)+" player 2: "+mockup.getPlayer(1));
         System.out.println("board:");
         System.out.print("   ");
-        for(int i=0; i < Model.getBoardSize(); ++i) {
+        for(int i = 0; i < Model.getBoardSize(); ++i) {
             System.out.print(" "+i+"  ");
         }
 
         System.out.println();
-        for(int i=0; i < Model.getBoardSize(); ++i) {
+        for(int i = 0; i < Model.getBoardSize(); ++i) {
             System.out.print(" "+i+" ");
-            for(int j=0; j< Model.getBoardSize(); ++j) {
+            for(int j = 0; j < Model.getBoardSize(); ++j) {
                 //System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
                 checkIsEmptyField(mockup, i, j);
                 
