@@ -17,19 +17,19 @@ abstract class NormalChecker {
                 moveToCheck.getStartY()).getChecker();
         
         if(isTargetToTheLeft && isTargetToTheTop && 
-                isPossibleCaptureToTheLeftTopCorner(sourceChecker, null)) {
+                checkCapturesToTheTopLeftCorner(sourceChecker, null)) {
             return true;
             
         } else if(isTargetToTheRight && isTargetToTheTop && 
-                isPossibleCaptureToTheRightTopCorner(sourceChecker, null)) {
+                checkCapturesToTheTopRightCorner(sourceChecker, null)) {
             return true;
             
         } else if(isTargetToTheLeft && isTargetToTheBottom && 
-                isPossibleCaptureToTheLeftBottomCorner(sourceChecker, null)) {
+                checkCapturesToTheBottomLeftCorner(sourceChecker, null)) {
             return true;
             
         } else if(isTargetToTheRight && isTargetToTheBottom && 
-                isPossibleCaptureToTheRightBottomCorner(sourceChecker, null)) {
+                checkCapturesToTheBottomRightCorner(sourceChecker, null)) {
             return true;
         }
         return false;
@@ -76,19 +76,19 @@ abstract class NormalChecker {
             return false;
         }
         // sprawdzenie lewego gornego rogu
-        if(isPossibleCaptureToTheLeftTopCorner(sourceChecker, coordinatesToCapture)) {
+        if(checkCapturesToTheTopLeftCorner(sourceChecker, coordinatesToCapture)) {
             return true;
         }
         // sprawdzenie prawego gornego rogu
-        if(isPossibleCaptureToTheRightTopCorner(sourceChecker, coordinatesToCapture)) {
+        if(checkCapturesToTheTopRightCorner(sourceChecker, coordinatesToCapture)) {
             return true;
         }
         // sprawdzenie lewego dolnego rogu
-        if(isPossibleCaptureToTheLeftBottomCorner(sourceChecker, coordinatesToCapture)) {
+        if(checkCapturesToTheBottomLeftCorner(sourceChecker, coordinatesToCapture)) {
             return true;
         }
         // sprawdzenie prawego dolnego rogu
-        if(isPossibleCaptureToTheRightBottomCorner(sourceChecker, coordinatesToCapture)) {
+        if(checkCapturesToTheBottomRightCorner(sourceChecker, coordinatesToCapture)) {
             return true;
         }
     
@@ -102,7 +102,7 @@ abstract class NormalChecker {
      * @param coordinatesToCapture
      * @return
      */
-    private static boolean isPossibleCaptureToTheLeftTopCorner(final Checker sourceChecker, 
+    private static boolean checkCapturesToTheTopLeftCorner(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int targetX = sourceChecker.getX() - 2;
         int targetY = sourceChecker.getY() - 2;
@@ -129,7 +129,7 @@ abstract class NormalChecker {
      * @param coordinatesToCapture
      * @return true jesli bicie mozliwe
      */
-    private static boolean isPossibleCaptureToTheRightTopCorner(final Checker sourceChecker, 
+    private static boolean checkCapturesToTheTopRightCorner(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int targetX = sourceChecker.getX() + 2;
         int targetY = sourceChecker.getY() - 2;
@@ -156,7 +156,7 @@ abstract class NormalChecker {
      * @param coordinatesToCapture
      * @return true jesli bicie mozliwe
      */
-    private static boolean isPossibleCaptureToTheLeftBottomCorner(final Checker sourceChecker, 
+    private static boolean checkCapturesToTheBottomLeftCorner(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int targetX = sourceChecker.getX() - 2;
         int targetY = sourceChecker.getY() + 2;
@@ -183,7 +183,7 @@ abstract class NormalChecker {
      * @param coordinatesToCapture
      * @return true jesli bicie mozliwe
      */
-    private static boolean isPossibleCaptureToTheRightBottomCorner(final Checker sourceChecker, 
+    private static boolean checkCapturesToTheBottomRightCorner(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int targetX = sourceChecker.getX() + 2;
         int targetY = sourceChecker.getY() + 2;

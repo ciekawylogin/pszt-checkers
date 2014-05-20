@@ -407,7 +407,7 @@ public class Model {
             ArrayList<Coordinate> coordinatesToCapture) {
         
         boolean isPossibleCapture = NormalChecker.checkPossibleCaptures(color, coordinatesToCapture);
-        isPossibleCapture |= Queen.checkQueenCaptures(color, coordinatesToCapture);
+        isPossibleCapture |= Queen.checkPossibleCaptures(color, coordinatesToCapture);
         
         return isPossibleCapture;
     }

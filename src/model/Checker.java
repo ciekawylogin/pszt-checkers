@@ -20,7 +20,20 @@ public class Checker {
      * @param position - pozycja na planszy
      * @param type - rodzaj pionka
      */
-    Checker(final int positionX, final int positionY, final CheckerColor color,final CheckerType type) {
+    Checker(final int positionX, final int positionY, final CheckerColor color, final CheckerType type) {
+        this.type = type;
+        this.color = color;
+        this.positionX = positionX;
+        this.positionY = positionY;
+    }
+    
+    /**
+     * Konstruktor.
+     *
+     * @param position - pozycja na planszy
+     * @param type - rodzaj pionka
+     */
+    Checker(final int positionX, final int positionY, final CheckerColor color) {
         this.type = CheckerType.NORMAL;
         this.color = color;
         this.positionX = positionX;

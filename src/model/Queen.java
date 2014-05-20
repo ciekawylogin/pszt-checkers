@@ -368,7 +368,7 @@ abstract class Queen {
      * @param coordinatesToCapture
      * @return true jesli bicie jest mozliwe
      */
-    static boolean checkQueenCaptures(final CheckerColor color, 
+    static boolean checkPossibleCaptures(final CheckerColor color, 
             ArrayList<Coordinate> coordinatesToCapture) {
         
         Checker checkerOnField;

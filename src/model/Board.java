@@ -25,8 +25,8 @@ class Board {
         this.INIT_ROWS = init_rows;
         fields = new Field[SIZE][SIZE];
 
-        for(int i=0; i<8; ++i) {
-            for(int j=0; j<8; ++j) {
+        for(int i = 0; i < Model.BOARD_SIZE; ++i) {
+            for(int j = 0; j < Model.BOARD_SIZE; ++j) {
                 fields[j][i] = new Field(j, i);
             }
         }
@@ -39,8 +39,8 @@ class Board {
         // zmienna pomocnicza
         Field field;
 
-        for(int x=0; x<SIZE; ++x) {
-            for(int y=0; y<SIZE; ++y) {
+        for(int y = 0; y < SIZE; ++y) {
+            for(int x = 0; x < SIZE; ++x) {
                 field = fields[x][y];
                 if(isWhiteStartingPosition(x, y)) {
                     field.setChecker(new Checker(x, y, CheckerColor.WHITE, CheckerType.NORMAL));
