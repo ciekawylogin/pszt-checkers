@@ -13,13 +13,13 @@ abstract class Queen {
      * @param checkerOnField
      * @param coordinatesToCapture
      */
-    private static void checkQueenCapturesToTheBottomRightCorner(final Checker checkerOnField, 
+    private static void checkCapturesToTheBottomRightCorner(final Checker checkerOnField, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int x = checkerOnField.getX()+1;
         int y = checkerOnField.getY()+1;
         
         for(; x < Model.BOARD_SIZE && y < Model.BOARD_SIZE; ++x, ++y) {
-            checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+            checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
     }
@@ -29,13 +29,13 @@ abstract class Queen {
      * @param checkerOnField
      * @param coordinatesToCapture
      */
-    private static void checkQueenCapturesToTheTopRightCorner(final Checker checkerOnField, 
+    private static void checkCapturesToTheTopRightCorner(final Checker checkerOnField, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int x = checkerOnField.getX()+1;
         int y = checkerOnField.getY()-1;
         
         for(; x < Model.BOARD_SIZE && y < Model.BOARD_SIZE; ++x, ++y) {
-            checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+            checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
     }
@@ -45,13 +45,13 @@ abstract class Queen {
      * @param checkerOnField
      * @param coordinatesToCapture
      */
-    private static void checkQueenCapturesToTheBottomLeftCorner(final Checker checkerOnField, 
+    private static void checkCapturesToTheBottomLeftCorner(final Checker checkerOnField, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int x = checkerOnField.getX()-1;
         int y = checkerOnField.getY()+1;
         
         for(; x < Model.BOARD_SIZE && y < Model.BOARD_SIZE; ++x, ++y) {
-            checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+            checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
     }
@@ -61,13 +61,13 @@ abstract class Queen {
      * @param checkerOnField
      * @param coordinatesToCapture
      */
-    private static void checkQueenCapturesToTheTopLeftCorner(final Checker checkerOnField, 
+    private static void checkCapturesToTheTopLeftCorner(final Checker checkerOnField, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int x = checkerOnField.getX()-1;
         int y = checkerOnField.getY()-1;
         
         for(; x < Model.BOARD_SIZE && y < Model.BOARD_SIZE; ++x, ++y) {
-            checkQueenMove(checkerOnField.getX(), checkerOnField.getY(), 
+            checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
     }
@@ -93,16 +93,16 @@ abstract class Queen {
      * @param targetY - wspolrzedna Y koncowej pozycji
      * @return true, jesli ruch zostal wykonany
      */
-    static boolean makeQueenMove(final int sourceX, final int sourceY, 
+    static boolean makeMove(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, final boolean forcedCapture) {
         ArrayList<Coordinate> coordinatesToDelete = new ArrayList<>();
-        boolean correctMove = checkQueenMove(sourceX, sourceY, targetX, targetY, coordinatesToDelete);
+        boolean correctMove = checkMove(sourceX, sourceY, targetX, targetY, coordinatesToDelete);
         if(forcedCapture) {
-            correctMove &= isMoveAQueenCapture(new Move(sourceX, sourceY, targetX, targetY));
+            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY));
         };
 
         if(correctMove) {
-            setQueenOnPosition(sourceX, sourceY, targetX, targetY);
+            setOnPosition(sourceX, sourceY, targetX, targetY);
             
             // usuwanie potencjalnych ofiar ruchu
             removeCapturedCheckers(coordinatesToDelete);
@@ -120,7 +120,7 @@ abstract class Queen {
      * @param targetX
      * @param targetY
      */
-    private static void setQueenOnPosition(final int sourceX, final int sourceY, 
+    private static void setOnPosition(final int sourceX, final int sourceY, 
             final int targetX, final int targetY) {
         Field oldField = Model.board.getField(sourceX, sourceY);
         Checker checker = oldField.getChecker();
@@ -153,7 +153,7 @@ abstract class Queen {
      * @param coordinatesToDelete - tablica zbitych po drodze pionkow
      * @return true gdy ruch poprawny
      */
-    static boolean checkQueenMove(final int sourceX, final int sourceY,
+    static boolean checkMove(final int sourceX, final int sourceY,
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         // sprawdz czy docelowe pole jest puste badz poza plansza
@@ -167,22 +167,22 @@ abstract class Queen {
 
         // cel: lewy gorny rog
         if(isTargetToTheLeft && isTargetToTheTop) {
-            return checkQueenMoveToTheLeftTopCorner(sourceX, sourceY, 
+            return checkMoveToTheLeftTopCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
             
         // cel: lewy dolny rog
         } else if(isTargetToTheLeft && !isTargetToTheTop) {
-            return checkQueenMoveToTheLeftBottomCorner(sourceX, sourceY, 
+            return checkMoveToTheLeftBottomCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
             
         // cel: prawy gorny rog
         } else if(!isTargetToTheLeft && isTargetToTheTop) {
-            return checkQueenMoveToTheRightTopCorner(sourceX, sourceY, 
+            return checkMoveToTheRightTopCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
             
         // cel: prawy dolny rog
         } else if(!isTargetToTheLeft && !isTargetToTheTop) {
-            return checkQueenMoveToTheRightBottomCorner(sourceX, sourceY, 
+            return checkMoveToTheRightBottomCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
         }
         return false;
@@ -199,7 +199,7 @@ abstract class Queen {
      * @param coordinatesToDelete
      * @return true jesli ruch poprawny
      */
-    private static boolean checkQueenMoveToTheLeftTopCorner(final int sourceX, final int sourceY, 
+    private static boolean checkMoveToTheLeftTopCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         int x = sourceX -1;
@@ -237,7 +237,7 @@ abstract class Queen {
      * @param coordinatesToDelete
      * @return true jesli ruch poprawny
      */
-    private static boolean checkQueenMoveToTheRightTopCorner(final int sourceX, final int sourceY, 
+    private static boolean checkMoveToTheRightTopCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         int x = sourceX +1;
@@ -276,7 +276,7 @@ abstract class Queen {
      * @param coordinatesToDelete
      * @return true jesli ruch poprawny
      */
-    private static boolean checkQueenMoveToTheRightBottomCorner(final int sourceX, final int sourceY, 
+    private static boolean checkMoveToTheRightBottomCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         int x = sourceX +1;
@@ -315,7 +315,7 @@ abstract class Queen {
      * @param coordinatesToDelete
      * @return true jesli ruch poprawny
      */
-    private static boolean checkQueenMoveToTheLeftBottomCorner(final int sourceX, final int sourceY, 
+    private static boolean checkMoveToTheLeftBottomCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
         
         int x = sourceX -1;
@@ -348,9 +348,9 @@ abstract class Queen {
      * @param moveToCheck
      * @return true jesli jest to bicie damy
      */
-    static boolean isMoveAQueenCapture(final Move moveToCheck) {
+    static boolean isMoveACapture(final Move moveToCheck) {
         ArrayList<Coordinate> coordinatesToDelete = new ArrayList<Coordinate>();
-        checkQueenMove(moveToCheck.getStartX(), moveToCheck.getStartY(),
+        checkMove(moveToCheck.getStartX(), moveToCheck.getStartY(),
                 moveToCheck.getEndX(), moveToCheck.getEndY(), coordinatesToDelete);
         if(coordinatesToDelete.size() != 0) {
             coordinatesToDelete = null;
@@ -381,16 +381,16 @@ abstract class Queen {
                         checkerOnField.getColor() == color) {
                     
                     // cel: prawy dolny rog
-                    checkQueenCapturesToTheBottomRightCorner(checkerOnField, coordinatesToCapture);
+                    checkCapturesToTheBottomRightCorner(checkerOnField, coordinatesToCapture);
                     
                     // cel: prawy gorny rog
-                    checkQueenCapturesToTheTopRightCorner(checkerOnField, coordinatesToCapture);
+                    checkCapturesToTheTopRightCorner(checkerOnField, coordinatesToCapture);
                     
                     // cel: lewy dolny rog
-                    checkQueenCapturesToTheBottomLeftCorner(checkerOnField, coordinatesToCapture);
+                    checkCapturesToTheBottomLeftCorner(checkerOnField, coordinatesToCapture);
                     
                     // cel: lewy gorny rog
-                    checkQueenCapturesToTheTopLeftCorner(checkerOnField, coordinatesToCapture);
+                    checkCapturesToTheTopLeftCorner(checkerOnField, coordinatesToCapture);
                     }
                 }
                 

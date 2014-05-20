@@ -17,10 +17,10 @@ public class Model {
     static Board board;
 
     /* gracze */
-    static Player players[];
+    private Player players[];
 
     /* numer aktywnego gracze */
-    int active_player;
+    private int active_player;
     
     /* gracz komputerowy */
     private AI cpuPlayer;
@@ -29,8 +29,8 @@ public class Model {
      * Konstruktor.
      */
     public Model() {
-        this.board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
-        this.players = new Player[2];
+        board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
+        players = new Player[2];
         this.active_player = 0;
         cpuPlayer = new AI();
     }
@@ -99,9 +99,9 @@ public class Model {
         
         if(board.getField(targetX, targetY).getChecker() == null) {
             if(sourceChecker.getType() == CheckerType.QUEEN) {
-                correctMove = Queen.makeQueenMove(sourceX, sourceY, targetX, targetY, forcedCapture);
+                correctMove = Queen.makeMove(sourceX, sourceY, targetX, targetY, forcedCapture);
             } else {
-                correctMove = makeNormalCheckerMove(sourceX, sourceY, targetX, targetY, forcedCapture);
+                correctMove = NormalChecker.makeMove(sourceX, sourceY, targetX, targetY, forcedCapture);
             }
         } else {
             // docelowe pole jest zajete
@@ -124,47 +124,6 @@ public class Model {
     }
 
     /**
-     * Wykonuje ruch zwyklego pionka, sprawdzajac jego poprawnosc
-     *
-     * @param sourceX - wspolrzedna X poczatkowej pozycji
-     * @param sourceY - wspolrzedna Y poczatkowej pozycji
-     * @param targetX - wspolrzedna X koncowej pozycji
-     * @param targetY - wspolrzedna Y koncowej pozycji
-     * @return true jesli ruch zostal wykonany
-     */
-    private boolean makeNormalCheckerMove(final int sourceX, final int sourceY, 
-            final int targetX, final int targetY, final boolean forcedCapture) {
-        if(targetX >= BOARD_SIZE || targetY >= BOARD_SIZE ||
-                targetX < 0 || targetY < 0) {
-            return false;
-        }
-
-        boolean normalMove = NormalChecker.isNormalCheckerNormalMoveCorrect(sourceX, sourceY, targetX, targetY);
-        boolean captureMove = NormalChecker.isNormalCheckerCaptureMoveCorrect(sourceX, sourceY, targetX, targetY);
-        boolean correctMove = normalMove || captureMove;
-        
-        if(forcedCapture) {
-            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY));
-        };
-        
-        if(correctMove) {
-            Field oldField = board.getField(sourceX, sourceY);
-            Checker checker = oldField.getChecker();
-            oldField.removeChecker();
-            Field newField = board.getField(targetX, targetY);
-            newField.setChecker(checker);
-            checker.setPositionOnBoard(targetX, targetY);
-            Queen.checkQueenCondition(targetX, targetY);
-        }
-        if (captureMove) {
-            int checkerToRemoveX = (targetX + sourceX) / 2;
-            int checkerToRemoveY = (targetY + sourceY) / 2;
-            board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
-        }
-        return correctMove;
-    }
-
-    /**
      * Ogolna metoda sprawdzajaca czy dany ruch jest poprawny dla pionka dowolnego typu
      *
      * @param sourceX - wspolrzedna X poczatkowej pozycji
@@ -178,9 +137,9 @@ public class Model {
     {
         CheckerType type = board.getField(sourceX, sourceY).getChecker().getType();
         if(type == CheckerType.NORMAL) {
-            return NormalChecker.isNormalCheckerMoveCorrect(sourceX, sourceY, targetX, targetY);
+            return NormalChecker.isMoveCorrect(sourceX, sourceY, targetX, targetY);
         } else {
-            return Queen.checkQueenMove(sourceX, sourceY, targetX, targetY, null);
+            return Queen.checkMove(sourceX, sourceY, targetX, targetY, null);
         }
     }
 
@@ -427,11 +386,11 @@ public class Model {
         
         // jesli pionek jest dama
         if(sourceChecker != null && sourceChecker.getType() == CheckerType.QUEEN) {
-            return Queen.isMoveAQueenCapture(moveToCheck);
+            return Queen.isMoveACapture(moveToCheck);
             
         // jesli pionek jest zwyklym pionkiem
         } else if(sourceChecker !=null) {
-            return NormalChecker.isMoveANormalCheckerCapture(moveToCheck);
+            return NormalChecker.isMoveACapture(moveToCheck);
         }
         
         return false;
@@ -447,7 +406,7 @@ public class Model {
     private boolean checkAllPossibleCaptures(final CheckerColor color, 
             ArrayList<Coordinate> coordinatesToCapture) {
         
-        boolean isPossibleCapture = NormalChecker.checkPossibleNormalCheckerCaptures(color, coordinatesToCapture);
+        boolean isPossibleCapture = NormalChecker.checkPossibleCaptures(color, coordinatesToCapture);
         isPossibleCapture |= Queen.checkQueenCaptures(color, coordinatesToCapture);
         
         return isPossibleCapture;
