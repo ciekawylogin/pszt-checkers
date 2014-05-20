@@ -82,6 +82,11 @@ public class Model {
      *            wprowadzone do modelu
      */
     public final boolean moveSelectedCheckerTo(final int targetX, final int targetY) {
+    	
+    	if(!areCoordinatesOnBoard( targetX, targetY)) {
+            return false;
+    	}
+    	
         Coordinate source_coordinate = getSelectedCheckerCoordinate();
         int sourceX = source_coordinate.getX();
         int sourceY = source_coordinate.getY();
@@ -113,16 +118,29 @@ public class Model {
         if(correctMove) {
             changeActivePlayer();
             
-            ArrayList<Move> AIMoves = new ArrayList<Move>();
-            while(isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves)) {
-                //makeAIMove(AIMoves);
-                Move selectedMove = cpuPlayer.makeAIMove(AIMoves);
-                selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
-                moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY());
-                AIMoves.clear();
-            }
+            makeAIMove();
         }
         return correctMove;
+    }
+    
+    /**
+     * Wykonanie ruchu gracza komputerowego.
+     */
+    public void makeAIMove() {
+    	ArrayList<Move> AIMoves = new ArrayList<Move>();
+        while(isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves)) {
+        	Move selectedMove = cpuPlayer.makeAIMove(AIMoves);
+            selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
+            moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY());
+            AIMoves.clear();
+        }
+    	
+        
+	}
+
+	private boolean areCoordinatesOnBoard(final int x, final int y) {
+    	
+    	return !(x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE);
     }
 
     /**
@@ -192,9 +210,12 @@ public class Model {
      * @return true jezeli na danej pozycji znajduje sie pionek i jest on zaznaczony
      *            false jezeli na danej pozycji nie ma pionka lub pionek jest niezaznaczony
      */
-    public final boolean isCheckerSelected(int x, int y) {
-        Field field = board.getField(x, y);
-        return field.isSelected();
+    public final boolean isCheckerSelected(final int x, final int y) {
+    	if(areCoordinatesOnBoard(x, y)) {
+    		Field field = board.getField(x, y);
+            return field.isSelected();
+    	}
+        return false;
     }
 
     /**
@@ -205,8 +226,12 @@ public class Model {
      * @param y wspolrzedna y pozycji do sprawdzenia
      * @return true jezeli na polu (x, y) znajduje sie pionek aktywnego gracza
      */
-    public final boolean isCurrentPlayerCheckerOnPosition(int x, int y) {
+    public final boolean isCurrentPlayerCheckerOnPosition(final int x, final int y) {
 
+    	if(!areCoordinatesOnBoard(x, y)) {
+            return false;
+    	}
+    	
         Checker checker = board.getField(x, y).getChecker();
         if(checker == null) {
             return false;

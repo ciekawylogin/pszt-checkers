@@ -45,7 +45,7 @@ class Field {
     }
 
     /**
-     * Tworzy makietę pola
+     * Tworzy makiete pola
      */
     FieldMockup getMockup() {
         return new FieldMockup(getCheckerMockup(), is_selected);

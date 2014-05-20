@@ -120,7 +120,7 @@ public class View extends Application implements Runnable {
     @Override
     public void start(Stage primaryStage) throws Exception {
         AnchorPane page = (AnchorPane) FXMLLoader.load(View.class.getResource("source/menu.fxml"));
-        Scene scene = new Scene(page, 390, 390);
+        Scene scene = new Scene(page, page.getMaxWidth()-10, page.getMaxHeight()-10);
         scene.getStylesheets().add(View.class.getResource("source/stylesheet.css").toExternalForm());
         primaryStage.initStyle(StageStyle.DECORATED);
         primaryStage.setScene(scene);

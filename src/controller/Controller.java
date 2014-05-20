@@ -101,15 +101,8 @@ public class Controller {
                     System.out.println("empty field clicked; ignoring");
                 }
                 
-                // sprawdzenie warunku zwyciestwa przez jednego z graczy
-                Player player = model.checkIfAnyPlayerWon();
-                if (player != null) {
-                    blocking_queue.add(new GameFinishEvent(false, player));
-                } 
-                // sprawdzenie warunku remisu
-                if (model.checkIfWithdraw()) {
-                    blocking_queue.add(new GameFinishEvent(false, null));
-                }
+                checkEndGameConditions();
+                
                 
                 break;
                 
@@ -138,5 +131,21 @@ public class Controller {
     private void refreshView() {
         Mockup mockup = model.getMockup();
         view.draw(mockup);
+    }
+    
+    /**
+     * Sprawdza czy ktorys z graczy wygral badz czy nastapil remis
+     */
+    private void checkEndGameConditions() {
+    	
+    	// sprawdzenie warunku zwyciestwa przez jednego z graczy
+        Player player = model.checkIfAnyPlayerWon();
+        if (player != null) {
+            blocking_queue.add(new GameFinishEvent(false, player));
+        } 
+        // sprawdzenie warunku remisu
+        if (model.checkIfWithdraw()) {
+            blocking_queue.add(new GameFinishEvent(false, null));
+        }
     }
 }
