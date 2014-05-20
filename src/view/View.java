@@ -171,7 +171,12 @@ public class View extends Application implements Runnable {
             }
             System.out.println();
         }
-        System.out.println("----------------------------------");
+    }
+    
+    /**
+     * Pobiera wspolrzedne pola z klawiatury.
+     */
+    public void getFieldFromKeyboard() {
         Scanner in = new Scanner(System.in);
         int x = in.nextInt();
         int y = in.nextInt();

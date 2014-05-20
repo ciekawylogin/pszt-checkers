@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import model.Model;
 
-class AI {
+abstract class AI {
     
 
     /**
@@ -11,7 +11,7 @@ class AI {
      * 
      * @param moves - tablica mozliwych ruchow
      */
-    Move makeAIMove(ArrayList<Move> moves) {
+    static Move makeAIMove(ArrayList<Move> moves) {
         
         int movesCount = moves.size();
         System.out.println("liczba dozwolonych ruchow: " + movesCount);

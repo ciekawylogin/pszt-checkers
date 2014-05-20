@@ -67,7 +67,7 @@ public class Controller {
             
             case GAME_START:
                 // kliknieto przycisk rozpoczecia gry
-                GameStartEvent gameStartEvent = (GameStartEvent)event;
+                final GameStartEvent gameStartEvent = (GameStartEvent)event;
                 model.startGame(gameStartEvent.getPlayerName(), gameStartEvent.getGameLevel(), 
                         gameStartEvent.getCheckerColor());
                 break;
@@ -83,27 +83,14 @@ public class Controller {
                 
             case FIELD_CLICK:
                 // kliknieto pole
-                FieldClickEvent fieldClickEvent = (FieldClickEvent)event;
-                final int x = fieldClickEvent.getFieldX();
-                final int y = fieldClickEvent.getFieldY();
-                if(model.isCheckerSelected(x, y)) {
-                    model.unselectChecker();
-                } else if(model.isCurrentPlayerCheckerOnPosition(x, y)) {
-                    if(model.isAnyCheckerSelected()) {
-                        model.unselectChecker();
-                    }
-                    model.selectChecker(x, y);
-                } else if(model.isAnyCheckerSelected()) {
-                    model.moveSelectedCheckerTo(x, y);
-                } else {
-                    // kliknieto puste pole, ignorujemy
-                    fieldClickEvent = null;
-                    System.out.println("empty field clicked; ignoring");
+                final FieldClickEvent fieldClickEvent = (FieldClickEvent)event;
+                boolean isHumanPlayerMoveComplete = 
+                        model.processClick(fieldClickEvent.getFieldX(), fieldClickEvent.getFieldY());
+                if(isHumanPlayerMoveComplete) {
+                    refreshView();
+                    model.makeAIMove();
                 }
-                
                 checkEndGameConditions();
-                
-                
                 break;
                 
             case PROGRAM_QUIT:
@@ -116,8 +103,9 @@ public class Controller {
             }
             
             // po kazdym zdarzeniu odswiezamy
-            System.out.println("refresh");
             refreshView();
+            view.getFieldFromKeyboard();
+            
         }
         catch(InterruptedException exception) {
             // nie powinno sie zdarzyc
@@ -139,7 +127,7 @@ public class Controller {
     private void checkEndGameConditions() {
     	
     	// sprawdzenie warunku zwyciestwa przez jednego z graczy
-        Player player = model.checkIfAnyPlayerWon();
+        final Player player = model.checkIfAnyPlayerWon();
         if (player != null) {
             blocking_queue.add(new GameFinishEvent(false, player));
         } 
