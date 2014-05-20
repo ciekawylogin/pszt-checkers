@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class View extends Application implements Runnable {
-    static private BlockingQueue < GameEvent> blocking_queue = null;
+    static private BlockingQueue<GameEvent> blocking_queue = null;
     static private Stage stage;
     /*@FXML*/ private GridPane board;
     @FXML private Button start;
@@ -177,7 +177,7 @@ public class View extends Application implements Runnable {
 
     public View() {}
 
-    public View(BlockingQueue < GameEvent> blocking_queue) {
+    public View(BlockingQueue<GameEvent> blocking_queue) {
         this.blocking_queue = blocking_queue;
         //TODO utworzyc elementy widoku
     }
