@@ -58,6 +58,15 @@ public class Model {
         return false;
         
     }
+    
+    /**
+     * Metoda dla nowej gry
+     */
+    public void cleanAndSetUpAgain() {
+        board.clean();
+        players = new Player[2];
+        this.active_player = 0;
+    }
 
     /**
      * @return true wtedy i tylko wtedy, gdy jakikolwiek pionek jest zaznaczony

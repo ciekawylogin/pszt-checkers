@@ -82,12 +82,33 @@ class Board {
         return (x + y) % 2 == 0;
     }
 
-    Field getField(int x, int y) {
-        // TODO Auto-generated method stub
+    /**
+     * Zwraca dane pole Field
+     * @param x
+     * @param y
+     * @return Field
+     */
+    Field getField(final int x, final  int y) {
         return fields[x][y];
     }
     
+    /**
+     * Zwraca tablice Field[][]
+     * @return
+     */
     Field[][] getFields() {
         return fields;
+    }
+    
+    /**
+     * Metoda czyszczaca.
+     */
+    void clean() {
+        for(Field[] row : fields) {
+            for(Field field : row) {
+                field.removeChecker();
+            }
+        }
+        
     }
 }

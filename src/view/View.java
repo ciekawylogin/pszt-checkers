@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
+import common.events.GameFinishEvent;
 import common.events.GameStartEvent;
 import common.events.ProgramQuitEvent;
 import common.CheckerMockup;
@@ -82,6 +83,7 @@ public class View extends Application implements Runnable {
         catch (IOException e) {
             e.printStackTrace();
         }
+        blocking_queue.add(new GameFinishEvent(false, null));
     }
     
     protected void showBoard() {

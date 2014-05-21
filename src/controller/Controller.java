@@ -73,12 +73,8 @@ public class Controller {
                 break;
                 
             case GAME_FINISH:
-                //TODO
-                // powrot do glownego menu
+                model.cleanAndSetUpAgain();
                 
-                // tymczasowo:
-                System.out.println("koniec.");
-                System.exit(0);
                 break;
                 
             case FIELD_CLICK:
