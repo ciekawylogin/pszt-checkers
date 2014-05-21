@@ -22,6 +22,9 @@ public class Model {
 
     /* numer aktywnego gracze */
     private int active_player;
+    
+    /* numer aktywnego gracze */
+    private GameState gameState;
 
     /**
      * Konstruktor.
@@ -30,12 +33,14 @@ public class Model {
         board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
         players = new Player[2];
         active_player = 0;
+        gameState = GameState.NOT_STARTED;
     }
     
     /**
      * Metoda obslugi klikniecia wolana z kontrolera
      */
     public boolean processHumanMove(final int x, final int y) {
+        gameState = GameState.PLAYER_1_MOVE;
         
         if(isCheckerSelected(x, y)) {
             unselectChecker();
@@ -53,6 +58,7 @@ public class Model {
             
             // kliknieto puste pole, ignorujemy
             System.out.println("empty field clicked; ignoring");
+            gameState = GameState.PLAYER_2_MOVE_REPEAT_MOVE;
         }
         return false;
         
@@ -154,6 +160,7 @@ public class Model {
      * Wykonanie ruchu gracza komputerowego.
      */
     public void makeAIMove() {
+        gameState = GameState.PLAYER_2_MOVE;
     	ArrayList<Move> AIMoves = new ArrayList<Move>();
         while(isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves)) {
         	Move selectedMove = AI.makeAIMove(AIMoves);
@@ -308,10 +315,10 @@ public class Model {
      * @see #Mockup
      */
     public final Mockup getMockup() {
-        Mockup mockup = new Mockup(); // wypelnij mnie
+        Mockup mockup = new Mockup(gameState.getValue()); // wypelnij mnie
         mockup.setGameState(GameStateMockup.PLAYER_1_MOVE);
-        for(int i=0;i<8;++i)
-            for(int j=0;j<8;++j)
+        for(int i = 0; i < BOARD_SIZE;++i)
+            for(int j = 0; j < BOARD_SIZE;++j)
                 mockup.setField(board.getField(i, j).getMockup(), i, j);
         mockup.setPlayers(PlayerMockup.HUMAN_PLAYER, 0);
         mockup.setPlayers(PlayerMockup.AI_PLAYER, 1);
@@ -325,9 +332,11 @@ public class Model {
     public Player checkIfAnyPlayerWon() {
         // sprawdzenie czy pierwszy gracz wygral
         if(hasPlayerWon(players[0])) {
+            gameState = GameState.PLAYER_1_WON;
             return getPlayer(0);
         // sprawdzenie czy drugi gracz wygral
         } else if(hasPlayerWon(players[1])) {
+            gameState = GameState.PLAYER_2_WON;
             return getPlayer(1);
         }
         return null;
@@ -342,6 +351,7 @@ public class Model {
         
         if( !checkAllPossibleMoves(CheckerColor.BLACK, null) && 
                 !checkAllPossibleMoves(CheckerColor.WHITE, null)) {
+            gameState = GameState.WITHDRAW;
             return true;
         }
         
@@ -403,6 +413,7 @@ public class Model {
                 }
             }
         }
+        System.out.println("model.checkAllPossibleMoves: "+isAnyPossibleMove);
         return isAnyPossibleMove;
     }
 

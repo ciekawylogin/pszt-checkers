@@ -1,72 +1,102 @@
 package common;
 
-import java.util.Arrays;
-
 /**
- * Makieta, tj. obiekt generowany przez model, który zawiera wszystkie informacje niezbędne
- * widokowi do wyświetlenia stanu gry.
+ * Makieta, tj. obiekt generowany przez model, ktory zawiera wszystkie informacje niezbedne
+ * widokowi do wyswietlenia stanu gry.
  */
 public final class Mockup {
-    // opis planszy
-    FieldMockup fields[][];
-    // stan gry
-    GameStateMockup game_state;
-    // gracze (0 = bialy, 1 = czarny)
-    PlayerMockup players[];
+    /* opis planszy */
+    private FieldMockup fields[][];
+    /* stan gry */
+    private GameStateMockup game_state = GameStateMockup.NOT_STARTED;
+    
+    /* gracze (0 = bialy, 1 = czarny) */
+    private PlayerMockup players[];
 
-    public Mockup() {
+    public Mockup(final int numberState) {
         players = new PlayerMockup[2];
         fields = new FieldMockup[8][8];
+        setGameStateFromNumber(numberState);
     }
 
     /**
-     * @return the fields
+     * @return 
      */
     public final FieldMockup getField(int x, int y) {
         return fields[x][y];
     }
 
     /**
-     * @param fields the fields to set
+     * @param 
      */
     public final void setField(FieldMockup field, int x, int y) {
         this.fields[x][y] = field;
     }
 
     /**
-     * @return the game_state
+     * @return 
      */
     public final GameStateMockup getGameState() {
         return game_state;
     }
 
     /**
-     * @param game_state the game_state to set
+     * @param
      */
     public final void setGameState(GameStateMockup game_state) {
         this.game_state = game_state;
     }
 
     /**
-     * @return the players
+     * @return 
      */
     public final PlayerMockup getPlayer(int player_num) {
         return players[player_num];
     }
 
     /**
-     * @param players the players to set
+     * @param 
      */
     public final void setPlayers(PlayerMockup player, int player_num) {
         this.players[player_num] = player;
     }
-
+    
     /**
-     * tylko do debugowania
+     * Przypisuje numerowi dany stan gry
+     * @param numberState
      */
-    @Override
-    public String toString() {
-        return "Mockup [fields=" + Arrays.toString(fields) + ", game_state="
-                + game_state + ", players=" + Arrays.toString(players) + "]";
+    private void setGameStateFromNumber(final int numberState) {
+        switch(numberState) {
+        case 0:
+            game_state = GameStateMockup.NOT_STARTED;
+            break;
+        case 1:
+            game_state = GameStateMockup.PLAYER_1_MOVE;
+            break;
+        case 2:
+            game_state = GameStateMockup.PLAYER_2_MOVE;
+            break;
+        case 3:
+            game_state = GameStateMockup.PLAYER_1_WON;
+            break;
+        case 4:
+            game_state = GameStateMockup.PLAYER_2_WON;
+            break;
+        case 5:
+            game_state = GameStateMockup.WITHDRAW;
+            break;
+        case 6:
+            game_state = GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE;
+            break;
+        case 7:
+            game_state = GameStateMockup.PLAYER_2_MOVE_REPEAT_MOVE;
+            break;
+        default:
+            throw new RuntimeException("gameState not recognized");
+                
+        }
     }
+    
+    
+    
 }
