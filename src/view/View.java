@@ -262,7 +262,6 @@ public class View extends Application implements Runnable {
     
     private void checkIsBlackChecker(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
-            
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -274,7 +273,6 @@ public class View extends Application implements Runnable {
                     }
                 }
             });
-                
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]@[ ");
             } else {
