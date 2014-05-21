@@ -73,7 +73,7 @@ public class Controller {
                 break;
                 
             case GAME_FINISH:
-                model.cleanAndSetUpAgain();
+                refreshView();
                 
                 break;
                 
@@ -85,6 +85,7 @@ public class Controller {
                 if(isHumanPlayerMoveComplete) {
                     refreshView();
                     model.makeAIMove();
+                    
                 }
                 checkEndGameConditions();
                 break;
@@ -121,14 +122,13 @@ public class Controller {
      * Sprawdza czy ktorys z graczy wygral badz czy nastapil remis
      */
     private void checkEndGameConditions() {
-    	
     	// sprawdzenie warunku zwyciestwa przez jednego z graczy
         final Player player = model.checkIfAnyPlayerWon();
         if (player != null) {
             blocking_queue.add(new GameFinishEvent(false, player));
         } 
         // sprawdzenie warunku remisu
-        if (model.checkIfWithdraw()) {
+        else if (model.checkIfWithdraw()) {
             blocking_queue.add(new GameFinishEvent(false, null));
         }
     }

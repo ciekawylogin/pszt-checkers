@@ -9,6 +9,7 @@ import common.events.GameFinishEvent;
 import common.events.GameStartEvent;
 import common.events.ProgramQuitEvent;
 import common.CheckerMockup;
+import common.GameStateMockup;
 import common.Mockup;
 import model.CheckerColor;
 import model.GameLevel;
@@ -108,7 +109,11 @@ public class View extends Application implements Runnable {
                         
                         @Override
                         public void handle(ActionEvent event) {
-                            blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
+                            if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
+                                    || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
+                                blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
+                            }
+                            
                         }
                     });
                     board.add(b, j, i);

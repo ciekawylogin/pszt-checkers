@@ -40,7 +40,7 @@ public class Model {
      * Metoda obslugi klikniecia wolana z kontrolera
      */
     public boolean processHumanMove(final int x, final int y) {
-        gameState = GameState.PLAYER_1_MOVE;
+        //gameState = GameState.PLAYER_1_MOVE;
         
         if(isCheckerSelected(x, y)) {
             unselectChecker();
@@ -58,19 +58,10 @@ public class Model {
             
             // kliknieto puste pole, ignorujemy
             System.out.println("empty field clicked; ignoring");
-            gameState = GameState.PLAYER_2_MOVE_REPEAT_MOVE;
+            gameState = GameState.PLAYER_1_MOVE_REPEAT_MOVE;
         }
         return false;
         
-    }
-    
-    /**
-     * Metoda dla nowej gry
-     */
-    public void cleanAndSetUpAgain() {
-        board.clean();
-        players = new Player[2];
-        this.active_player = 0;
     }
 
     /**
@@ -160,7 +151,7 @@ public class Model {
      * Wykonanie ruchu gracza komputerowego.
      */
     public void makeAIMove() {
-        gameState = GameState.PLAYER_2_MOVE;
+        //gameState = GameState.PLAYER_2_MOVE;
     	ArrayList<Move> AIMoves = new ArrayList<Move>();
         while(isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves)) {
         	Move selectedMove = AI.makeAIMove(AIMoves);
@@ -237,6 +228,7 @@ public class Model {
      */
     private final void changeActivePlayer() {
         active_player = active_player == 1 ? 0 : 1;
+        gameState = active_player == 0 ? GameState.PLAYER_1_MOVE : GameState.PLAYER_2_MOVE;
     }
 
     /**
@@ -287,11 +279,8 @@ public class Model {
      *
      * @param x wspolrzedna x pionka do zaznaczenia
      * @param y wspolrzedna y pionka do zaznaczenia
-     *
-     * @throws RuntimeException jezeli na pozycji (x, y) nie ma pionka aktywnego gracza
-     * @throws RuntimeException jezeli jakis pionek jest juz zaznaczony
      */
-    private final void selectChecker(int x, int y) {
+    private final void selectChecker(final int x, final int y) {
         board.getField(x, y).select();
     }
 
@@ -305,7 +294,10 @@ public class Model {
         players[0] = new Player("player", checkerColor, false, gameLevel);
         players[1] = new Player("CPU", CheckerColor.getOppositeColor(checkerColor), true, null);
         active_player = players[0].getPlayerColor() == CheckerColor.WHITE ? 0 : 1;
+        gameState = players[0].getPlayerColor() == CheckerColor.WHITE ? 
+                GameState.PLAYER_1_MOVE : GameState.PLAYER_2_MOVE;
         // rozstaw pionki
+        board.clean();
         board.setUp();
     }
 
@@ -315,8 +307,7 @@ public class Model {
      * @see #Mockup
      */
     public final Mockup getMockup() {
-        Mockup mockup = new Mockup(gameState.getValue()); // wypelnij mnie
-        mockup.setGameState(GameStateMockup.PLAYER_1_MOVE);
+        Mockup mockup = new Mockup(gameState.getValue());
         for(int i = 0; i < BOARD_SIZE;++i)
             for(int j = 0; j < BOARD_SIZE;++j)
                 mockup.setField(board.getField(i, j).getMockup(), i, j);
@@ -401,19 +392,14 @@ public class Model {
      */
     private boolean checkAllPossibleMoves(CheckerColor color, ArrayList<Move> result) {
         boolean isAnyPossibleMove = false;
-        for(int x=0; x<BOARD_SIZE; ++x) {
-            for(int y=0; y<BOARD_SIZE; ++y) {
+        for(int y=0; y<BOARD_SIZE; ++y) {
+            for(int x=0; x<BOARD_SIZE; ++x) {
                 if(board.getField(x, y).getChecker() != null &&
                    board.getField(x, y).getChecker().getColor() == color) {
-                    if(result != null) {
-                        checkAllPossibleMovesFromPosition(x, y, result);
-                    }
-                    
-                    isAnyPossibleMove = true;
+                    isAnyPossibleMove |= checkAllPossibleMovesFromPosition(x, y, result);
                 }
             }
-        }
-        System.out.println("model.checkAllPossibleMoves: "+isAnyPossibleMove);
+        };
         return isAnyPossibleMove;
     }
 

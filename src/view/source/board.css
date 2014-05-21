@@ -3,7 +3,7 @@ root {
 }
 
 .root {
-    -fx-background-image: url("wood.jpg");
+    -fx-background-image: url("wood.png");
     -fx-background-size: 400 210;
     -fx-background-position: 0 400;
     -fx-background-repeat: no-repeat;
