@@ -32,6 +32,7 @@ import jfx.messagebox.MessageBox;
 
 public class View extends Application implements Runnable {
     static private BlockingQueue<GameEvent> blocking_queue;
+    static private Mockup mockup;
     static private Stage stage;
     static private Image imageWhiteChecker;
     static private Image imageWhiteQueen;
@@ -88,15 +89,19 @@ public class View extends Application implements Runnable {
         try {
             page = (AnchorPane) FXMLLoader.load(getClass().getResource("source/board.fxml"));
             Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
+            scene.getStylesheets().add(getClass().getResource("source/board.css").toExternalForm());
             board = (GridPane)scene.lookup("#board");
             for(int i = 0; i < Model.getBoardSize(); ++i) {
                 for(int j = 0; j < Model.getBoardSize(); ++j) {
                     final Button b = new Button();
                     b.setPrefSize(50, 50);
-                    if ((i+j) % 2 == 0)
-                        b.setStyle("-fx-background-color: black;");
-                    else
-                        b.setStyle("-fx-background-color: white;");
+                    if ((i+j) % 2 == 0) {
+                        b.setStyle("-fx-background-image: url('" + getClass().getResource("source/black_tile.png").toExternalForm() + "');"
+                                + "-fx-background-color: transparent;");
+                    } else {
+                        b.setStyle("-fx-background-image: url('" + getClass().getResource("source/white_tile.png").toExternalForm() + "');"
+                                + "-fx-background-color: transparent;");
+                    }
                     b.setOnAction(new EventHandler<ActionEvent>() {
                         
                         @Override
@@ -108,7 +113,6 @@ public class View extends Application implements Runnable {
                 }
             }
 
-            scene.getStylesheets().add(getClass().getResource("source/board.css").toExternalForm());
             stage.setScene(scene);
             stage.show();
         }
@@ -205,28 +209,35 @@ public class View extends Application implements Runnable {
      * ekran gry etc.) - patrz dokumentacja klasy GameStateMockup
      */
     public void draw(Mockup mockup) {
-        System.out.println("--------------------------------");
-        System.out.println("game state: "+mockup.getGameState());
-        System.out.println("player 1: "+mockup.getPlayer(0)+" player 2: "+mockup.getPlayer(1));
-        System.out.println("board:");
-        System.out.print("   ");
-        for(int i = 0; i < Model.getBoardSize(); ++i) {
-            System.out.print(" "+i+"  ");
-        }
+        View.mockup = mockup;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("--------------------------------");
+                System.out.println("game state: "+View.mockup.getGameState());
+                System.out.println("player 1: "+View.mockup.getPlayer(0)+" player 2: "+View.mockup.getPlayer(1));
+                System.out.println("board:");
+                System.out.print("   ");
+                for(int i = 0; i < Model.getBoardSize(); ++i) {
+                    System.out.print(" "+i+"  ");
+                }
 
-        System.out.println();
-        for(int i = 0; i < Model.getBoardSize(); ++i) {
-            System.out.print(" "+i+" ");
-            for(int j = 0; j < Model.getBoardSize(); ++j) {
-                //System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
-                checkIsEmptyField(mockup, i, j);
-                checkIsBlackChecker(mockup, i,  j);
-                checkIsBlackQueen(mockup, i, j);
-                checkIsWhiteChecker(mockup, i, j);
-                checkIsWhiteQueen(mockup, i, j);
+                System.out.println();
+                for(int i = 0; i < Model.getBoardSize(); ++i) {
+                    System.out.print(" "+i+" ");
+                    for(int j = 0; j < Model.getBoardSize(); ++j) {
+                        //System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
+                        checkIsEmptyField(View.mockup, i, j);
+                        checkIsBlackChecker(View.mockup, i,  j);
+                        checkIsBlackQueen(View.mockup, i, j);
+                        checkIsWhiteChecker(View.mockup, i, j);
+                        checkIsWhiteQueen(View.mockup, i, j);
+                    }
+                    System.out.println();
+                }
             }
-            System.out.println();
-        }
+        });
+
     }
     
     /**
@@ -243,15 +254,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsEmptyField(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    if(board != null) {
-                        ImageView image = new ImageView();
-                        getButton(i, j).setGraphic(image);
-                    }
-                }
-            });
+            ImageView image = new ImageView();
+            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]_[ ");
             } else {
@@ -262,17 +266,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsBlackChecker(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    if(board != null) {
-                        ImageView image = new ImageView(imageBlackChecker);
-                        image.setFitWidth(20);
-                        image.setFitHeight(20);
-                        getButton(i, j).setGraphic(image);
-                    }
-                }
-            });
+            ImageView image = new ImageView(imageBlackChecker);
+            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]@[ ");
             } else {
@@ -283,17 +278,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsBlackQueen(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    if(board != null) {
-                        ImageView image = new ImageView(imageBlackQueen);
-                        image.setFitWidth(20);
-                        image.setFitHeight(20);
-                        getButton(i, j).setGraphic(image);
-                    }
-                }
-            });
+            ImageView image = new ImageView(imageBlackQueen);
+            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]2[ ");
             } else {
@@ -304,17 +290,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsWhiteChecker(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    if(board != null) {
-                        ImageView image = new ImageView(imageWhiteChecker);
-                        image.setFitWidth(20);
-                        image.setFitHeight(20);
-                        getButton(i, j).setGraphic(image);
-                    }
-                }
-            });
+            ImageView image = new ImageView(imageWhiteChecker);
+            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]#[ ");
             } else {
@@ -325,17 +302,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsWhiteQueen(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    if(board != null) {
-                        ImageView image = new ImageView(imageWhiteQueen);
-                        image.setFitWidth(20);
-                        image.setFitHeight(20);
-                        getButton(i, j).setGraphic(image);
-                    }
-                }
-            });
+            ImageView image = new ImageView(imageWhiteQueen);
+            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]3[ ");
             } else {
