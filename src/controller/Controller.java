@@ -44,8 +44,9 @@ public class Controller {
      * wola metody inicjalizujace model i widok), po czym wchodzi w glowna pele programu.
      */
     public void go() {
-        //TODO
-        view.init();
+        Thread thread = new Thread(view);
+        thread.start();
+
         while(true) {
             processEvents();
         }

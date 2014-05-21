@@ -17,7 +17,6 @@ import java.util.concurrent.BlockingQueue;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,19 +28,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import jfx.messagebox.MessageBox;
 
 public class View extends Application implements Runnable {
-    static private BlockingQueue<GameEvent> blocking_queue = null;
+    static private BlockingQueue<GameEvent> blocking_queue;
     static private Stage stage;
+    static private Image imageWhiteChecker;
+    static private Image imageWhiteQueen;
+    static private Image imageBlackChecker;
+    static private Image imageBlackQueen;
     static private GridPane board;
-    private Image imageWhiteChecker;// = new Image(getClass().getResourceAsStream("ok.png"));
-    private Image imageWhiteQueen;// = new Image(getClass().getResourceAsStream("ok.png"));
-    private Image imageBlackChecker;// = new Image(getClass().getResourceAsStream("ok.png"));
-    private Image imageBlackQueen;// = new Image(getClass().getResourceAsStream("ok.png"));
-    @FXML private Button start;
-    @FXML private Button exit;
     @FXML private ChoiceBox difficulty;
     @FXML private ChoiceBox color;
     @FXML private TextField name;
@@ -76,9 +72,9 @@ public class View extends Application implements Runnable {
     protected void showMenu(ActionEvent event) {
         AnchorPane page;
         try {
-            page = (AnchorPane) FXMLLoader.load(View.class.getResource("source/menu.fxml"));
+            page = (AnchorPane) FXMLLoader.load(getClass().getResource("source/menu.fxml"));
             Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
-            scene.getStylesheets().add(View.class.getResource("source/menu.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("source/menu.css").toExternalForm());
             stage.setScene(scene);
             stage.show();
         }
@@ -90,39 +86,29 @@ public class View extends Application implements Runnable {
     protected void showBoard() {
         AnchorPane page;
         try {
-            page = (AnchorPane) FXMLLoader.load(View.class.getResource("source/board.fxml"));
-            board = new GridPane();
-            page.getChildren().addAll(board);
-            board.setPrefSize(400, 400);
-            board.setGridLinesVisible(true);
-            
-            for(int i = 0; i < Model.getBoardSize(); ++i) {
-                board.getColumnConstraints().add(new ColumnConstraints(50));
-                board.getRowConstraints().add(new RowConstraints(50));
-            }
-
+            page = (AnchorPane) FXMLLoader.load(getClass().getResource("source/board.fxml"));
+            Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
+            board = (GridPane)scene.lookup("#board");
             for(int i = 0; i < Model.getBoardSize(); ++i) {
                 for(int j = 0; j < Model.getBoardSize(); ++j) {
                     final Button b = new Button();
                     b.setPrefSize(50, 50);
                     if ((i+j) % 2 == 0)
-                        b.setStyle("-fx-background-color: white;");
-                    else
                         b.setStyle("-fx-background-color: black;");
+                    else
+                        b.setStyle("-fx-background-color: white;");
                     b.setOnAction(new EventHandler<ActionEvent>() {
                         
                         @Override
                         public void handle(ActionEvent event) {
-                            blocking_queue.add(new FieldClickEvent(board.getColumnIndex(b), board.getRowIndex(b)));
-                            System.out.println(board.getColumnIndex(b) + " " + board.getRowIndex(b));
+                            blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
                         }
                     });
                     board.add(b, j, i);
                 }
             }
 
-            Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
-            scene.getStylesheets().add(View.class.getResource("source/board.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("source/board.css").toExternalForm());
             stage.setScene(scene);
             stage.show();
         }
@@ -131,6 +117,15 @@ public class View extends Application implements Runnable {
         }
     }
     
+    protected Button getButton(final int row, final int column) {
+        for (int i = 1; i < board.getChildren().size(); i++) {
+            Node node = board.getChildren().get(i);
+            if (GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row) {
+                return (Button)node;
+            }
+        }
+        return null;
+    }
     
     /**
      * Zwraca kolor ze stringa ChoiceBoxa
@@ -177,18 +172,6 @@ public class View extends Application implements Runnable {
         System.out.println("Exit");
     }
     
-    protected Button getButton(final int row, final int column, GridPane gridPane) {
-        Node result = null;
-        ObservableList<Node> childrens = gridPane.getChildren();
-        for(Node node : childrens) {
-            if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
-                result = node;
-                break;
-            }
-        }
-        return (Button)result;
-    }
-
     public View() {
         imageWhiteChecker = new Image(getClass().getResourceAsStream("source/white.png"));
         imageWhiteQueen   = new Image(getClass().getResourceAsStream("source/white_queen.png"));
@@ -197,29 +180,22 @@ public class View extends Application implements Runnable {
     }
 
     public View(BlockingQueue<GameEvent> blocking_queue) {
-        this.blocking_queue = blocking_queue;
+        View.blocking_queue = blocking_queue;
     }
 
+    /**
+     * Inicjuje widok
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
-        AnchorPane page = (AnchorPane) FXMLLoader.load(View.class.getResource("source/menu.fxml"));
+        AnchorPane page = (AnchorPane) FXMLLoader.load(getClass().getResource("source/menu.fxml"));
         Scene scene = new Scene(page, page.getMaxWidth()-10, page.getMaxHeight()-10);
-        scene.getStylesheets().add(View.class.getResource("source/menu.css").toExternalForm());
-        stage.initStyle(StageStyle.DECORATED);
+        scene.getStylesheets().add(getClass().getResource("source/menu.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Checkers");
         stage.setResizable(false);
         stage.show();
-    }
-
-    /**
-     * Inicjuje widok, np. odpala okno gry (na razie nic nie wyswietla - bezposrednio potem
-     * zostanie zawolana metoda draw)
-     */
-    public void init() {
-        //TODO write me
-        //throw new UnsupportedOperationException("Not yet implemented");
     }
 
     /**
@@ -229,8 +205,6 @@ public class View extends Application implements Runnable {
      * ekran gry etc.) - patrz dokumentacja klasy GameStateMockup
      */
     public void draw(Mockup mockup) {
-        //TODO
-
         System.out.println("--------------------------------");
         System.out.println("game state: "+mockup.getGameState());
         System.out.println("player 1: "+mockup.getPlayer(0)+" player 2: "+mockup.getPlayer(1));
@@ -264,11 +238,20 @@ public class View extends Application implements Runnable {
         int y = in.nextInt();
         //System.out.println("przed wyslaniem: x: "+x+", y: "+y);
         blocking_queue.add(new FieldClickEvent(x, y));
+        in.close();
     }
     
     private void checkIsEmptyField(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
-            //getButton(j, i, board).setGraphic();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null) {
+                        ImageView image = new ImageView();
+                        getButton(i, j).setGraphic(image);
+                    }
+                }
+            });
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]_[ ");
             } else {
@@ -279,7 +262,19 @@ public class View extends Application implements Runnable {
     
     private void checkIsBlackChecker(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
-            getButton(j, i, board).setGraphic(new ImageView(imageBlackChecker));
+            
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null) {
+                        ImageView image = new ImageView(imageBlackChecker);
+                        image.setFitWidth(20);
+                        image.setFitHeight(20);
+                        getButton(i, j).setGraphic(image);
+                    }
+                }
+            });
+                
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]@[ ");
             } else {
@@ -290,7 +285,17 @@ public class View extends Application implements Runnable {
     
     private void checkIsBlackQueen(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
-            getButton(j, i, board).setGraphic(new ImageView(imageBlackQueen));
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null) {
+                        ImageView image = new ImageView(imageBlackQueen);
+                        image.setFitWidth(20);
+                        image.setFitHeight(20);
+                        getButton(i, j).setGraphic(image);
+                    }
+                }
+            });
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]2[ ");
             } else {
@@ -301,7 +306,17 @@ public class View extends Application implements Runnable {
     
     private void checkIsWhiteChecker(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
-            getButton(j, i, board).setGraphic(new ImageView(imageWhiteChecker));
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null) {
+                        ImageView image = new ImageView(imageWhiteChecker);
+                        image.setFitWidth(20);
+                        image.setFitHeight(20);
+                        getButton(i, j).setGraphic(image);
+                    }
+                }
+            });
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]#[ ");
             } else {
@@ -312,7 +327,17 @@ public class View extends Application implements Runnable {
     
     private void checkIsWhiteQueen(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
-            getButton(j, i, board).setGraphic(new ImageView(imageWhiteQueen));
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if(board != null) {
+                        ImageView image = new ImageView(imageWhiteQueen);
+                        image.setFitWidth(20);
+                        image.setFitHeight(20);
+                        getButton(i, j).setGraphic(image);
+                    }
+                }
+            });
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]3[ ");
             } else {
