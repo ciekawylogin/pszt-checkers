@@ -46,7 +46,6 @@ public class Controller {
     public void go() {
         Thread thread = new Thread(view);
         thread.start();
-
         while(true) {
             processEvents();
         }
@@ -70,6 +69,7 @@ public class Controller {
                 final GameStartEvent gameStartEvent = (GameStartEvent)event;
                 model.startGame(gameStartEvent.getPlayerName(), gameStartEvent.getGameLevel(), 
                         gameStartEvent.getCheckerColor());
+                model.makeAIMove();
                 break;
                 
             case GAME_FINISH:
@@ -81,7 +81,7 @@ public class Controller {
                 // kliknieto pole
                 final FieldClickEvent fieldClickEvent = (FieldClickEvent)event;
                 boolean isHumanPlayerMoveComplete = 
-                        model.processClick(fieldClickEvent.getFieldX(), fieldClickEvent.getFieldY());
+                        model.processHumanMove(fieldClickEvent.getFieldX(), fieldClickEvent.getFieldY());
                 if(isHumanPlayerMoveComplete) {
                     refreshView();
                     model.makeAIMove();

@@ -29,13 +29,13 @@ public class Model {
     public Model() {
         board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
         players = new Player[2];
-        this.active_player = 0;
+        active_player = 0;
     }
     
     /**
      * Metoda obslugi klikniecia wolana z kontrolera
      */
-    public boolean processClick(final int x, final int y) {
+    public boolean processHumanMove(final int x, final int y) {
         
         if(isCheckerSelected(x, y)) {
             unselectChecker();
@@ -47,7 +47,6 @@ public class Model {
         } else if(isAnyCheckerSelected()) {
             if(moveSelectedCheckerTo(x, y)) {
                 changeActivePlayer();
-                //makeAIMove();
                 return true;
             }
         } else {
@@ -298,6 +297,7 @@ public class Model {
 
         players[0] = new Player("player", checkerColor, false, gameLevel);
         players[1] = new Player("CPU", CheckerColor.getOppositeColor(checkerColor), true, null);
+        active_player = players[0].getPlayerColor() == CheckerColor.WHITE ? 0 : 1;
         // rozstaw pionki
         board.setUp();
     }
@@ -472,7 +472,7 @@ public class Model {
      * Sprawdza czy w obecnej turze ruch nalezy do komputera
      * @return true jesli tura komputera
      */
-    private boolean isAITurn() {
+    public boolean isAITurn() {
         return players[active_player].isCpu();
     }
 }
