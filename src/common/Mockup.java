@@ -11,10 +11,8 @@ public final class Mockup {
     private GameStateMockup game_state = GameStateMockup.NOT_STARTED;
     /* gracze (0 = bialy, 1 = czarny) */
     private PlayerMockup players[];
-    /* makieta ostatniego ruchu gracza 1 */
-    private MoveMockup player1LastMove;
-    /* makieta ostatniego ruchu gracza 2 */
-    private MoveMockup player2LastMove;
+    /* makieta ostatniego poprawnego ruchu */
+    private MoveMockup lastMove;
 
     public Mockup(final int numberState) {
         players = new PlayerMockup[2];
@@ -104,8 +102,8 @@ public final class Mockup {
      * 
      * @return
      */
-    public MoveMockup getPlayer2LastMove() {
-        return player2LastMove;
+    public MoveMockup getLastMove() {
+        return lastMove;
     }
 
     /**
@@ -115,28 +113,8 @@ public final class Mockup {
      * @param endX
      * @param endY
      */
-    public void setPlayer2LastMove(final int startX, final int startY, final int endX, final int endY) {
-        this.player2LastMove = new MoveMockup(startX, startY, endX, endY);
-        
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public MoveMockup getPlayer1LastMove() {
-        return player1LastMove;
-    }
-
-    /**
-     * 
-     * @param startX
-     * @param startY
-     * @param endX
-     * @param endY
-     */
-    public void setPlayer1LastMove(final int startX, final int startY, final int endX, final int endY) {
-        this.player1LastMove = new MoveMockup(startX, startY, endX, endY);
+    public void setLastMove(final int startX, final int startY, final int endX, final int endY) {
+        this.lastMove = new MoveMockup(startX, startY, endX, endY);
         
     }
     

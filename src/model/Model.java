@@ -328,14 +328,21 @@ public class Model {
                 mockup.setField(board.getField(i, j).getMockup(), i, j);
         mockup.setPlayers(PlayerMockup.HUMAN_PLAYER, 0);
         mockup.setPlayers(PlayerMockup.AI_PLAYER, 1);
-        Move move = players[0].getLastMove();
-        if(move != null) {
-            mockup.setPlayer1LastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
+        
+        Move move = null;
+        if(gameState == GameState.PLAYER_2_MOVE 
+                || gameState == GameState.PLAYER_1_MOVE_REPEAT_MOVE) {
+            move = players[0].getLastMove();
+            
+        } else if(gameState == GameState.PLAYER_1_MOVE 
+                || gameState == GameState.PLAYER_2_MOVE_REPEAT_MOVE) {
+            move = players[1].getLastMove();
         }
-        move = players[1].getLastMove();
+        
         if(move != null) {
-            mockup.setPlayer2LastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
+            mockup.setLastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
         }
+        
         return mockup;
     }
 
