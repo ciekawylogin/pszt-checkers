@@ -329,10 +329,13 @@ public class Model {
         mockup.setPlayers(PlayerMockup.HUMAN_PLAYER, 0);
         mockup.setPlayers(PlayerMockup.AI_PLAYER, 1);
         Move move = players[0].getLastMove();
-        mockup.setPlayer1LastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
+        if(move != null) {
+            mockup.setPlayer1LastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
+        }
         move = players[1].getLastMove();
-        mockup.setPlayer2LastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
-        move = null;
+        if(move != null) {
+            mockup.setPlayer2LastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
+        }
         return mockup;
     }
 
