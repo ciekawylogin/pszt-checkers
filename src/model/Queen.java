@@ -2,11 +2,15 @@ package model;
 
 import java.util.ArrayList;
 
+import common.Coordinate;
+
 /**
  * Statyczna klasa zawierajaca metody dla dam.
  *
  */
 abstract class Queen {
+    
+    static ArrayList<Coordinate> deletedCheckers = new ArrayList<Coordinate>();
     
     /**
      * Sprawdza mozliwe bicia w kierunku prawego dolnego rogu
@@ -155,6 +159,7 @@ abstract class Queen {
             int x = coordToDelete.getX();
             int y = coordToDelete.getY();
             Model.board.getField(x, y).removeChecker();
+            deletedCheckers.add(new Coordinate(x, y));
         }
         coordinatesToDelete.clear();
     }

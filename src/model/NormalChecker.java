@@ -1,11 +1,14 @@
 package model;
 import java.util.ArrayList;
 
+import common.Coordinate;
+
 /**
  * Statyczna klasa zawierajaca metody dla zwyklego pionka.
  *
  */
 abstract class NormalChecker {
+    static ArrayList<Coordinate> deletedCheckers = new ArrayList<Coordinate>();
     
     /**
      * Sprawdza czy ruch jest biciem za pomoca zwyklego pionka
@@ -317,6 +320,7 @@ abstract class NormalChecker {
             int checkerToRemoveX = (targetX + sourceX) / 2;
             int checkerToRemoveY = (targetY + sourceY) / 2;
             Model.board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
+            deletedCheckers.add(new Coordinate(checkerToRemoveX, checkerToRemoveY));
         }
         return correctMove;
     }

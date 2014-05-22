@@ -1,5 +1,7 @@
 package common;
 
+import java.util.ArrayList;
+
 /**
  * Makieta, tj. obiekt generowany przez model, ktory zawiera wszystkie informacje niezbedne
  * widokowi do wyswietlenia stanu gry.
@@ -13,11 +15,14 @@ public final class Mockup {
     private PlayerMockup players[];
     /* makieta ostatniego poprawnego ruchu */
     private MoveMockup lastMove;
+    
+    private ArrayList<Coordinate> deletedCheckers;
 
     public Mockup(final int numberState) {
         players = new PlayerMockup[2];
         fields = new FieldMockup[8][8];
         setGameStateFromNumber(numberState);
+        deletedCheckers = new ArrayList<Coordinate>();
     }
 
     /**
@@ -116,6 +121,14 @@ public final class Mockup {
     public void setLastMove(final int startX, final int startY, final int endX, final int endY) {
         this.lastMove = new MoveMockup(startX, startY, endX, endY);
         
+    }
+    
+    public void addCoordinate(final Coordinate coordinateToadd) {
+        deletedCheckers.add(coordinateToadd);
+    }
+    
+    public ArrayList<Coordinate> getDeletedCheckers() {
+        return deletedCheckers;
     }
     
     

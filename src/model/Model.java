@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+import common.Coordinate;
 import common.GameStateMockup;
 import common.Mockup;
 import common.PlayerMockup;
@@ -368,6 +369,18 @@ public class Model {
         if(move != null) {
             mockup.setLastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
         }
+        
+        for(Coordinate coordinate : Queen.deletedCheckers) {
+            mockup.addCoordinate(coordinate);
+            System.out.println("Q");
+        }
+        
+        for(Coordinate coordinate : NormalChecker.deletedCheckers) {
+            mockup.addCoordinate(coordinate);
+            System.out.println("N");
+        }
+        Queen.deletedCheckers.clear();
+        NormalChecker.deletedCheckers.clear();
         
         return mockup;
     }

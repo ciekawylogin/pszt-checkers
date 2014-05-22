@@ -1,5 +1,7 @@
 package model;
 
+import common.Coordinate;
+
 /**
  * Klasa reprezentujaca pojedynczy ruch gracza
  */
