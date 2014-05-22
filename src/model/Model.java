@@ -55,13 +55,11 @@ public class Model {
             Coordinate endCoordinate = new Coordinate(x, y);
             
             boolean isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
-            //System.out.println("/debug1 isCap: "+isMoveACapture(new Move(startCoordinate, endCoordinate))+" areCap: "+checkCapturesFromPosition(x, y));
             
             
             if(moveSelectedCheckerTo(x, y)) {
                 
                 isNotASingleMove &= checkCapturesFromPosition(x, y);
-                
                 if(!isNotASingleMove) {
                     changeActivePlayer();
                 }
@@ -186,14 +184,11 @@ public class Model {
         	Move selectedMove = AI.makeAIMove(AIMoves);
             selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
             Coordinate startCoordinate = getSelectedCheckerCoordinate();
-            Coordinate endCoordinate = new Coordinate(selectedMove.getEndX(), selectedMove.getEndX());
-            //System.out.println("/debug2 isCap: "+isMoveACapture(new Move(startCoordinate, endCoordinate))+" areCap: "+checkCapturesFromPosition(selectedMove.getEndX(), selectedMove.getEndX()));
+            Coordinate endCoordinate = new Coordinate(selectedMove.getEndX(), selectedMove.getEndY());
             
             boolean isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
             
-            
             if(moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY())) {
-                
                 isNotASingleMove &= checkCapturesFromPosition(selectedMove.getEndX(), selectedMove.getEndY());
                 
                 if(!isNotASingleMove) {
@@ -372,12 +367,10 @@ public class Model {
         
         for(Coordinate coordinate : Queen.deletedCheckers) {
             mockup.addCoordinate(coordinate);
-            System.out.println("Q");
         }
         
         for(Coordinate coordinate : NormalChecker.deletedCheckers) {
             mockup.addCoordinate(coordinate);
-            System.out.println("N");
         }
         Queen.deletedCheckers.clear();
         NormalChecker.deletedCheckers.clear();
@@ -503,7 +496,6 @@ public class Model {
      * @return true jesli ruch jest biciem
      */
     private boolean isMoveACapture(final Move moveToCheck) {
-        
         Checker sourceChecker = board.getField(moveToCheck.getStartX(), 
                 moveToCheck.getStartY()).getChecker();
         
@@ -552,18 +544,14 @@ public class Model {
         
         boolean isCapturePossible = false;
         Checker checker = board.getField(x, y).getChecker();
-        System.out.println("PRZED checkCapturesFromPosition" );
         if(checker != null && checker.getType() == CheckerType.NORMAL) {
             isCapturePossible |= 
                     NormalChecker.checkPossibleCapturesFromChecker(checker, null);
-            System.out.println("NCH checkCapturesFromPosition: ("+x+","+y+")"+" isPossib: "+isCapturePossible);
         } else if(checker != null){
             isCapturePossible |= 
                     Queen.checkPossibleCapturesFromQueen(checker, null);
-            System.out.println("Q checkCapturesFromPosition: ("+x+","+y+")"+" isPossib: "+isCapturePossible);
         }
         
-        System.out.println("checkCapturesFromPosition: ("+x+","+y+")"+" isPossib: "+isCapturePossible);
         return isCapturePossible;
     }
 }

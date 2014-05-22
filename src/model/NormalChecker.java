@@ -22,7 +22,6 @@ abstract class NormalChecker {
         boolean isTargetToTheBottom = moveToCheck.getEndY() == moveToCheck.getStartY() + 2;
         Checker sourceChecker = Model.board.getField(moveToCheck.getStartX(),
                 moveToCheck.getStartY()).getChecker();
-        
         if(isTargetToTheLeft && isTargetToTheTop && 
                 checkCapturesToTheTopLeftCorner(sourceChecker, null)) {
             return true;
