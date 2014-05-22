@@ -13,7 +13,7 @@ abstract class Queen {
      * @param checkerOnField
      * @param coordinatesToCapture
      */
-    private static void checkCapturesToTheBottomRightCorner(final Checker checkerOnField, 
+    private static boolean checkCapturesToTheBottomRightCorner(final Checker checkerOnField, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int x = checkerOnField.getX()+1;
         int y = checkerOnField.getY()+1;
@@ -22,6 +22,10 @@ abstract class Queen {
             checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
+        if(coordinatesToCapture != null && coordinatesToCapture.size() != 0) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -29,7 +33,7 @@ abstract class Queen {
      * @param checkerOnField
      * @param coordinatesToCapture
      */
-    private static void checkCapturesToTheTopRightCorner(final Checker checkerOnField, 
+    private static boolean checkCapturesToTheTopRightCorner(final Checker checkerOnField, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int x = checkerOnField.getX()+1;
         int y = checkerOnField.getY()-1;
@@ -38,6 +42,10 @@ abstract class Queen {
             checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
+        if(coordinatesToCapture != null && coordinatesToCapture.size() != 0) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -45,7 +53,7 @@ abstract class Queen {
      * @param checkerOnField
      * @param coordinatesToCapture
      */
-    private static void checkCapturesToTheBottomLeftCorner(final Checker checkerOnField, 
+    private static boolean checkCapturesToTheBottomLeftCorner(final Checker checkerOnField, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int x = checkerOnField.getX()-1;
         int y = checkerOnField.getY()+1;
@@ -54,6 +62,10 @@ abstract class Queen {
             checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
+        if(coordinatesToCapture != null && coordinatesToCapture.size() != 0) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -61,7 +73,7 @@ abstract class Queen {
      * @param checkerOnField
      * @param coordinatesToCapture
      */
-    private static void checkCapturesToTheTopLeftCorner(final Checker checkerOnField, 
+    private static boolean checkCapturesToTheTopLeftCorner(final Checker checkerOnField, 
             ArrayList<Coordinate> coordinatesToCapture) {
         int x = checkerOnField.getX()-1;
         int y = checkerOnField.getY()-1;
@@ -70,6 +82,10 @@ abstract class Queen {
             checkMove(checkerOnField.getX(), checkerOnField.getY(), 
                     x, y, coordinatesToCapture);
         }
+        if(coordinatesToCapture != null && coordinatesToCapture.size() != 0) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -372,6 +388,7 @@ abstract class Queen {
             ArrayList<Coordinate> coordinatesToCapture) {
         
         Checker checkerOnField;
+        boolean isCapturePossible = false;
         
         for(Field[] rows : Model.board.getFields()) {
             
@@ -380,27 +397,48 @@ abstract class Queen {
                 if(checkerOnField!= null && checkerOnField.getType() == CheckerType.QUEEN && 
                         checkerOnField.getColor() == color) {
                     
-                    // cel: prawy dolny rog
-                    checkCapturesToTheBottomRightCorner(checkerOnField, coordinatesToCapture);
-                    
-                    // cel: prawy gorny rog
-                    checkCapturesToTheTopRightCorner(checkerOnField, coordinatesToCapture);
-                    
-                    // cel: lewy dolny rog
-                    checkCapturesToTheBottomLeftCorner(checkerOnField, coordinatesToCapture);
-                    
-                    // cel: lewy gorny rog
-                    checkCapturesToTheTopLeftCorner(checkerOnField, coordinatesToCapture);
+                    isCapturePossible |= 
+                            checkPossibleCapturesFromQueen(checkerOnField, coordinatesToCapture);
                     }
                 }
                 
         }
-        if(coordinatesToCapture!= null && coordinatesToCapture.size() != 0) {
-            return true;
-        }
         
         
-        return false;
+        return isCapturePossible;
+    }
+    
+    /**
+     * Sprawdza czy sa mozliwe bicia dla konkretnej damy.
+     * Jesli tak, wpisuje do tablicy wspolrzedne pionkow mozliwych do zbicia
+     * @param sourceChecker
+     * @param coordinatesToCapture
+     * @return
+     */
+    static boolean checkPossibleCapturesFromQueen(final Checker sourceChecker, 
+            ArrayList<Coordinate> coordinatesToCapture) {
+        
+        boolean isCapturePossible = false;
+        
+        // cel: prawy dolny rog
+        isCapturePossible |= checkCapturesToTheBottomRightCorner(sourceChecker, 
+                coordinatesToCapture);
+        
+        // cel: prawy gorny rog
+        isCapturePossible |= checkCapturesToTheTopRightCorner(sourceChecker, 
+                coordinatesToCapture);
+        
+        // cel: lewy dolny rog
+        isCapturePossible |= checkCapturesToTheBottomLeftCorner(sourceChecker, 
+                coordinatesToCapture);
+        
+        // cel: lewy gorny rog
+        isCapturePossible |= checkCapturesToTheTopLeftCorner(sourceChecker, 
+                coordinatesToCapture);
+        
+        return isCapturePossible;
+        
+        
     }
 
 }

@@ -73,7 +73,7 @@ abstract class NormalChecker {
      * @param sourceChecker
      * @return true jesli bicie mozliwe
      */
-    private static boolean checkPossibleCapturesFromChecker(final Checker sourceChecker, 
+    static boolean checkPossibleCapturesFromChecker(final Checker sourceChecker, 
             ArrayList<Coordinate> coordinatesToCapture) {
         
         if(sourceChecker == null) {

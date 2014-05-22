@@ -50,8 +50,21 @@ public class Model {
             }
             selectChecker(x, y);
         } else if(isAnyCheckerSelected()) {
+            Coordinate startCoordinate = getSelectedCheckerCoordinate();
+            Coordinate endCoordinate = new Coordinate(x, y);
+            
+            boolean isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
+            //System.out.println("/debug1 isCap: "+isMoveACapture(new Move(startCoordinate, endCoordinate))+" areCap: "+checkCapturesFromPosition(x, y));
+            
+            
             if(moveSelectedCheckerTo(x, y)) {
-                changeActivePlayer();
+                
+                isNotASingleMove &= checkCapturesFromPosition(x, y);
+                
+                if(!isNotASingleMove) {
+                    changeActivePlayer();
+                }
+                
                 return true;
             }
         } else {
@@ -171,8 +184,21 @@ public class Model {
         while(isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves)) {
         	Move selectedMove = AI.makeAIMove(AIMoves);
             selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
+            Coordinate startCoordinate = getSelectedCheckerCoordinate();
+            Coordinate endCoordinate = new Coordinate(selectedMove.getEndX(), selectedMove.getEndX());
+            //System.out.println("/debug2 isCap: "+isMoveACapture(new Move(startCoordinate, endCoordinate))+" areCap: "+checkCapturesFromPosition(selectedMove.getEndX(), selectedMove.getEndX()));
+            
+            boolean isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
+            
+            
             if(moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY())) {
-                changeActivePlayer();
+                
+                isNotASingleMove &= checkCapturesFromPosition(selectedMove.getEndX(), selectedMove.getEndY());
+                
+                if(!isNotASingleMove) {
+                    changeActivePlayer();
+                }
+                
             }
             AIMoves.clear();
         }
@@ -501,5 +527,30 @@ public class Model {
      */
     public boolean isAITurn() {
         return players[active_player].isCpu();
+    }
+    
+    /**
+     * Sprawdza czy mozliwe jest bicie z danej pozycji
+     * @param x
+     * @param y
+     * @return true jesli bicie jest mozliwe
+     */
+    private boolean checkCapturesFromPosition(final int x, final int y) {
+        
+        boolean isCapturePossible = false;
+        Checker checker = board.getField(x, y).getChecker();
+        System.out.println("PRZED checkCapturesFromPosition" );
+        if(checker != null && checker.getType() == CheckerType.NORMAL) {
+            isCapturePossible |= 
+                    NormalChecker.checkPossibleCapturesFromChecker(checker, null);
+            System.out.println("NCH checkCapturesFromPosition: ("+x+","+y+")"+" isPossib: "+isCapturePossible);
+        } else if(checker != null){
+            isCapturePossible |= 
+                    Queen.checkPossibleCapturesFromQueen(checker, null);
+            System.out.println("Q checkCapturesFromPosition: ("+x+","+y+")"+" isPossib: "+isCapturePossible);
+        }
+        
+        System.out.println("checkCapturesFromPosition: ("+x+","+y+")"+" isPossib: "+isCapturePossible);
+        return isCapturePossible;
     }
 }

@@ -30,6 +30,18 @@ class Move {
         this.endX = endX;
         this.endY = endY;
     }
+    
+    /**
+     * Konstruktor
+     * @param startCoordinate - wspolrzedne polozenia poczatkowego
+     * @param endCoordinate - wspolrzedne polozenia koncowego
+     */
+    Move(final Coordinate startCoordinate, final Coordinate endCoordinate) {
+        startX = startCoordinate.getX();
+        startY = startCoordinate.getY();
+        endX = endCoordinate.getX();
+        endY = endCoordinate.getY();
+    }
 
     int getStartX() {
         return startX;
