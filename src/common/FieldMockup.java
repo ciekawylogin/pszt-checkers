@@ -3,8 +3,8 @@ package common;
 import model.Checker;
 
 public class FieldMockup {
-    public CheckerMockup checker;
-    public boolean is_selected;
+    private CheckerMockup checker;
+    private boolean is_selected;
 
     public CheckerMockup getCheckerMockup() {
         return checker;

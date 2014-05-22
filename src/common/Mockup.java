@@ -9,9 +9,12 @@ public final class Mockup {
     private FieldMockup fields[][];
     /* stan gry */
     private GameStateMockup game_state = GameStateMockup.NOT_STARTED;
-    
     /* gracze (0 = bialy, 1 = czarny) */
     private PlayerMockup players[];
+    /* makieta ostatniego ruchu gracza 1 */
+    private MoveMockup player1LastMove;
+    /* makieta ostatniego ruchu gracza 2 */
+    private MoveMockup player2LastMove;
 
     public Mockup(final int numberState) {
         players = new PlayerMockup[2];
@@ -95,6 +98,46 @@ public final class Mockup {
             throw new RuntimeException("gameState not recognized");
                 
         }
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public MoveMockup getPlayer2LastMove() {
+        return player2LastMove;
+    }
+
+    /**
+     * 
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     */
+    public void setPlayer2LastMove(final int startX, final int startY, final int endX, final int endY) {
+        this.player2LastMove = new MoveMockup(startX, startY, endX, endY);
+        
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public MoveMockup getPlayer1LastMove() {
+        return player1LastMove;
+    }
+
+    /**
+     * 
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     */
+    public void setPlayer1LastMove(final int startX, final int startY, final int endX, final int endY) {
+        this.player1LastMove = new MoveMockup(startX, startY, endX, endY);
+        
     }
     
     

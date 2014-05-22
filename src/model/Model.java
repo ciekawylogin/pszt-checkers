@@ -144,7 +144,22 @@ public class Model {
             correctMove = false;
         }
         unselectChecker();
+        saveCorrectMove(sourceX, sourceY, targetX, targetY);
         return correctMove;
+    }
+    
+    /**
+     * Ustawia ostatni poprawny ruch dla aktywnego gracza
+     * @param sourceX
+     * @param sourceY
+     * @param targetX
+     * @param targetY
+     */
+    private void saveCorrectMove(final int sourceX, final int sourceY, 
+            final int targetX, final int targetY) {
+        Player player = active_player == 0 ? players[0] : players[1];        
+        
+        player.setLastMove(new Move(sourceX, sourceY, targetX, targetY));
     }
     
     /**
@@ -313,6 +328,11 @@ public class Model {
                 mockup.setField(board.getField(i, j).getMockup(), i, j);
         mockup.setPlayers(PlayerMockup.HUMAN_PLAYER, 0);
         mockup.setPlayers(PlayerMockup.AI_PLAYER, 1);
+        Move move = players[0].getLastMove();
+        mockup.setPlayer1LastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
+        move = players[1].getLastMove();
+        mockup.setPlayer2LastMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
+        move = null;
         return mockup;
     }
 

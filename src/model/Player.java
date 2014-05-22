@@ -12,6 +12,8 @@ public class Player {
     private boolean isCpu;
     // poziom trudnosci
     private GameLevel gameLevel;
+    /* ostatni poprawny ruch gracza */
+    private Move lastMove;
 
     /**
      * Konstruktor
@@ -84,5 +86,21 @@ public class Player {
      */
     GameLevel getGameLevel() {
         return gameLevel;
+    }
+
+    /**
+     * Zwraca ostatni poprawnie wykonany ruch gracza.
+     * @return
+     */
+    Move getLastMove() {
+        return lastMove;
+    }
+
+    /**
+     * Ustawia ostatni poprawny ruch gracza
+     * @param lastMove
+     */
+    void setLastMove(final Move lastMove) {
+        this.lastMove = lastMove;
     }
 }
