@@ -82,8 +82,8 @@ public class Controller {
                 final FieldClickEvent fieldClickEvent = (FieldClickEvent)event;
                 boolean isHumanPlayerMoveComplete = 
                         model.processHumanMove(fieldClickEvent.getFieldX(), fieldClickEvent.getFieldY());
+                refreshView();
                 if(isHumanPlayerMoveComplete) {
-                    refreshView();
                     Thread.sleep(1000);
                     model.makeAIMove();
                     
@@ -102,7 +102,6 @@ public class Controller {
             
             // po kazdym zdarzeniu odswiezamy
             refreshView();
-            //view.getFieldFromKeyboard();
             
         }
         catch(InterruptedException exception) {
