@@ -152,6 +152,11 @@ public class View extends Application implements Runnable {
                 }
             }
             fillBoard();
+            
+            for(int i = 0; i < Model.getBoardSize(); ++i) {
+                scene.lookup("#row"+i).toFront();
+                scene.lookup("#col"+i).toFront();
+            }
 
             stage.setScene(scene);
             stage.show();
