@@ -39,6 +39,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -57,10 +58,12 @@ public class View extends Application implements Runnable {
     static private Button fields[][];
     static private ImageView checkersOnBoard[][];
     static private MoveMockup lastMove;
+    static private Text state;
+    static private Text message;
     @FXML private ChoiceBox difficulty;
     @FXML private ChoiceBox color;
     @FXML private TextField name;
-
+    
     @FXML
     protected void beginGame(ActionEvent event) {
         CheckerColor checkerColor = null;
@@ -110,6 +113,8 @@ public class View extends Application implements Runnable {
             Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
             scene.getStylesheets().add(getClass().getResource("source/board.css").toExternalForm());
             board = (GridPane)scene.lookup("#board");
+            state = (Text)scene.lookup("#state");
+            message = (Text)scene.lookup("#message");
             checkers = (AnchorPane)scene.lookup("#checkers");
             fields = new Button[Model.getBoardSize()][Model.getBoardSize()];
             
@@ -119,10 +124,10 @@ public class View extends Application implements Runnable {
                     b.setMinSize(50, 50);
                     if ((i+j) % 2 == 0) {
                         b.setStyle("-fx-background-image: url('" + getClass().getResource("source/black_tile.png").toExternalForm() + "');"
-                                + "-fx-background-color: transparent;");
+                                 + "-fx-background-color: transparent;");
                     } else {
                         b.setStyle("-fx-background-image: url('" + getClass().getResource("source/white_tile.png").toExternalForm() + "');"
-                                + "-fx-background-color: transparent;");
+                                 + "-fx-background-color: transparent;");
                     }
                     final String style = b.getStyle();
                     b.setOnAction(new EventHandler<ActionEvent>() {
@@ -190,77 +195,82 @@ public class View extends Application implements Runnable {
     protected void animateLastMove(MoveMockup move) {
         if((move != null) && (lastMove != move)) {
             lastMove = move;
-            int startX = move.getStartX();
-            int startY = move.getStartY();
-            int endX = move.getEndX();
-            int endY = move.getEndY();
+            final int startX = move.getStartX();
+            final int startY = move.getStartY();
+            final int endX = move.getEndX();
+            final int endY = move.getEndY();
             
             System.out.println("ruch z " + startX + " " + startY + " na " + endX + " " + endY);
             if (checkersOnBoard[startY][startX] != null) {
                 System.out.println("before " + checkersOnBoard[startY][startX] + " " + (checkersOnBoard[startY][startX].getLayoutX()-10)/50 + " " + (checkersOnBoard[startY][startX].getLayoutY()-10)/50);
 
-            checkersOnBoard[startY][startX].relocate(endX*50+10,endY*50+10);
-            
-            double sqrt = 10*Math.sqrt(2); 
-            Path path = new Path();
-            path.getElements().add(new MoveTo(sqrt-(endX-startX)*50, sqrt-(endY-startY)*50));
-            path.getElements().add(new LineTo(endX-startX+sqrt, endY-startY+sqrt));
-            path.setStrokeWidth(1);
-            path.setStroke(Color.BLACK);
-
-            PathTransition pathTransition = PathTransitionBuilder.create()
-                    .node(checkersOnBoard[startY][startX])
-                    .path(path)
-                    .duration(Duration.millis(1000))
-                    .cycleCount(1)
-                    .build();
-            
-            pathTransition.playFromStart();
-            
-            checkersOnBoard[endY][endX] = checkersOnBoard[startY][startX];
-            checkersOnBoard[startY][startX] = null;
-
-            System.out.println("after " + checkersOnBoard[endY][endX] + " " + (checkersOnBoard[endY][endX].getLayoutX()-10)/50 + " " + (checkersOnBoard[endY][endX].getLayoutY()-10)/50);
-            System.out.println();
-
-            int a = 0;
-            int b = 0;
-            
-            if((startX - endX) == -2) {
-                a = -1;
-            } else if((startX - endX) == 2) {
-                a = 1;
-            }
-            
-            if((startY - endY) == -2) {
-                b = -1;
-            } else if((startY - endY) == 2) {
-                b = 1;
-            }
-            
-            if((a != 0) && (b != 0)) {
-                int s = b+endY;
-                int z = a+endX;
-                System.out.println("(ja) usuwany " + s + " " + z);
-                checkers.getChildren().remove(checkersOnBoard[b+endY][a+endX]);
-            }
-            
-            for(Coordinate xy : mockup.getDeletedCheckers()) {
-                System.out.println("usuwany " + xy.getY() + " " + xy.getX());
-                checkers.getChildren().remove(checkersOnBoard[xy.getY()][xy.getX()]);
-            }
+                checkersOnBoard[startY][startX].relocate(endX*50+10,endY*50+10);
                 
-            for(int i = 0; i < Model.getBoardSize(); ++i) {
-                for(int j = 0; j < Model.getBoardSize(); ++j) {
-                    fields[i][j].setStyle(fields[i][j].getStyle().substring(0, 144));
-                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
-                        checkersOnBoard[i][j].setImage(imageBlackQueen);
+                double sqrt = 10*Math.sqrt(2); 
+                Path path = new Path();
+                path.getElements().add(new MoveTo(sqrt-(endX-startX)*50, sqrt-(endY-startY)*50));
+                path.getElements().add(new LineTo((endX-startX)+sqrt, (endY-startY)+sqrt));
+                
+                checkersOnBoard[startY][startX].toFront();
+                
+                PathTransition pathTransition = PathTransitionBuilder.create()
+                        .node(checkersOnBoard[startY][startX])
+                        .path(path)
+                        .duration(Duration.millis(1000))
+                        .cycleCount(1)
+                        .build();
+                
+                pathTransition.playFromStart();
+                
+                checkersOnBoard[endY][endX] = checkersOnBoard[startY][startX];
+                checkersOnBoard[startY][startX] = null;
+    
+                System.out.println("after " + checkersOnBoard[endY][endX] + " " + (checkersOnBoard[endY][endX].getLayoutX()-10)/50 + " " + (checkersOnBoard[endY][endX].getLayoutY()-10)/50);
+                System.out.println();
+                
+                pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int a = 0;
+                        int b = 0;
+                        
+                        if((startX - endX) == -2) {
+                            a = -1;
+                        } else if((startX - endX) == 2) {
+                            a = 1;
+                        }
+                        
+                        if((startY - endY) == -2) {
+                            b = -1;
+                        } else if((startY - endY) == 2) {
+                            b = 1;
+                        }
+                        
+                        if((a != 0) && (b != 0)) {
+                            int s = b+endY;
+                            int z = a+endX;
+                            System.out.println("(ja) usuwany " + s + " " + z);
+                            checkers.getChildren().remove(checkersOnBoard[b+endY][a+endX]);
+                        }
+                        
+                        for(Coordinate xy : mockup.getDeletedCheckers()) {
+                            System.out.println("usuwany " + xy.getY() + " " + xy.getX());
+                            checkers.getChildren().remove(checkersOnBoard[xy.getY()][xy.getX()]);
+                        }
+                            
+                        for(int i = 0; i < Model.getBoardSize(); ++i) {
+                            for(int j = 0; j < Model.getBoardSize(); ++j) {
+                                fields[i][j].setStyle(fields[i][j].getStyle().replace("-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );", ""));
+                                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
+                                    checkersOnBoard[i][j].setImage(imageBlackQueen);
+                                }
+                                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
+                                    checkersOnBoard[i][j].setImage(imageWhiteQueen);
+                                }
+                            }
+                        }
                     }
-                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
-                        checkersOnBoard[i][j].setImage(imageWhiteQueen);
-                    }
-                }
-            }
+                });
             }
             else
                 System.out.println("NULL");
@@ -352,8 +362,9 @@ public class View extends Application implements Runnable {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {
+                blocking_queue.add(new ProgramQuitEvent());
                 Platform.exit();
-                System.exit(0);
+                System.out.println("Exit");
             }
         });
     }
@@ -369,6 +380,12 @@ public class View extends Application implements Runnable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                state.setText((new Communicate(mockup.getGameState())).getMessage());
+                message.setText("Ostatni ruch:\n"
+                        + "(" + mockup.getLastMove().getStartY()
+                        + "," + mockup.getLastMove().getStartX() + ") -> "
+                        + "(" + mockup.getLastMove().getEndY()
+                        + "," + mockup.getLastMove().getEndX() + ")");
                 animateLastMove(mockup.getLastMove());
                 System.out.println("--------------------------------");
 //                System.out.println("game state: "+View.mockup.getGameState());

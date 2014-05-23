@@ -480,7 +480,7 @@ public class Model {
         for(int targetX=0; targetX<8; ++targetX) {
             for(int targetY=0; targetY<8; ++targetY) {
                 if(isMoveCorrect(sourceX, sourceY, targetX, targetY)) {
-                    System.out.println("dodaje: " + sourceX + " " + sourceY + " " + targetX + " " + targetY);
+                    //System.out.println("dodaje: " + sourceX + " " + sourceY + " " + targetX + " " + targetY);
                     if(result != null) {
                         result.add(new Move(sourceX, sourceY, targetX, targetY));
                     }

@@ -18,8 +18,8 @@ abstract class AI {
         int randomId = (int) Math.floor(Math.random() * movesCount);
         if(!moves.isEmpty()) {
             Move selectedMove = moves.get(randomId);
-            System.out.println("wybrany ruch z ["+ selectedMove.getStartX() + ", " + selectedMove.getStartY() +
-                               "] na [" + selectedMove.getEndX() + ", " + selectedMove.getEndY() + "]");
+            //System.out.println("wybrany ruch z ["+ selectedMove.getStartX() + ", " + selectedMove.getStartY() +
+            //                   "] na [" + selectedMove.getEndX() + ", " + selectedMove.getEndY() + "]");
             //selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
             //moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY());
             return selectedMove;
