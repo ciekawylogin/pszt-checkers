@@ -58,11 +58,12 @@ public class View extends Application implements Runnable {
     static private Button fields[][];
     static private ImageView checkersOnBoard[][];
     static private MoveMockup lastMove;
+    static private ImageView playerChecker;
     static private Text state;
     static private Text message;
-    @FXML private ChoiceBox difficulty;
-    @FXML private ChoiceBox color;
-    @FXML private TextField name;
+    static private ChoiceBox<?> difficulty;
+    static private ChoiceBox<?> color;
+    static private TextField name;
     
     @FXML
     protected void beginGame(ActionEvent event) {
@@ -113,6 +114,7 @@ public class View extends Application implements Runnable {
             Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
             scene.getStylesheets().add(getClass().getResource("source/board.css").toExternalForm());
             board = (GridPane)scene.lookup("#board");
+            playerChecker = (ImageView)scene.lookup("#playerChecker");
             state = (Text)scene.lookup("#state");
             message = (Text)scene.lookup("#message");
             checkers = (AnchorPane)scene.lookup("#checkers");
@@ -294,7 +296,7 @@ public class View extends Application implements Runnable {
      * Zwraca kolor ze stringa ChoiceBoxa
      * @return CheckerColor
      */
-    private CheckerColor getCheckerColorFromChoiceBox() {
+    protected CheckerColor getCheckerColorFromChoiceBox() {
         
         ColorIdentificator colorId = ColorIdentificator.getId((String)color.getValue());
         
@@ -367,6 +369,10 @@ public class View extends Application implements Runnable {
                 System.out.println("Exit");
             }
         });
+        
+        difficulty = (ChoiceBox<?>)scene.lookup("#difficulty");
+        color = (ChoiceBox<?>)scene.lookup("#color");
+        name = (TextField)scene.lookup("#name");
     }
 
     /**
@@ -380,12 +386,34 @@ public class View extends Application implements Runnable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                CheckerColor checkerColor = getCheckerColorFromChoiceBox();
+                Image player = null;
+                Image CPU = null;
+                if(checkerColor == CheckerColor.WHITE) {
+                    player = imageWhiteChecker;
+                    CPU = imageBlackChecker;
+                } else if(checkerColor == CheckerColor.BLACK) {
+                    player = imageBlackChecker;
+                    CPU = imageWhiteChecker;
+                }
+                    
+                if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
+                        || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
+                    playerChecker.setImage(player);
+                }
+                if(mockup.getGameState() == GameStateMockup.PLAYER_2_MOVE 
+                        || mockup.getGameState() == GameStateMockup.PLAYER_2_MOVE_REPEAT_MOVE) {
+                    playerChecker.setImage(CPU);
+                }
+                
                 state.setText((new Communicate(mockup.getGameState())).getMessage());
-                message.setText("Ostatni ruch:\n"
+                if(mockup.getLastMove() != null) {
+                    message.setText("Ostatni ruch:\n"
                         + "(" + mockup.getLastMove().getStartY()
                         + "," + mockup.getLastMove().getStartX() + ") -> "
                         + "(" + mockup.getLastMove().getEndY()
                         + "," + mockup.getLastMove().getEndX() + ")");
+                }
                 animateLastMove(mockup.getLastMove());
                 System.out.println("--------------------------------");
 //                System.out.println("game state: "+View.mockup.getGameState());
