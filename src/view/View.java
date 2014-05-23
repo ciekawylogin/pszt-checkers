@@ -40,6 +40,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import jfx.messagebox.MessageBox;
 
@@ -53,7 +54,9 @@ public class View extends Application implements Runnable {
     static private Image imageBlackQueen;
     static private GridPane board;
     static private AnchorPane checkers;
+    static private Button fields[][];
     static private ImageView checkersOnBoard[][];
+    static private MoveMockup lastMove;
     @FXML private ChoiceBox difficulty;
     @FXML private ChoiceBox color;
     @FXML private TextField name;
@@ -108,6 +111,7 @@ public class View extends Application implements Runnable {
             scene.getStylesheets().add(getClass().getResource("source/board.css").toExternalForm());
             board = (GridPane)scene.lookup("#board");
             checkers = (AnchorPane)scene.lookup("#checkers");
+            fields = new Button[Model.getBoardSize()][Model.getBoardSize()];
             
             for(int i = 0; i < Model.getBoardSize(); ++i) {
                 for(int j = 0; j < Model.getBoardSize(); ++j) {
@@ -121,21 +125,24 @@ public class View extends Application implements Runnable {
                                 + "-fx-background-color: transparent;");
                     }
                     final String style = b.getStyle();
+                    b.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
+                                    || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
+                                b.setStyle(style + "-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );");
+                                blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
+                            }
+                        }
+                    });
+                    fields[j][i] = b;
                     b.focusedProperty().addListener(new ChangeListener<Boolean>() {
                         @Override
                         public void changed(ObservableValue<? extends Boolean> arg0, Boolean outFocus, Boolean onFocus)
                         {
-                            if (onFocus) {
-                                if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
-                                        || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
-                                    b.setStyle(style + "-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );");
-                                    blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
-                                    onFocus = outFocus;
-                                }
-                            } else {
+                            if (outFocus) {
                                 b.setStyle(style);
                             }
-
                         }
                     });
                     board.add(b, j, i);
@@ -181,17 +188,19 @@ public class View extends Application implements Runnable {
     }
     
     protected void animateLastMove(MoveMockup move) {
-        if(move != null) {
+        if((move != null) && (lastMove != move)) {
+            lastMove = move;
             int startX = move.getStartX();
             int startY = move.getStartY();
             int endX = move.getEndX();
             int endY = move.getEndY();
             
-            System.out.println(startX + " " + startY + " " + endX + " " + endY);
+            System.out.println("ruch z " + startX + " " + startY + " na " + endX + " " + endY);
             if (checkersOnBoard[startY][startX] != null) {
                 System.out.println("before " + checkersOnBoard[startY][startX] + " " + (checkersOnBoard[startY][startX].getLayoutX()-10)/50 + " " + (checkersOnBoard[startY][startX].getLayoutY()-10)/50);
-            checkersOnBoard[endY][endX] = checkersOnBoard[startY][startX];
 
+            checkersOnBoard[startY][startX].relocate(endX*50+10,endY*50+10);
+            
             double sqrt = 10*Math.sqrt(2); 
             Path path = new Path();
             path.getElements().add(new MoveTo(sqrt-(endX-startX)*50, sqrt-(endY-startY)*50));
@@ -200,20 +209,20 @@ public class View extends Application implements Runnable {
             path.setStroke(Color.BLACK);
 
             PathTransition pathTransition = PathTransitionBuilder.create()
-                    .node(checkersOnBoard[endY][endX])
+                    .node(checkersOnBoard[startY][startX])
                     .path(path)
                     .duration(Duration.millis(1000))
                     .cycleCount(1)
                     .build();
             
             pathTransition.playFromStart();
+            
+            checkersOnBoard[endY][endX] = checkersOnBoard[startY][startX];
+            checkersOnBoard[startY][startX] = null;
 
-            checkersOnBoard[endY][endX].relocate(endX*50+10,endY*50+10);
             System.out.println("after " + checkersOnBoard[endY][endX] + " " + (checkersOnBoard[endY][endX].getLayoutX()-10)/50 + " " + (checkersOnBoard[endY][endX].getLayoutY()-10)/50);
             System.out.println();
-            
-            checkersOnBoard[startY][startX] = null;
-            
+
             int a = 0;
             int b = 0;
             
@@ -230,15 +239,20 @@ public class View extends Application implements Runnable {
             }
             
             if((a != 0) && (b != 0)) {
+                int s = b+endY;
+                int z = a+endX;
+                System.out.println("(ja) usuwany " + s + " " + z);
                 checkers.getChildren().remove(checkersOnBoard[b+endY][a+endX]);
             }
             
             for(Coordinate xy : mockup.getDeletedCheckers()) {
+                System.out.println("usuwany " + xy.getY() + " " + xy.getX());
                 checkers.getChildren().remove(checkersOnBoard[xy.getY()][xy.getX()]);
             }
                 
             for(int i = 0; i < Model.getBoardSize(); ++i) {
                 for(int j = 0; j < Model.getBoardSize(); ++j) {
+                    fields[i][j].setStyle(fields[i][j].getStyle().substring(0, 144));
                     if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
                         checkersOnBoard[i][j].setImage(imageBlackQueen);
                     }
@@ -335,6 +349,13 @@ public class View extends Application implements Runnable {
         stage.setTitle("Checkers");
         stage.setResizable(false);
         stage.show();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
     }
 
     /**
@@ -350,13 +371,13 @@ public class View extends Application implements Runnable {
             public void run() {
                 animateLastMove(mockup.getLastMove());
                 System.out.println("--------------------------------");
-                System.out.println("game state: "+View.mockup.getGameState());
-                System.out.println("player 1: "+View.mockup.getPlayer(0)+" player 2: "+View.mockup.getPlayer(1));
-                System.out.println("board:");
-                System.out.print("   ");
-                for(int i = 0; i < Model.getBoardSize(); ++i) {
-                    System.out.print(" "+i+"  ");
-                }
+//                System.out.println("game state: "+View.mockup.getGameState());
+//                System.out.println("player 1: "+View.mockup.getPlayer(0)+" player 2: "+View.mockup.getPlayer(1));
+//                System.out.println("board:");
+//                System.out.print("   ");
+//                for(int i = 0; i < Model.getBoardSize(); ++i) {
+//                    System.out.print(" "+i+"  ");
+//                }
 
                 System.out.println();
                 for(int i = 0; i < Model.getBoardSize(); ++i) {
