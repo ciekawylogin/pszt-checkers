@@ -3,7 +3,6 @@ package model;
 import java.util.ArrayList;
 
 import common.Coordinate;
-import common.GameStateMockup;
 import common.Mockup;
 import common.PlayerMockup;
 

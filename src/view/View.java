@@ -35,7 +35,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -61,9 +60,9 @@ public class View extends Application implements Runnable {
     static private ImageView playerChecker;
     static private Text state;
     static private Text message;
-    static private ChoiceBox<?> difficulty;
-    static private ChoiceBox<?> color;
-    static private TextField name;
+    @FXML private ChoiceBox<?> difficulty;
+    @FXML private ChoiceBox<?> color;
+    @FXML private TextField name;
     
     @FXML
     protected void beginGame(ActionEvent event) {
@@ -135,11 +134,8 @@ public class View extends Application implements Runnable {
                     b.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            if(mockup.getGameState() == GameStateMockup.WHITE_PLAYER_MOVE 
-                                    || mockup.getGameState() == GameStateMockup.WHITE_PLAYER_REPEAT_MOVE) {
-                                b.setStyle(style + "-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );");
-                                blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
-                            }
+                            b.setStyle(style + "-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );");
+                            blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
                         }
                     });
                     fields[j][i] = b;
@@ -369,10 +365,6 @@ public class View extends Application implements Runnable {
                 System.out.println("Exit");
             }
         });
-        
-        difficulty = (ChoiceBox<?>)scene.lookup("#difficulty");
-        color = (ChoiceBox<?>)scene.lookup("#color");
-        name = (TextField)scene.lookup("#name");
     }
 
     /**
@@ -386,24 +378,13 @@ public class View extends Application implements Runnable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                CheckerColor checkerColor = getCheckerColorFromChoiceBox();
-                Image player = null;
-                Image CPU = null;
-                if(checkerColor == CheckerColor.WHITE) {
-                    player = imageWhiteChecker;
-                    CPU = imageBlackChecker;
-                } else if(checkerColor == CheckerColor.BLACK) {
-                    player = imageBlackChecker;
-                    CPU = imageWhiteChecker;
+                if(mockup.getGameState() == GameStateMockup.WHITE_PLAYER_MOVE 
+                        || mockup.getGameState() == GameStateMockup.WHITE_PLAYER_REPEAT_MOVE) {
+                    playerChecker.setImage(imageWhiteChecker);
                 }
-                    
-                if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
-                        || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
-                    playerChecker.setImage(player);
-                }
-                if(mockup.getGameState() == GameStateMockup.PLAYER_2_MOVE 
-                        || mockup.getGameState() == GameStateMockup.PLAYER_2_MOVE_REPEAT_MOVE) {
-                    playerChecker.setImage(CPU);
+                if(mockup.getGameState() == GameStateMockup.BLACK_PLAYER_MOVE 
+                        || mockup.getGameState() == GameStateMockup.BLACK_PLAYER_REPEAT_MOVE) {
+                    playerChecker.setImage(imageBlackChecker);
                 }
                 
                 state.setText((new Communicate(mockup.getGameState())).getMessage());

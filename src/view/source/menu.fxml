@@ -13,7 +13,7 @@
          <effect>
             <DropShadow />
          </effect></Label>
-        <ChoiceBox id="difficulty" layoutX="163.0" layoutY="140.0" prefWidth="150.0" value="easy">
+        <ChoiceBox fx:id="difficulty" layoutX="163.0" layoutY="140.0" prefWidth="150.0" value="easy">
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="easy" />
@@ -26,7 +26,7 @@
          <effect>
             <DropShadow />
          </effect></Label>
-        <ChoiceBox id="color" layoutX="163.0" layoutY="182.0" prefWidth="150.0" value="white">
+        <ChoiceBox fx:id="color" layoutX="163.0" layoutY="182.0" prefWidth="150.0" value="white">
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="white" />
@@ -38,7 +38,7 @@
          <effect>
             <DropShadow />
          </effect></Label>
-        <TextField id="name" layoutX="164.0" layoutY="224.0" prefWidth="150.0" />
+        <TextField fx:id="name" layoutX="164.0" layoutY="224.0" prefWidth="150.0" />
         <Button fx:id="start" layoutX="150.0" layoutY="285.0" mnemonicParsing="false" onAction="#beginGame" prefWidth="100.0" text="Begin game" />
         <Button fx:id="exit" layoutX="150.0" layoutY="327.0" mnemonicParsing="false" onAction="#exitProgram" prefWidth="100.0" text="Exit" />
       <Text fx:id="welcome_text" layoutX="76.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Checkers" textAlignment="CENTER" />
