@@ -44,5 +44,16 @@ public class MoveMockup {
     public int getEndY() {
         return endY;
     }
+    
+    @Override 
+    public boolean equals(Object other) {
+        boolean result = false;
+        if (other instanceof MoveMockup) {
+            MoveMockup that = (MoveMockup)other;
+            result = (this.getStartX() == that.getStartX() && this.getStartY() == that.getStartY() 
+                    && this.getEndX() == that.getEndX() && this.getEndY() == that.getEndY());
+        }
+        return result;
+    }
 
 }

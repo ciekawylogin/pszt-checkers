@@ -130,10 +130,10 @@ public class Model {
         Coordinate source_coordinate = getSelectedCheckerCoordinate();
         int sourceX = source_coordinate.getX();
         int sourceY = source_coordinate.getY();
-        System.out.println("a " + players[active_player].isCpu());
-        System.out.println("b " + players[active_player].getPlayerColor());
-        System.out.println("c " + sourceX + " " + sourceY);
-        System.out.println("d " + targetX + " " + targetY);
+        //System.out.println("a " + players[active_player].isCpu());
+        //System.out.println("b " + players[active_player].getPlayerColor());
+        //System.out.println("c " + sourceX + " " + sourceY);
+        //System.out.println("d " + targetX + " " + targetY);
         Checker sourceChecker = board.getField(sourceX, sourceY).getChecker();
         boolean correctMove = true;
         boolean forcedCapture = false;
@@ -369,6 +369,10 @@ public class Model {
         
         for(Coordinate coordinate : NormalChecker.deletedCheckers) {
             mockup.addCoordinate(coordinate);
+        }
+        
+        for(Coordinate c: mockup.getDeletedCheckers()) {
+           System.out.println("DELETED: "+c.getX()+" "+c.getY());
         }
         Queen.deletedCheckers.clear();
         NormalChecker.deletedCheckers.clear();

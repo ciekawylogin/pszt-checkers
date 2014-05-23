@@ -84,6 +84,7 @@ public class Controller {
                         model.processHumanMove(fieldClickEvent.getFieldX(), fieldClickEvent.getFieldY());
                 if(isHumanPlayerMoveComplete) {
                     refreshView();
+                    Thread.sleep(1000);
                     model.makeAIMove();
                     
                 }

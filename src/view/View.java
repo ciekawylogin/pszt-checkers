@@ -189,7 +189,7 @@ public class View extends Application implements Runnable {
                 
                 image.relocate(j*50+10, i*50+10);
                 checkers.getChildren().add(image); 
-                checkersOnBoard[i][j] = image;
+                checkersOnBoard[j][i] = image;
             }
         }
         checkers.toFront();
@@ -204,20 +204,21 @@ public class View extends Application implements Runnable {
             final int endY = move.getEndY();
             
             System.out.println("ruch z " + startX + " " + startY + " na " + endX + " " + endY);
-            if (checkersOnBoard[startY][startX] != null) {
-                System.out.println("before " + checkersOnBoard[startY][startX] + " " + (checkersOnBoard[startY][startX].getLayoutX()-10)/50 + " " + (checkersOnBoard[startY][startX].getLayoutY()-10)/50);
+            if (checkersOnBoard[startX][startY] != null) {
+                System.out.println("before " + checkersOnBoard[startX][startY] + " " + (checkersOnBoard[startX][startY].getLayoutX()-10)/50 
+                        + " " + (checkersOnBoard[startX][startY].getLayoutY()-10)/50);
 
-                checkersOnBoard[startY][startX].relocate(endX*50+10,endY*50+10);
+                checkersOnBoard[startX][startY].relocate(endX*50+10, endY*50+10);
                 
                 double sqrt = 10*Math.sqrt(2); 
                 Path path = new Path();
                 path.getElements().add(new MoveTo(sqrt-(endX-startX)*50, sqrt-(endY-startY)*50));
                 path.getElements().add(new LineTo((endX-startX)+sqrt, (endY-startY)+sqrt));
                 
-                checkersOnBoard[startY][startX].toFront();
+                checkersOnBoard[startX][startY].toFront();
                 
                 PathTransition pathTransition = PathTransitionBuilder.create()
-                        .node(checkersOnBoard[startY][startX])
+                        .node(checkersOnBoard[startX][startY])
                         .path(path)
                         .duration(Duration.millis(1000))
                         .cycleCount(1)
@@ -225,50 +226,30 @@ public class View extends Application implements Runnable {
                 
                 pathTransition.playFromStart();
                 
-                checkersOnBoard[endY][endX] = checkersOnBoard[startY][startX];
+                checkersOnBoard[endX][endY] = checkersOnBoard[startX][startY];
                 checkersOnBoard[startY][startX] = null;
     
-                System.out.println("after " + checkersOnBoard[endY][endX] + " " + (checkersOnBoard[endY][endX].getLayoutX()-10)/50 + " " + (checkersOnBoard[endY][endX].getLayoutY()-10)/50);
+                System.out.println("after " + checkersOnBoard[endX][endY] + " " + (checkersOnBoard[endX][endY].getLayoutX()-10)/50 
+                        + " " + (checkersOnBoard[endX][endY].getLayoutY()-10)/50);
                 System.out.println();
                 
                 pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        int a = 0;
-                        int b = 0;
-                        
-                        if((startX - endX) == -2) {
-                            a = -1;
-                        } else if((startX - endX) == 2) {
-                            a = 1;
-                        }
-                        
-                        if((startY - endY) == -2) {
-                            b = -1;
-                        } else if((startY - endY) == 2) {
-                            b = 1;
-                        }
-                        
-                        if((a != 0) && (b != 0)) {
-                            int s = b+endY;
-                            int z = a+endX;
-                            System.out.println("(ja) usuwany " + s + " " + z);
-                            checkers.getChildren().remove(checkersOnBoard[b+endY][a+endX]);
-                        }
-                        
+                        System.out.println("HANDLE KURWA");
                         for(Coordinate xy : mockup.getDeletedCheckers()) {
-                            System.out.println("usuwany " + xy.getY() + " " + xy.getX());
-                            checkers.getChildren().remove(checkersOnBoard[xy.getY()][xy.getX()]);
+                            System.out.println("usuwany " + xy.getX() + " " + xy.getY());
+                            checkers.getChildren().remove(checkersOnBoard[xy.getX()][xy.getY()]);
                         }
                             
                         for(int i = 0; i < Model.getBoardSize(); ++i) {
                             for(int j = 0; j < Model.getBoardSize(); ++j) {
-                                fields[i][j].setStyle(fields[i][j].getStyle().replace("-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );", ""));
+                                fields[j][i].setStyle(fields[j][i].getStyle().replace("-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );", ""));
                                 if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
-                                    checkersOnBoard[i][j].setImage(imageBlackQueen);
+                                    checkersOnBoard[j][i].setImage(imageBlackQueen);
                                 }
                                 if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
-                                    checkersOnBoard[i][j].setImage(imageWhiteQueen);
+                                    checkersOnBoard[j][i].setImage(imageWhiteQueen);
                                 }
                             }
                         }
@@ -276,12 +257,12 @@ public class View extends Application implements Runnable {
                 });
             }
             else
-                System.out.println("NULL");
+                System.out.println("NULL: "+startX + " " + startY + " na " + endX + " " + endY);
 
         }
     }
     
-    protected Button getButton(final int row, final int column) {
+    protected Button getButton(final int column, final int row) {
         for(Node node : board.getChildren()) {
             if (node.getClass() == Button.class) {
 
@@ -380,6 +361,7 @@ public class View extends Application implements Runnable {
      */
     public void draw(final Mockup mockup) {
         View.mockup = mockup;
+        System.out.println("NOWY MOCKUP KURWA");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -395,31 +377,23 @@ public class View extends Application implements Runnable {
                 state.setText((new Communicate(mockup.getGameState())).getMessage());
                 if(mockup.getLastMove() != null) {
                     message.setText("Ostatni ruch:\n"
-                        + "(" + mockup.getLastMove().getStartY()
-                        + "," + mockup.getLastMove().getStartX() + ") -> "
-                        + "(" + mockup.getLastMove().getEndY()
-                        + "," + mockup.getLastMove().getEndX() + ")");
+                        + "(" + mockup.getLastMove().getStartX()
+                        + "," + mockup.getLastMove().getStartY() + ") -> "
+                        + "(" + mockup.getLastMove().getEndX()
+                        + "," + mockup.getLastMove().getEndY() + ")");
                 }
                 animateLastMove(mockup.getLastMove());
                 System.out.println("--------------------------------");
-//                System.out.println("game state: "+View.mockup.getGameState());
-//                System.out.println("player 1: "+View.mockup.getPlayer(0)+" player 2: "+View.mockup.getPlayer(1));
-//                System.out.println("board:");
-//                System.out.print("   ");
-//                for(int i = 0; i < Model.getBoardSize(); ++i) {
-//                    System.out.print(" "+i+"  ");
-//                }
 
                 System.out.println();
                 for(int i = 0; i < Model.getBoardSize(); ++i) {
                     System.out.print(" "+i+" ");
                     for(int j = 0; j < Model.getBoardSize(); ++j) {
-                        //System.out.print("\t" + mockup.getField(j, i).isSelected() + "\t" + mockup.getField(j, i).getCheckerMockup());
-                        checkIsEmptyField(View.mockup, i, j);
-                        checkIsBlackChecker(View.mockup, i,  j);
-                        checkIsBlackQueen(View.mockup, i, j);
-                        checkIsWhiteChecker(View.mockup, i, j);
-                        checkIsWhiteQueen(View.mockup, i, j);
+                        checkIsEmptyField(View.mockup, j, i);
+                        checkIsBlackChecker(View.mockup, j,  i);
+                        checkIsBlackQueen(View.mockup, j, i);
+                        checkIsWhiteChecker(View.mockup, j, i);
+                        checkIsWhiteQueen(View.mockup, j, i);
                     }
                     System.out.println();
                 }
@@ -428,23 +402,9 @@ public class View extends Application implements Runnable {
 
     }
     
-    /**
-     * Pobiera wspolrzedne pola z klawiatury.
-     */
-    public void getFieldFromKeyboard() {
-        Scanner in = new Scanner(System.in);
-        int x = in.nextInt();
-        int y = in.nextInt();
-        //System.out.println("przed wyslaniem: x: "+x+", y: "+y);
-        blocking_queue.add(new FieldClickEvent(x, y));
-        in.close();
-    }
-    
     private void checkIsEmptyField(final Mockup mockup, final int i, final int j) {
-        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
-//            ImageView image = new ImageView();
-//            getButton(i, j).setGraphic(image);
-            if(mockup.getField(j, i).isSelected()) {
+        if(mockup.getField(i, j).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
+            if(mockup.getField(i, j).isSelected()) {
                 System.out.print("]_[ ");
             } else {
                 System.out.print("[_] ");
@@ -453,10 +413,8 @@ public class View extends Application implements Runnable {
     }
     
     private void checkIsBlackChecker(final Mockup mockup, final int i, final int j) {
-        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
-//            ImageView image = new ImageView(imageBlackChecker);
-//            getButton(i, j).setGraphic(image);
-            if(mockup.getField(j, i).isSelected()) {
+        if(mockup.getField(i, j).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
+            if(mockup.getField(i, j).isSelected()) {
                 System.out.print("]@[ ");
             } else {
                 System.out.print("[@] ");
@@ -465,10 +423,8 @@ public class View extends Application implements Runnable {
     }
     
     private void checkIsBlackQueen(final Mockup mockup, final int i, final int j) {
-        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
-//            ImageView image = new ImageView(imageBlackQueen);
-//            getButton(i, j).setGraphic(image);
-            if(mockup.getField(j, i).isSelected()) {
+        if(mockup.getField(i, j).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
+            if(mockup.getField(i, j).isSelected()) {
                 System.out.print("]2[ ");
             } else {
                 System.out.print("[2] ");
@@ -477,10 +433,8 @@ public class View extends Application implements Runnable {
     }
     
     private void checkIsWhiteChecker(final Mockup mockup, final int i, final int j) {
-        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
-//            ImageView image = new ImageView(imageWhiteChecker);
-//            getButton(i, j).setGraphic(image);
-            if(mockup.getField(j, i).isSelected()) {
+        if(mockup.getField(i, j).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
+            if(mockup.getField(i, j).isSelected()) {
                 System.out.print("]#[ ");
             } else {
                 System.out.print("[#] ");
@@ -489,10 +443,8 @@ public class View extends Application implements Runnable {
     }
     
     private void checkIsWhiteQueen(final Mockup mockup, final int i, final int j) {
-        if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
-//            ImageView image = new ImageView(imageWhiteQueen);
-//            getButton(i, j).setGraphic(image);
-            if(mockup.getField(j, i).isSelected()) {
+        if(mockup.getField(i, j).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
+            if(mockup.getField(i, j).isSelected()) {
                 System.out.print("]3[ ");
             } else {
                 System.out.print("[3] ");
