@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="610.0" maxWidth="400.0" minHeight="610.0" minWidth="400.0" prefHeight="610.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.View">
 	<children>
@@ -31,6 +32,54 @@
 			</rowConstraints>
          <children>
             <AnchorPane id="checkers" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="8" GridPane.rowSpan="8" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+               <GridPane.margin>
+                  <Insets left="22.0" top="-31.0" />
+               </GridPane.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="1" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets left="22.0" top="-31.0" />
+               </GridPane.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="2" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets left="22.0" top="-31.0" />
+               </GridPane.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="3" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets left="22.0" top="-31.0" />
+               </GridPane.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="4" GridPane.columnIndex="4">
+               <GridPane.margin>
+                  <Insets left="22.0" top="-31.0" />
+               </GridPane.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="5" GridPane.columnIndex="5">
+               <GridPane.margin>
+                  <Insets left="22.0" top="-31.0" />
+               </GridPane.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="6" GridPane.columnIndex="6">
+               <GridPane.margin>
+                  <Insets left="22.0" top="-31.0" />
+               </GridPane.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="7" GridPane.columnIndex="7">
+               <GridPane.margin>
+                  <Insets left="22.0" top="-31.0" />
+               </GridPane.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="1" GridPane.rowIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="2" GridPane.rowIndex="2" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="3" GridPane.rowIndex="3" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="4" GridPane.rowIndex="4" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="5" GridPane.rowIndex="5" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="6" GridPane.rowIndex="6" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="7" GridPane.rowIndex="7" />
          </children>
 		</GridPane>
 		<Button fx:id="back" layoutX="286.0" layoutY="581.0" mnemonicParsing="false" onAction="#showMenu" prefWidth="100.0" text="Back to menu" />
