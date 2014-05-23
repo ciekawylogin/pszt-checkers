@@ -8,11 +8,6 @@
 
 <AnchorPane maxHeight="610.0" maxWidth="400.0" minHeight="610.0" minWidth="400.0" prefHeight="610.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.View">
 	<children>
-      <ImageView fitHeight="210.0" fitWidth="400.0" layoutY="400.0">
-         <image>
-            <Image url="@wood.png" />
-         </image>
-      </ImageView>
 		<GridPane id="board" gridLinesVisible="true" layoutX="0.0" layoutY="0.0" prefHeight="400.0" prefWidth="400.0">
 			<columnConstraints>
 				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
@@ -41,5 +36,6 @@
 		<Button fx:id="back" layoutX="286.0" layoutY="581.0" mnemonicParsing="false" onAction="#showMenu" prefWidth="100.0" text="Back to menu" />
       <Text id="state" fill="WHITE" layoutX="50.0" layoutY="440.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="147.888671875" />
       <Text id="message" fill="WHITE" layoutX="50.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.0" />
+      <ImageView id="playerChecker" layoutX="312.0" layoutY="430.0" />
 	</children>
 </AnchorPane>
