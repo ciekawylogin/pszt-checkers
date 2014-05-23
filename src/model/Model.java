@@ -156,7 +156,9 @@ public class Model {
             correctMove = false;
         }
         unselectChecker();
-        saveCorrectMove(sourceX, sourceY, targetX, targetY);
+        if(correctMove) {
+        	saveCorrectMove(sourceX, sourceY, targetX, targetY);
+        }
         return correctMove;
     }
     
@@ -170,7 +172,6 @@ public class Model {
     private void saveCorrectMove(final int sourceX, final int sourceY, 
             final int targetX, final int targetY) {
         Player player = active_player == 0 ? players[0] : players[1];        
-        
         player.setLastMove(new Move(sourceX, sourceY, targetX, targetY));
     }
     
