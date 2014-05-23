@@ -122,17 +122,15 @@ public class View extends Application implements Runnable {
                     }
                     final String style = b.getStyle();
                     b.focusedProperty().addListener(new ChangeListener<Boolean>() {
-
-
                         @Override
                         public void changed(ObservableValue<? extends Boolean> arg0, Boolean outFocus, Boolean onFocus)
                         {
                             if (onFocus) {
-
                                 if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
                                         || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
                                     b.setStyle(style + "-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );");
                                     blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
+                                    onFocus = outFocus;
                                 }
                             } else {
                                 b.setStyle(style);
@@ -196,8 +194,8 @@ public class View extends Application implements Runnable {
 
             double sqrt = 10*Math.sqrt(2); 
             Path path = new Path();
-            path.getElements().add(new MoveTo(sqrt, sqrt));
-            path.getElements().add(new LineTo((endX-startX)*50+sqrt, (endY-startY)*50+sqrt));
+            path.getElements().add(new MoveTo(sqrt-(endX-startX)*50, sqrt-(endY-startY)*50));
+            path.getElements().add(new LineTo(endX-startX+sqrt, endY-startY+sqrt));
             path.setStrokeWidth(1);
             path.setStroke(Color.BLACK);
 
@@ -210,30 +208,30 @@ public class View extends Application implements Runnable {
             
             pathTransition.playFromStart();
 
-//            checkersOnBoard[endY][endX].relocate(endX*50+10,endY*50+10);
+            checkersOnBoard[endY][endX].relocate(endX*50+10,endY*50+10);
             System.out.println("after " + checkersOnBoard[endY][endX] + " " + (checkersOnBoard[endY][endX].getLayoutX()-10)/50 + " " + (checkersOnBoard[endY][endX].getLayoutY()-10)/50);
             System.out.println();
             
             checkersOnBoard[startY][startX] = null;
             
-//            int a = 0;
-//            int b = 0;
-//            
-//            if((startX - endX) == -2) {
-//                a = -1;
-//            } else if((startX - endX) == 2) {
-//                a = 1;
-//            }
-//            
-//            if((startY - endY) == -2) {
-//                b = -1;
-//            } else if((startY - endY) == 2) {
-//                b = 1;
-//            }
-//            
-//            if((a != 0) && (b != 0)) {
-//                checkers.getChildren().remove(checkersOnBoard[b+endY][a+endX]);
-//            }
+            int a = 0;
+            int b = 0;
+            
+            if((startX - endX) == -2) {
+                a = -1;
+            } else if((startX - endX) == 2) {
+                a = 1;
+            }
+            
+            if((startY - endY) == -2) {
+                b = -1;
+            } else if((startY - endY) == 2) {
+                b = 1;
+            }
+            
+            if((a != 0) && (b != 0)) {
+                checkers.getChildren().remove(checkersOnBoard[b+endY][a+endX]);
+            }
             
             for(Coordinate xy : mockup.getDeletedCheckers()) {
                 checkers.getChildren().remove(checkersOnBoard[xy.getY()][xy.getX()]);
