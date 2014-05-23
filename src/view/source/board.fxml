@@ -6,7 +6,7 @@
 
 <AnchorPane maxHeight="610.0" maxWidth="400.0" minHeight="610.0" minWidth="400.0" prefHeight="610.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.View">
 	<children>
-		<GridPane id="board" prefHeight="400.0" prefWidth="400.0" gridLinesVisible="true" layoutX="0.0" layoutY="0.0">
+		<GridPane id="board" gridLinesVisible="true" layoutX="0.0" layoutY="0.0" prefHeight="400.0" prefWidth="400.0">
 			<columnConstraints>
 				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
 				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
@@ -27,6 +27,9 @@
 				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
 				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
 			</rowConstraints>
+         <children>
+            <AnchorPane id="checkers" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="8" GridPane.rowSpan="8" />
+         </children>
 		</GridPane>
 		<Button fx:id="back" layoutX="286.0" layoutY="571.0" mnemonicParsing="false" onAction="#showMenu" prefWidth="100.0" text="Back to menu" />
 	</children>

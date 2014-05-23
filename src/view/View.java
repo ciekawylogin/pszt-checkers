@@ -8,17 +8,23 @@ import common.events.GameEvent;
 import common.events.GameFinishEvent;
 import common.events.GameStartEvent;
 import common.events.ProgramQuitEvent;
+import common.Coordinate;
 import common.CheckerMockup;
 import common.GameStateMockup;
 import common.Mockup;
+import common.MoveMockup;
 import model.CheckerColor;
 import model.GameLevel;
 import model.Model;
 
 import java.util.concurrent.BlockingQueue;
 
+import javafx.animation.PathTransition;
+import javafx.animation.PathTransitionBuilder;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,7 +35,12 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import jfx.messagebox.MessageBox;
 
 public class View extends Application implements Runnable {
@@ -41,6 +52,8 @@ public class View extends Application implements Runnable {
     static private Image imageBlackChecker;
     static private Image imageBlackQueen;
     static private GridPane board;
+    static private AnchorPane checkers;
+    static private ImageView checkersOnBoard[][];
     @FXML private ChoiceBox difficulty;
     @FXML private ChoiceBox color;
     @FXML private TextField name;
@@ -94,10 +107,12 @@ public class View extends Application implements Runnable {
             Scene scene = new Scene(page, page.getMaxWidth(), page.getMaxHeight());
             scene.getStylesheets().add(getClass().getResource("source/board.css").toExternalForm());
             board = (GridPane)scene.lookup("#board");
+            checkers = (AnchorPane)scene.lookup("#checkers");
+            
             for(int i = 0; i < Model.getBoardSize(); ++i) {
                 for(int j = 0; j < Model.getBoardSize(); ++j) {
                     final Button b = new Button();
-                    b.setPrefSize(50, 50);
+                    b.setMinSize(50, 50);
                     if ((i+j) % 2 == 0) {
                         b.setStyle("-fx-background-image: url('" + getClass().getResource("source/black_tile.png").toExternalForm() + "');"
                                 + "-fx-background-color: transparent;");
@@ -105,20 +120,30 @@ public class View extends Application implements Runnable {
                         b.setStyle("-fx-background-image: url('" + getClass().getResource("source/white_tile.png").toExternalForm() + "');"
                                 + "-fx-background-color: transparent;");
                     }
-                    b.setOnAction(new EventHandler<ActionEvent>() {
-                        
+                    final String style = b.getStyle();
+                    b.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+
                         @Override
-                        public void handle(ActionEvent event) {
-                            if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
-                                    || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
-                                blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
+                        public void changed(ObservableValue<? extends Boolean> arg0, Boolean outFocus, Boolean onFocus)
+                        {
+                            if (onFocus) {
+
+                                if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
+                                        || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
+                                    b.setStyle(style + "-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );");
+                                    blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
+                                }
+                            } else {
+                                b.setStyle(style);
                             }
-                            
+
                         }
                     });
                     board.add(b, j, i);
                 }
             }
+            fillBoard();
 
             stage.setScene(scene);
             stage.show();
@@ -128,11 +153,116 @@ public class View extends Application implements Runnable {
         }
     }
     
+    protected void fillBoard() {
+        checkersOnBoard = new ImageView[Model.getBoardSize()][Model.getBoardSize()];
+        for(int i = 0; i < Model.getBoardSize(); ++i) {
+            for(int j = 0; j < Model.getBoardSize(); ++j) {
+                ImageView image = null;
+                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
+                    continue;
+                }
+                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
+                    image = new ImageView(imageBlackChecker);
+                }
+                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
+                    image = new ImageView(imageBlackQueen);
+                }
+                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
+                    image = new ImageView(imageWhiteChecker);
+                }
+                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
+                    image = new ImageView(imageWhiteQueen);
+                }
+                
+                image.relocate(j*50+10, i*50+10);
+                checkers.getChildren().add(image); 
+                checkersOnBoard[i][j] = image;
+            }
+        }
+        checkers.toFront();
+    }
+    
+    protected void animateLastMove(MoveMockup move) {
+        if(move != null) {
+            int startX = move.getStartX();
+            int startY = move.getStartY();
+            int endX = move.getEndX();
+            int endY = move.getEndY();
+            
+            System.out.println(startX + " " + startY + " " + endX + " " + endY);
+            if (checkersOnBoard[startY][startX] != null) {
+                System.out.println("before " + checkersOnBoard[startY][startX] + " " + (checkersOnBoard[startY][startX].getLayoutX()-10)/50 + " " + (checkersOnBoard[startY][startX].getLayoutY()-10)/50);
+            checkersOnBoard[endY][endX] = checkersOnBoard[startY][startX];
+
+            double sqrt = 10*Math.sqrt(2); 
+            Path path = new Path();
+            path.getElements().add(new MoveTo(sqrt, sqrt));
+            path.getElements().add(new LineTo((endX-startX)*50+sqrt, (endY-startY)*50+sqrt));
+            path.setStrokeWidth(1);
+            path.setStroke(Color.BLACK);
+
+            PathTransition pathTransition = PathTransitionBuilder.create()
+                    .node(checkersOnBoard[endY][endX])
+                    .path(path)
+                    .duration(Duration.millis(1000))
+                    .cycleCount(1)
+                    .build();
+            
+            pathTransition.playFromStart();
+
+//            checkersOnBoard[endY][endX].relocate(endX*50+10,endY*50+10);
+            System.out.println("after " + checkersOnBoard[endY][endX] + " " + (checkersOnBoard[endY][endX].getLayoutX()-10)/50 + " " + (checkersOnBoard[endY][endX].getLayoutY()-10)/50);
+            System.out.println();
+            
+            checkersOnBoard[startY][startX] = null;
+            
+//            int a = 0;
+//            int b = 0;
+//            
+//            if((startX - endX) == -2) {
+//                a = -1;
+//            } else if((startX - endX) == 2) {
+//                a = 1;
+//            }
+//            
+//            if((startY - endY) == -2) {
+//                b = -1;
+//            } else if((startY - endY) == 2) {
+//                b = 1;
+//            }
+//            
+//            if((a != 0) && (b != 0)) {
+//                checkers.getChildren().remove(checkersOnBoard[b+endY][a+endX]);
+//            }
+            
+            for(Coordinate xy : mockup.getDeletedCheckers()) {
+                checkers.getChildren().remove(checkersOnBoard[xy.getY()][xy.getX()]);
+            }
+                
+            for(int i = 0; i < Model.getBoardSize(); ++i) {
+                for(int j = 0; j < Model.getBoardSize(); ++j) {
+                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
+                        checkersOnBoard[i][j].setImage(imageBlackQueen);
+                    }
+                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
+                        checkersOnBoard[i][j].setImage(imageWhiteQueen);
+                    }
+                }
+            }
+            }
+            else
+                System.out.println("NULL");
+
+        }
+    }
+    
     protected Button getButton(final int row, final int column) {
-        for (int i = 1; i < board.getChildren().size(); i++) {
-            Node node = board.getChildren().get(i);
-            if (GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row) {
-                return (Button)node;
+        for(Node node : board.getChildren()) {
+            if (node.getClass() == Button.class) {
+
+                if (GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row) {
+                    return (Button)node;
+                }
             }
         }
         return null;
@@ -215,11 +345,12 @@ public class View extends Application implements Runnable {
      * W zaleznosci od stanu gry podanego w makiecie moze rysowac rozne ekrany (ekran powitalny,
      * ekran gry etc.) - patrz dokumentacja klasy GameStateMockup
      */
-    public void draw(Mockup mockup) {
+    public void draw(final Mockup mockup) {
         View.mockup = mockup;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                animateLastMove(mockup.getLastMove());
                 System.out.println("--------------------------------");
                 System.out.println("game state: "+View.mockup.getGameState());
                 System.out.println("player 1: "+View.mockup.getPlayer(0)+" player 2: "+View.mockup.getPlayer(1));
@@ -261,8 +392,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsEmptyField(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
-            ImageView image = new ImageView();
-            getButton(i, j).setGraphic(image);
+//            ImageView image = new ImageView();
+//            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]_[ ");
             } else {
@@ -273,8 +404,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsBlackChecker(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
-            ImageView image = new ImageView(imageBlackChecker);
-            getButton(i, j).setGraphic(image);
+//            ImageView image = new ImageView(imageBlackChecker);
+//            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]@[ ");
             } else {
@@ -285,8 +416,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsBlackQueen(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
-            ImageView image = new ImageView(imageBlackQueen);
-            getButton(i, j).setGraphic(image);
+//            ImageView image = new ImageView(imageBlackQueen);
+//            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]2[ ");
             } else {
@@ -297,8 +428,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsWhiteChecker(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
-            ImageView image = new ImageView(imageWhiteChecker);
-            getButton(i, j).setGraphic(image);
+//            ImageView image = new ImageView(imageWhiteChecker);
+//            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]#[ ");
             } else {
@@ -309,8 +440,8 @@ public class View extends Application implements Runnable {
     
     private void checkIsWhiteQueen(final Mockup mockup, final int i, final int j) {
         if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
-            ImageView image = new ImageView(imageWhiteQueen);
-            getButton(i, j).setGraphic(image);
+//            ImageView image = new ImageView(imageWhiteQueen);
+//            getButton(i, j).setGraphic(image);
             if(mockup.getField(j, i).isSelected()) {
                 System.out.print("]3[ ");
             } else {
