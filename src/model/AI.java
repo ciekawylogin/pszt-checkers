@@ -13,7 +13,7 @@ abstract class AI {
     static Move makeAIMove(ArrayList<Move> moves) {
         
         int movesCount = moves.size();
-        System.out.println("liczba dozwolonych ruchow: " + movesCount);
+        //System.out.println("liczba dozwolonych ruchow: " + movesCount);
         int randomId = (int) Math.floor(Math.random() * movesCount);
         if(!moves.isEmpty()) {
             Move selectedMove = moves.get(randomId);

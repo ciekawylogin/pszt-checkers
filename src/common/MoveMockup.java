@@ -45,8 +45,11 @@ public class MoveMockup {
         return endY;
     }
     
-    @Override 
-    public boolean equals(Object other) {
+    public boolean isEqual(Object other) {
+        if (other == null)
+            return false;
+        if (other == this)
+            return true;
         boolean result = false;
         if (other instanceof MoveMockup) {
             MoveMockup that = (MoveMockup)other;
@@ -55,5 +58,4 @@ public class MoveMockup {
         }
         return result;
     }
-
 }

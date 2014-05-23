@@ -1,7 +1,6 @@
 package view;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 import common.events.FieldClickEvent;
 import common.events.GameEvent;
@@ -56,7 +55,7 @@ public class View extends Application implements Runnable {
     static private AnchorPane checkers;
     static private Button fields[][];
     static private ImageView checkersOnBoard[][];
-    static private MoveMockup lastMove;
+    static private MoveMockup lastMove = new MoveMockup(0, 0, 0, 0);
     static private ImageView playerChecker;
     static private Text state;
     static private Text message;
@@ -196,7 +195,7 @@ public class View extends Application implements Runnable {
     }
     
     protected void animateLastMove(MoveMockup move) {
-        if((move != null) && (lastMove != move)) {
+        if(move != null && !lastMove.isEqual(move)) {
             lastMove = move;
             final int startX = move.getStartX();
             final int startY = move.getStartY();
@@ -204,7 +203,7 @@ public class View extends Application implements Runnable {
             final int endY = move.getEndY();
             
             System.out.println("ruch z " + startX + " " + startY + " na " + endX + " " + endY);
-            if (checkersOnBoard[startX][startY] != null) {
+            //if (checkersOnBoard[startX][startY] != null) {
                 System.out.println("before " + checkersOnBoard[startX][startY] + " " + (checkersOnBoard[startX][startY].getLayoutX()-10)/50 
                         + " " + (checkersOnBoard[startX][startY].getLayoutY()-10)/50);
 
@@ -227,9 +226,9 @@ public class View extends Application implements Runnable {
                 pathTransition.playFromStart();
                 
                 checkersOnBoard[endX][endY] = checkersOnBoard[startX][startY];
-                checkersOnBoard[startY][startX] = null;
+                checkersOnBoard[startX][startY] = null;
     
-                System.out.println("after " + checkersOnBoard[endX][endY] + " " + (checkersOnBoard[endX][endY].getLayoutX()-10)/50 
+                System.out.println("after  " + checkersOnBoard[endX][endY] + " " + (checkersOnBoard[endX][endY].getLayoutX()-10)/50 
                         + " " + (checkersOnBoard[endX][endY].getLayoutY()-10)/50);
                 System.out.println();
                 
@@ -255,10 +254,12 @@ public class View extends Application implements Runnable {
                         }
                     }
                 });
-            }
-            else
-                System.out.println("NULL: "+startX + " " + startY + " na " + endX + " " + endY);
+//            } else {
+//                System.out.println("NULL: "+startX + " " + startY + " na " + endX + " " + endY);
+//            }
 
+        } else {
+            System.out.println("IGNORING");
         }
     }
     
@@ -394,6 +395,12 @@ public class View extends Application implements Runnable {
                         checkIsBlackQueen(View.mockup, j, i);
                         checkIsWhiteChecker(View.mockup, j, i);
                         checkIsWhiteQueen(View.mockup, j, i);
+                    }
+                    for(int j = 0; j < Model.getBoardSize(); ++j) {
+                        if(checkersOnBoard[j][i] != null)
+                            System.out.print(" " + (checkersOnBoard[j][i].getLayoutY()-10)/50 + " " + (checkersOnBoard[j][i].getLayoutX()-10)/50 + " | ");
+                        else
+                            System.out.print("         | ");
                     }
                     System.out.println();
                 }
