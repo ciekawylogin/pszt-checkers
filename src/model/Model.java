@@ -345,7 +345,7 @@ public class Model {
      * @see #Mockup
      */
     public final Mockup getMockup() {
-        Mockup mockup = new Mockup(gameState.getValue());
+        Mockup mockup = new Mockup(getGameStateMockupValue());
         for(int i = 0; i < BOARD_SIZE;++i)
             for(int j = 0; j < BOARD_SIZE;++j)
                 mockup.setField(board.getField(i, j).getMockup(), i, j);
@@ -353,12 +353,10 @@ public class Model {
         mockup.setPlayers(PlayerMockup.AI_PLAYER, 1);
         
         Move move = null;
-        if(gameState == GameState.PLAYER_2_MOVE 
-                || gameState == GameState.PLAYER_1_MOVE_REPEAT_MOVE) {
+        if(gameState == GameState.PLAYER_2_MOVE) {
             move = players[0].getLastMove();
             
-        } else if(gameState == GameState.PLAYER_1_MOVE 
-                || gameState == GameState.PLAYER_2_MOVE_REPEAT_MOVE) {
+        } else if(gameState == GameState.PLAYER_1_MOVE) {
             move = players[1].getLastMove();
         }
         
@@ -377,6 +375,25 @@ public class Model {
         NormalChecker.deletedCheckers.clear();
         
         return mockup;
+    }
+    
+    /**
+     * Przetlumaczenie wartosci z GameState na GameStateMockup
+     * @return
+     */
+    private int getGameStateMockupValue() {
+        
+        if(players[0].getPlayerColor() == CheckerColor.WHITE 
+                || gameState == GameState.WITHDRAW || gameState == GameState.NOT_STARTED) {
+            return gameState.getValue();
+        } else if (isAITurn()) {
+            return gameState.getValue()-1;
+            
+        } else {
+            return gameState.getValue()+1;
+            
+        }
+        
     }
 
     /**

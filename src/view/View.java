@@ -133,8 +133,8 @@ public class View extends Application implements Runnable {
                     b.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            if(mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE 
-                                    || mockup.getGameState() == GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE) {
+                            if(mockup.getGameState() == GameStateMockup.WHITE_PLAYER_MOVE 
+                                    || mockup.getGameState() == GameStateMockup.WHITE_PLAYER_REPEAT_MOVE) {
                                 b.setStyle(style + "-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );");
                                 blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
                             }

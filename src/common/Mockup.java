@@ -77,25 +77,25 @@ public final class Mockup {
             game_state = GameStateMockup.NOT_STARTED;
             break;
         case 1:
-            game_state = GameStateMockup.PLAYER_1_MOVE;
+            game_state = GameStateMockup.WHITE_PLAYER_MOVE;
             break;
         case 2:
-            game_state = GameStateMockup.PLAYER_2_MOVE;
+            game_state = GameStateMockup.BLACK_PLAYER_MOVE;
             break;
         case 3:
-            game_state = GameStateMockup.PLAYER_1_WON;
+            game_state = GameStateMockup.WHITE_PLAYER_WON;
             break;
         case 4:
-            game_state = GameStateMockup.PLAYER_2_WON;
+            game_state = GameStateMockup.BLACK_PLAYER_WON;
             break;
         case 5:
             game_state = GameStateMockup.WITHDRAW;
             break;
         case 6:
-            game_state = GameStateMockup.PLAYER_1_MOVE_REPEAT_MOVE;
+            game_state = GameStateMockup.WHITE_PLAYER_REPEAT_MOVE;
             break;
         case 7:
-            game_state = GameStateMockup.PLAYER_2_MOVE_REPEAT_MOVE;
+            game_state = GameStateMockup.BLACK_PLAYER_REPEAT_MOVE;
             break;
         default:
             throw new RuntimeException("gameState not recognized");

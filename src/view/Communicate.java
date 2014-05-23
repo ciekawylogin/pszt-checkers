@@ -20,26 +20,26 @@ class Communicate {
         case NOT_STARTED:
             setMessage("Witaj");
             break;
-        case PLAYER_1_MOVE:
-            setMessage("Ruch gracza 1");
+        case WHITE_PLAYER_MOVE:
+            setMessage("Ruch gracza bialego");
             break;
-        case PLAYER_2_MOVE:
-            setMessage("Ruch gracza 2");
+        case BLACK_PLAYER_MOVE:
+            setMessage("Ruch gracza czarnego");
             break;
-        case PLAYER_1_WON:
-            setMessage("Gracz 1 wygral");
+        case WHITE_PLAYER_WON:
+            setMessage("Gracz bialy wygral");
             break;
-        case PLAYER_2_WON:
-            setMessage("Gracz 2 wygral");
+        case BLACK_PLAYER_WON:
+            setMessage("Gracz czarny wygral");
             break;
         case WITHDRAW:
             setMessage("Remis");
             break;
-        case PLAYER_1_MOVE_REPEAT_MOVE:
-            setMessage("Ruch gracza 1 - prosze powtorzyc ruch");
+        case WHITE_PLAYER_REPEAT_MOVE:
+            setMessage("Ruch gracza bialego - prosze powtorzyc ruch");
             break;
-        case PLAYER_2_MOVE_REPEAT_MOVE:
-            setMessage("Ruch gracza 2 - prosze powtorzyc ruch");
+        case BLACK_PLAYER_REPEAT_MOVE:
+            setMessage("Ruch gracza czarnego - prosze powtorzyc ruch");
             break;
         default:
             throw new RuntimeException("unrecognized gameState");
