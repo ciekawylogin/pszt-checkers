@@ -12,6 +12,7 @@ import common.events.GameStartEvent;
 import common.events.GameFinishEvent;
 import common.events.ProgramQuitEvent;
 
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,6 +76,7 @@ public class Controller {
                 break;
                 
             case GAME_FINISH:
+                System.out.println("DUPA");
                 refreshView();
                 
                 break;
@@ -82,15 +84,19 @@ public class Controller {
             case FIELD_CLICK:
                 // kliknieto pole
                 final FieldClickEvent fieldClickEvent = (FieldClickEvent)event;
+                System.out.println("processHumanMove");
                 boolean isHumanPlayerMoveComplete = 
                         model.processHumanMove(fieldClickEvent.getFieldX(), fieldClickEvent.getFieldY());
                 refreshView();
+                checkEndGameConditions();
+                
                 if(isHumanPlayerMoveComplete) {
-                    //Thread.sleep(1000);
+                    System.out.println("makeAI");
                     makeAIMove();
+                    checkEndGameConditions();
                     
                 }
-                checkEndGameConditions();
+                
                 break;
                 
             case PROGRAM_QUIT:
@@ -134,6 +140,7 @@ public class Controller {
             }
             isCPUMoveComplete = model.makeAIMove();
             refreshView();
+            isCPUMoveComplete |= checkEndGameConditions();
             
         }
             
@@ -143,15 +150,20 @@ public class Controller {
     /**
      * Sprawdza czy ktorys z graczy wygral badz czy nastapil remis
      */
-    private void checkEndGameConditions() {
+    private boolean checkEndGameConditions() {
+        System.out.println("checkEndGame");
     	// sprawdzenie warunku zwyciestwa przez jednego z graczy
         final Player player = model.checkIfAnyPlayerWon();
         if (player != null) {
             blocking_queue.add(new GameFinishEvent(false, player));
+            return true;
         } 
         // sprawdzenie warunku remisu
         else if (model.checkIfWithdraw()) {
             blocking_queue.add(new GameFinishEvent(false, null));
+            return true;
         }
+        
+        return false;
     }
 }

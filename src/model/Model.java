@@ -417,11 +417,12 @@ public class Model {
         if(players[0].getPlayerColor() == CheckerColor.WHITE 
                 || gameState == GameState.WITHDRAW || gameState == GameState.NOT_STARTED) {
             return gameState.getValue();
-        } else if (isAITurn()) {
-            return gameState.getValue()-1;
+        } else if (gameState == GameState.PLAYER_1_MOVE 
+                || gameState == GameState.PLAYER_1_MOVE_REPEAT_MOVE || gameState == GameState.PLAYER_1_WON) {
+            return gameState.getValue()+1;
             
         } else {
-            return gameState.getValue()+1;
+            return gameState.getValue()-1;
             
         }
         
