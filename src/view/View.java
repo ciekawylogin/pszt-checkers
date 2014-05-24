@@ -219,7 +219,7 @@ public class View extends Application implements Runnable {
                 PathTransition pathTransition = PathTransitionBuilder.create()
                         .node(checkersOnBoard[startX][startY])
                         .path(path)
-                        .duration(Duration.millis(700))
+                        .duration(Duration.millis(400))
                         .cycleCount(1)
                         .build();
                 
