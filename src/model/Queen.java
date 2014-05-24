@@ -198,7 +198,6 @@ abstract class Queen {
             
         // cel: prawy gorny rog
         } else if(!isTargetToTheLeft && isTargetToTheTop) {
-            if(sourceX == 3 && sourceY == 3)
             return checkMoveToTheRightTopCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
             

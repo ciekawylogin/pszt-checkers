@@ -69,6 +69,8 @@ public class Model {
                 }
                 
                 return true;
+            } else {
+                gameState = GameState.PLAYER_1_MOVE_REPEAT_MOVE;
             }
         } else {
             

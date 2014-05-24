@@ -76,7 +76,6 @@ public class Controller {
                 break;
                 
             case GAME_FINISH:
-                System.out.println("DUPA");
                 refreshView();
                 
                 break;
