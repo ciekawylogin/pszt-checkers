@@ -160,7 +160,6 @@ public class Model {
             correctMove = false;
         }
         unselectChecker();
-        //System.out.println("move: "+correctMove+" : "+sourceX+" "+sourceY+" "+targetX+ " "+targetY);
         if(correctMove) {
         	saveCorrectMove(sourceX, sourceY, targetX, targetY);
         }
@@ -178,7 +177,6 @@ public class Model {
             final int targetX, final int targetY) {
         Player player = active_player == 0 ? players[0] : players[1];        
         player.setLastMove(new Move(sourceX, sourceY, targetX, targetY));
-        //System.out.println("SAVE active: "+active_player);
     }
     
     /**
@@ -527,10 +525,9 @@ public class Model {
      */
     private boolean checkAllPossibleMovesFromPosition(int sourceX, int sourceY, ArrayList<Move> result) {
         boolean isAnyPossibleMove = false;
-        for(int targetX=0; targetX<8; ++targetX) {
-            for(int targetY=0; targetY<8; ++targetY) {
+        for(int targetX=0; targetX<BOARD_SIZE; ++targetX) {
+            for(int targetY=0; targetY<BOARD_SIZE; ++targetY) {
                 if(isMoveCorrect(sourceX, sourceY, targetX, targetY)) {
-                    //System.out.println("dodaje: " + sourceX + " " + sourceY + " " + targetX + " " + targetY);
                     if(result != null) {
                         result.add(new Move(sourceX, sourceY, targetX, targetY));
                     }
@@ -603,12 +600,13 @@ public class Model {
         
         boolean isCapturePossible = false;
         Checker checker = board.getField(x, y).getChecker();
+        ArrayList<Coordinate> list = new ArrayList<Coordinate>();
         if(checker != null && checker.getType() == CheckerType.NORMAL) {
             isCapturePossible |= 
                     NormalChecker.checkPossibleCapturesFromChecker(checker, null);
         } else if(checker != null){
             isCapturePossible |= 
-                    Queen.checkPossibleCapturesFromQueen(checker, null);
+                    Queen.checkPossibleCapturesFromQueen(checker, list);
         }
         
         return isCapturePossible;

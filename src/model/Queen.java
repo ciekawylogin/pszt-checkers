@@ -198,6 +198,7 @@ abstract class Queen {
             
         // cel: prawy gorny rog
         } else if(!isTargetToTheLeft && isTargetToTheTop) {
+            if(sourceX == 3 && sourceY == 3)
             return checkMoveToTheRightTopCorner(sourceX, sourceY, 
                     targetX, targetY, coordinatesToDelete);
             
@@ -260,7 +261,6 @@ abstract class Queen {
      */
     private static boolean checkMoveToTheRightTopCorner(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, ArrayList<Coordinate> coordinatesToDelete) {
-        
         int x = sourceX +1;
         int y = sourceY -1;
         
