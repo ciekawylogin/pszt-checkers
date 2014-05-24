@@ -202,10 +202,10 @@ public class View extends Application implements Runnable {
             final int endX = move.getEndX();
             final int endY = move.getEndY();
             
-            System.out.println("ruch z " + startX + " " + startY + " na " + endX + " " + endY);
+            //System.out.println("ruch z " + startX + " " + startY + " na " + endX + " " + endY);
             if (checkersOnBoard[startX][startY] != null) {
-                System.out.println("before " + checkersOnBoard[startX][startY] + " " + (checkersOnBoard[startX][startY].getLayoutX()-10)/50 
-                        + " " + (checkersOnBoard[startX][startY].getLayoutY()-10)/50);
+                //System.out.println("before " + checkersOnBoard[startX][startY] + " " + (checkersOnBoard[startX][startY].getLayoutX()-10)/50 
+                //        + " " + (checkersOnBoard[startX][startY].getLayoutY()-10)/50);
 
                 checkersOnBoard[startX][startY].relocate(endX*50+10, endY*50+10);
                 
@@ -228,9 +228,8 @@ public class View extends Application implements Runnable {
                 checkersOnBoard[endX][endY] = checkersOnBoard[startX][startY];
                 checkersOnBoard[startX][startY] = null;
     
-                System.out.println("after  " + checkersOnBoard[endX][endY] + " " + (checkersOnBoard[endX][endY].getLayoutX()-10)/50 
-                        + " " + (checkersOnBoard[endX][endY].getLayoutY()-10)/50);
-                System.out.println("aaaaa");
+                //System.out.println("after  " + checkersOnBoard[endX][endY] + " " + (checkersOnBoard[endX][endY].getLayoutX()-10)/50 
+                //        + " " + (checkersOnBoard[endX][endY].getLayoutY()-10)/50);
                 
                 pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
@@ -261,7 +260,7 @@ public class View extends Application implements Runnable {
             }
 
         } else {
-            System.out.println("IGNORING");
+            System.out.println("IGNORING: ruch sie powtarza");
         }
     }
     
@@ -364,8 +363,6 @@ public class View extends Application implements Runnable {
      */
     public void draw(final Mockup mockup) {
         View.mockup = mockup;
-        System.out.println("NOWY MOCKUP");
-        
         
         Platform.runLater(new Runnable() {
             @Override

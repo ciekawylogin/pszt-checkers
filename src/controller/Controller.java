@@ -70,6 +70,7 @@ public class Controller {
                 model.startGame(gameStartEvent.getPlayerName(), gameStartEvent.getGameLevel(), 
                         gameStartEvent.getCheckerColor());
                 model.makeAIMove();
+                refreshView();
                 break;
                 
             case GAME_FINISH:
@@ -101,7 +102,7 @@ public class Controller {
             }
             
             // po kazdym zdarzeniu odswiezamy
-            refreshView();
+            //refreshView();
             
         }
         catch(InterruptedException exception) {
@@ -124,7 +125,7 @@ public class Controller {
     private void makeAIMove() {
         boolean isCPUMoveComplete = false;
         
-        while(!isCPUMoveComplete) {
+        while(!isCPUMoveComplete && model.isAITurn()) {
             isCPUMoveComplete = model.makeAIMove();
             refreshView();
         }
