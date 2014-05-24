@@ -176,20 +176,24 @@ public class Model {
     
     /**
      * Wykonanie ruchu gracza komputerowego.
+     * @return jesli ruch poprawny
      */
-    public void makeAIMove() {
-        //gameState = GameState.PLAYER_2_MOVE;
+    public boolean makeAIMove() {
     	ArrayList<Move> AIMoves = new ArrayList<Move>();
-        while(isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves)) {
+    	boolean isNotASingleMove = true;
+    	boolean isMoveCorrect = false;
+        while(!isMoveCorrect && isAITurnPossible(AIMoves)) {
         	Move selectedMove = AI.makeAIMove(AIMoves);
             selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
             Coordinate startCoordinate = getSelectedCheckerCoordinate();
             Coordinate endCoordinate = new Coordinate(selectedMove.getEndX(), selectedMove.getEndY());
             
-            boolean isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
+            isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
             
             if(moveSelectedCheckerTo(selectedMove.getEndX(), selectedMove.getEndY())) {
                 isNotASingleMove &= checkCapturesFromPosition(selectedMove.getEndX(), selectedMove.getEndY());
+                
+                isMoveCorrect = true;
                 
                 if(!isNotASingleMove) {
                     changeActivePlayer();
@@ -198,6 +202,8 @@ public class Model {
             }
             AIMoves.clear();
         }
+        
+        return !isNotASingleMove;
     	
         
 	}
@@ -553,6 +559,14 @@ public class Model {
      */
     public boolean isAITurn() {
         return players[active_player].isCpu();
+    }
+    
+    /**
+     * Sprawdza czy w obecnej turze jest mozliwy ruch komputera
+     * @return true jesli tura komputera i ma sie gdzie ruszyc
+     */
+    public boolean isAITurnPossible(ArrayList<Move>AIMoves) {
+        return isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves);
     }
     
     /**

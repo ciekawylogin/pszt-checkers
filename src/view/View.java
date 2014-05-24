@@ -203,7 +203,7 @@ public class View extends Application implements Runnable {
             final int endY = move.getEndY();
             
             System.out.println("ruch z " + startX + " " + startY + " na " + endX + " " + endY);
-            //if (checkersOnBoard[startX][startY] != null) {
+            if (checkersOnBoard[startX][startY] != null) {
                 System.out.println("before " + checkersOnBoard[startX][startY] + " " + (checkersOnBoard[startX][startY].getLayoutX()-10)/50 
                         + " " + (checkersOnBoard[startX][startY].getLayoutY()-10)/50);
 
@@ -219,7 +219,7 @@ public class View extends Application implements Runnable {
                 PathTransition pathTransition = PathTransitionBuilder.create()
                         .node(checkersOnBoard[startX][startY])
                         .path(path)
-                        .duration(Duration.millis(1000))
+                        .duration(Duration.millis(700))
                         .cycleCount(1)
                         .build();
                 
@@ -230,15 +230,16 @@ public class View extends Application implements Runnable {
     
                 System.out.println("after  " + checkersOnBoard[endX][endY] + " " + (checkersOnBoard[endX][endY].getLayoutX()-10)/50 
                         + " " + (checkersOnBoard[endX][endY].getLayoutY()-10)/50);
-                System.out.println();
+                System.out.println("aaaaa");
                 
                 pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        System.out.println("HANDLE KURWA");
+                        System.out.println("HANDLE: "+mockup.getDeletedCheckers().size());
                         for(Coordinate xy : mockup.getDeletedCheckers()) {
                             System.out.println("usuwany " + xy.getX() + " " + xy.getY());
                             checkers.getChildren().remove(checkersOnBoard[xy.getX()][xy.getY()]);
+                            checkersOnBoard[xy.getX()][xy.getY()] = null;
                         }
                             
                         for(int i = 0; i < Model.getBoardSize(); ++i) {
@@ -254,9 +255,10 @@ public class View extends Application implements Runnable {
                         }
                     }
                 });
-//            } else {
-//                System.out.println("NULL: "+startX + " " + startY + " na " + endX + " " + endY);
-//            }
+            }
+            else {
+                System.out.println("NULL "+startX + " " + startY + " na " + endX + " " + endY);
+            }
 
         } else {
             System.out.println("IGNORING");
@@ -362,7 +364,9 @@ public class View extends Application implements Runnable {
      */
     public void draw(final Mockup mockup) {
         View.mockup = mockup;
-        System.out.println("NOWY MOCKUP KURWA");
+        System.out.println("NOWY MOCKUP");
+        
+        
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -398,7 +402,7 @@ public class View extends Application implements Runnable {
                     }
                     for(int j = 0; j < Model.getBoardSize(); ++j) {
                         if(checkersOnBoard[j][i] != null)
-                            System.out.print(" " + (checkersOnBoard[j][i].getLayoutY()-10)/50 + " " + (checkersOnBoard[j][i].getLayoutX()-10)/50 + " | ");
+                            System.out.print(" " + (checkersOnBoard[j][i].getLayoutX()-10)/50 + " " + (checkersOnBoard[j][i].getLayoutY()-10)/50 + " | ");
                         else
                             System.out.print("         | ");
                     }

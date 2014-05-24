@@ -85,7 +85,7 @@ public class Controller {
                 refreshView();
                 if(isHumanPlayerMoveComplete) {
                     Thread.sleep(1000);
-                    model.makeAIMove();
+                    makeAIMove();
                     
                 }
                 checkEndGameConditions();
@@ -117,6 +117,20 @@ public class Controller {
         Mockup mockup = model.getMockup();
         view.draw(mockup);
     }
+    
+    /**
+     * Wykonanie ruchu CPU
+     */
+    private void makeAIMove() {
+        boolean isCPUMoveComplete = false;
+        
+        while(!isCPUMoveComplete) {
+            isCPUMoveComplete = model.makeAIMove();
+            refreshView();
+        }
+            
+    }
+    
     
     /**
      * Sprawdza czy ktorys z graczy wygral badz czy nastapil remis
