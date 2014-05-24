@@ -46,6 +46,7 @@ public class Model {
     public boolean processHumanMove(final int x, final int y) {
         //gameState = GameState.PLAYER_1_MOVE;
         
+        
         if(isCheckerSelected(x, y)) {
             unselectChecker();
         } else if(isCurrentPlayerCheckerOnPosition(x, y)) {

@@ -235,6 +235,13 @@ abstract class Queen {
         for(; x > targetX && y > targetY; --x, --y) {
             Checker temp = Model.board.getField(x, y).getChecker();
             if(temp != null && temp.getColor() == colorSource) {
+                
+                if(coordinatesToDelete != null && coordinatesToDelete.size() != 0
+                        && coordinatesToDelete.get(coordinatesToDelete.size()-1).getX() -1 == x
+                        && coordinatesToDelete.get(coordinatesToDelete.size()-1).getY() -1 == y) {
+                    coordinatesToDelete.clear();
+                }
+                
                 return false;
             } else if(temp !=null && temp.getColor() != colorSource
                       && coordinatesToDelete != null) {
@@ -272,6 +279,13 @@ abstract class Queen {
         for(; x < targetX && y > targetY; ++x, --y) {
             Checker temp = Model.board.getField(x, y).getChecker();
             if(temp != null && temp.getColor() == colorSource) {
+                
+                if(coordinatesToDelete != null && coordinatesToDelete.size() != 0
+                        && coordinatesToDelete.get(coordinatesToDelete.size()-1).getX() +1 == x
+                        && coordinatesToDelete.get(coordinatesToDelete.size()-1).getY() -1 == y) {
+                    coordinatesToDelete.clear();
+                }
+                
                 return false;
             } else if(temp !=null && temp.getColor() != colorSource
                       && coordinatesToDelete != null) {
@@ -311,6 +325,13 @@ abstract class Queen {
         for(; x < targetX && y < targetY; ++x, ++y) {
             Checker temp = Model.board.getField(x, y).getChecker();
             if(temp != null && temp.getColor() == colorSource) {
+                
+                if(coordinatesToDelete != null && coordinatesToDelete.size() != 0
+                        && coordinatesToDelete.get(coordinatesToDelete.size()-1).getX() +1 == x
+                        && coordinatesToDelete.get(coordinatesToDelete.size()-1).getY() +1 == y) {
+                    coordinatesToDelete.clear();
+                }
+                
                 return false;
             } else if(temp !=null && temp.getColor() != colorSource
                       && coordinatesToDelete != null) {
@@ -350,6 +371,13 @@ abstract class Queen {
         for(; x > targetX && y < targetY; --x, ++y) {
             Checker temp = Model.board.getField(x, y).getChecker();
             if(temp != null && temp.getColor() == colorSource) {
+                
+                if(coordinatesToDelete != null && coordinatesToDelete.size() != 0
+                        && coordinatesToDelete.get(coordinatesToDelete.size()-1).getX() -1 == x
+                        && coordinatesToDelete.get(coordinatesToDelete.size()-1).getY() +1 == y) {
+                    coordinatesToDelete.clear();
+                }
+                
                 return false;
             } else if(temp !=null && temp.getColor() != colorSource
                       && coordinatesToDelete != null) {
@@ -403,6 +431,7 @@ abstract class Queen {
                     
                     isCapturePossible |= 
                             checkPossibleCapturesFromQueen(checkerOnField, coordinatesToCapture);
+                    
                     }
                 }
                 
