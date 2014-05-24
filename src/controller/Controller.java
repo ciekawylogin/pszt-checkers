@@ -1,7 +1,5 @@
 package controller;
 
-import model.CheckerColor;
-import model.GameLevel;
 import model.Model;
 import model.Player;
 import view.View;
@@ -10,12 +8,8 @@ import common.events.FieldClickEvent;
 import common.events.GameEvent;
 import common.events.GameStartEvent;
 import common.events.GameFinishEvent;
-import common.events.ProgramQuitEvent;
 
-import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Controller {
     // Model
@@ -77,25 +71,20 @@ public class Controller {
                 
             case GAME_FINISH:
                 refreshView();
-                
                 break;
                 
             case FIELD_CLICK:
                 // kliknieto pole
                 final FieldClickEvent fieldClickEvent = (FieldClickEvent)event;
-                System.out.println("processHumanMove");
                 boolean isHumanPlayerMoveComplete = 
                         model.processHumanMove(fieldClickEvent.getFieldX(), fieldClickEvent.getFieldY());
                 refreshView();
                 checkEndGameConditions();
                 
                 if(isHumanPlayerMoveComplete) {
-                    System.out.println("makeAI");
                     makeAIMove();
                     checkEndGameConditions();
-                    
                 }
-                
                 break;
                 
             case PROGRAM_QUIT:
@@ -140,9 +129,7 @@ public class Controller {
             isCPUMoveComplete = model.makeAIMove();
             refreshView();
             isCPUMoveComplete |= checkEndGameConditions();
-            
         }
-            
     }
     
     
@@ -150,8 +137,7 @@ public class Controller {
      * Sprawdza czy ktorys z graczy wygral badz czy nastapil remis
      */
     private boolean checkEndGameConditions() {
-        System.out.println("checkEndGame");
-    	// sprawdzenie warunku zwyciestwa przez jednego z graczy
+        // sprawdzenie warunku zwyciestwa przez jednego z graczy
         final Player player = model.checkIfAnyPlayerWon();
         if (player != null) {
             blocking_queue.add(new GameFinishEvent(false, player));

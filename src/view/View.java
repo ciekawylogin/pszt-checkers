@@ -18,6 +18,8 @@ import model.Model;
 
 import java.util.concurrent.BlockingQueue;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.PathTransition;
 import javafx.animation.PathTransitionBuilder;
 import javafx.application.Application;
@@ -204,11 +206,7 @@ public class View extends Application implements Runnable {
             final int endX = move.getEndX();
             final int endY = move.getEndY();
             
-            //System.out.println("ruch z " + startX + " " + startY + " na " + endX + " " + endY);
             if (checkersOnBoard[startX][startY] != null) {
-                //System.out.println("before " + checkersOnBoard[startX][startY] + " " + (checkersOnBoard[startX][startY].getLayoutX()-10)/50 
-                //        + " " + (checkersOnBoard[startX][startY].getLayoutY()-10)/50);
-
                 checkersOnBoard[startX][startY].relocate(endX*50+10, endY*50+10);
                 
                 double sqrt = 10*Math.sqrt(2); 
@@ -230,16 +228,21 @@ public class View extends Application implements Runnable {
                 checkersOnBoard[endX][endY] = checkersOnBoard[startX][startY];
                 checkersOnBoard[startX][startY] = null;
     
-                //System.out.println("after  " + checkersOnBoard[endX][endY] + " " + (checkersOnBoard[endX][endY].getLayoutX()-10)/50 
-                //        + " " + (checkersOnBoard[endX][endY].getLayoutY()-10)/50);
-                
                 pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        //System.out.println("HANDLE: "+mockup.getDeletedCheckers().size());
                         for(Coordinate xy : mockup.getDeletedCheckers()) {
-                            //System.out.println("usuwany " + xy.getX() + " " + xy.getY());
-                            checkers.getChildren().remove(checkersOnBoard[xy.getX()][xy.getY()]);
+                            
+                            FadeTransition fadeTransition = FadeTransitionBuilder.create()
+                                    .node(checkersOnBoard[xy.getX()][xy.getY()])
+                                    .duration(Duration.millis(350))
+                                    .fromValue(1.0)
+                                    .toValue(0.0)
+                                    .cycleCount(1)
+                                    .build();
+                            
+                            fadeTransition.playFromStart();
+
                             checkersOnBoard[xy.getX()][xy.getY()] = null;
                         }
                             
@@ -257,12 +260,6 @@ public class View extends Application implements Runnable {
                     }
                 });
             }
-            else {
-                //System.out.println("NULL "+startX + " " + startY + " na " + endX + " " + endY);
-            }
-
-        } else {
-            //System.out.println("IGNORING: ruch sie powtarza");
         }
     }
     
@@ -377,10 +374,24 @@ public class View extends Application implements Runnable {
                         || mockup.getGameState() == GameStateMockup.BLACK_PLAYER_REPEAT_MOVE) {
                     playerChecker.setImage(imageBlackChecker);
                 }
+                if(mockup.getGameState() == GameStateMockup.WHITE_PLAYER_WON) {
+                    playerChecker.setImage(imageWhiteQueen);
+                }
+                if(mockup.getGameState() == GameStateMockup.BLACK_PLAYER_WON) {
+                    playerChecker.setImage(imageBlackQueen);
+                }
+                if(mockup.getGameState() == GameStateMockup.WITHDRAW) {
+                    playerChecker = new ImageView();
+                }
                 
                 state.setText((new Communicate(mockup.getGameState())).getMessage());
                 if(mockup.getLastMove() != null) {
-                    message.setText("Ostatni ruch:\n"
+                    String repeat = "";
+                    if(mockup.getGameState() == GameStateMockup.WHITE_PLAYER_REPEAT_MOVE
+                            || mockup.getGameState() == GameStateMockup.BLACK_PLAYER_REPEAT_MOVE) {
+                        repeat = "Incorrect move\n";
+                    }
+                    message.setText(repeat + "Last move:\n"
                         + "(" + mockup.getLastMove().getStartX()
                         + "," + mockup.getLastMove().getStartY() + ") -> "
                         + "(" + mockup.getLastMove().getEndX()

@@ -18,28 +18,28 @@ class Communicate {
         
         switch(gameState) {
         case NOT_STARTED:
-            setMessage("Witaj");
+            setMessage("Hello");
             break;
         case WHITE_PLAYER_MOVE:
-            setMessage("Ruch gracza bialego");
+            setMessage("White pieces move");
             break;
         case BLACK_PLAYER_MOVE:
-            setMessage("Ruch gracza czarnego");
+            setMessage("Black pieces move");
             break;
         case WHITE_PLAYER_WON:
-            setMessage("Gracz bialy wygral");
+            setMessage("White pieces have won!");
             break;
         case BLACK_PLAYER_WON:
-            setMessage("Gracz czarny wygral");
+            setMessage("Black pieces have won!");
             break;
         case WITHDRAW:
-            setMessage("Remis");
+            setMessage("Withdraw");
             break;
         case WHITE_PLAYER_REPEAT_MOVE:
-            setMessage("Ruch gracza bialego - prosze powtorzyc ruch");
+            setMessage("White pieces move");
             break;
         case BLACK_PLAYER_REPEAT_MOVE:
-            setMessage("Ruch gracza czarnego - prosze powtorzyc ruch");
+            setMessage("Black pieces move");
             break;
         default:
             throw new RuntimeException("unrecognized gameState");
