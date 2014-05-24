@@ -23,6 +23,9 @@ public class Model {
     /* numer aktywnego gracze */
     private int active_player;
     
+    /* numer gracza ktorego ruch byl ostatni */
+    private int whoseWasLastMove;
+    
     /* numer aktywnego gracze */
     private GameState gameState;
 
@@ -33,6 +36,7 @@ public class Model {
         board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
         players = new Player[2];
         active_player = 0;
+        whoseWasLastMove = -1;
         gameState = GameState.NOT_STARTED;
     }
     
@@ -57,6 +61,7 @@ public class Model {
             
             
             if(moveSelectedCheckerTo(x, y)) {
+                setWhoseWasLastMove(0);
                 
                 isNotASingleMove &= checkCapturesFromPosition(x, y);
                 if(!isNotASingleMove) {
@@ -155,6 +160,7 @@ public class Model {
             correctMove = false;
         }
         unselectChecker();
+        //System.out.println("move: "+correctMove+" : "+sourceX+" "+sourceY+" "+targetX+ " "+targetY);
         if(correctMove) {
         	saveCorrectMove(sourceX, sourceY, targetX, targetY);
         }
@@ -172,6 +178,7 @@ public class Model {
             final int targetX, final int targetY) {
         Player player = active_player == 0 ? players[0] : players[1];        
         player.setLastMove(new Move(sourceX, sourceY, targetX, targetY));
+        //System.out.println("SAVE active: "+active_player);
     }
     
     /**
@@ -194,6 +201,8 @@ public class Model {
                 isNotASingleMove &= checkCapturesFromPosition(selectedMove.getEndX(), selectedMove.getEndY());
                 
                 isMoveCorrect = true;
+                setWhoseWasLastMove(1);
+                
                 
                 if(!isNotASingleMove) {
                     changeActivePlayer();
@@ -272,6 +281,14 @@ public class Model {
     private final void changeActivePlayer() {
         active_player = active_player == 1 ? 0 : 1;
         gameState = active_player == 0 ? GameState.PLAYER_1_MOVE : GameState.PLAYER_2_MOVE;
+    }
+    
+    /**
+     * Przypisuje czyj byl ostatni wykonany ruch
+     * @param i
+     */
+    private final void setWhoseWasLastMove(final int i) {
+        whoseWasLastMove = i;
     }
 
     /**
@@ -358,10 +375,12 @@ public class Model {
         mockup.setPlayers(PlayerMockup.AI_PLAYER, 1);
         
         Move move = null;
-        if(gameState == GameState.PLAYER_2_MOVE) {
+        // ostatni ruch nalezal do gracza ludzkiego
+        if(whoseWasLastMove == 0) {
             move = players[0].getLastMove();
             
-        } else if(gameState == GameState.PLAYER_1_MOVE) {
+        // ostatni ruch nalezal do cpu
+        } else {
             move = players[1].getLastMove();
         }
         
@@ -376,10 +395,15 @@ public class Model {
         for(Coordinate coordinate : NormalChecker.deletedCheckers) {
             mockup.addCoordinate(coordinate);
         }
-        
+        /*
         for(Coordinate c: mockup.getDeletedCheckers()) {
            System.out.println("DELETED: "+c.getX()+" "+c.getY());
         }
+        
+        if(mockup.getLastMove() != null) {
+            System.out.println("mockup: "+mockup.getLastMove().getStartX()+" "+mockup.getLastMove().getStartY()
+                    +" "+mockup.getLastMove().getEndX()+ " "+mockup.getLastMove().getEndY());
+        }*/
         Queen.deletedCheckers.clear();
         NormalChecker.deletedCheckers.clear();
         

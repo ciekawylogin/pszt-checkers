@@ -170,25 +170,27 @@ public class View extends Application implements Runnable {
         for(int i = 0; i < Model.getBoardSize(); ++i) {
             for(int j = 0; j < Model.getBoardSize(); ++j) {
                 ImageView image = null;
-                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
-                    continue;
+                if(mockup != null) {
+                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.EMPTY_FIELD) {
+                        continue;
+                    }
+                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
+                        image = new ImageView(imageBlackChecker);
+                    }
+                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
+                        image = new ImageView(imageBlackQueen);
+                    }
+                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
+                        image = new ImageView(imageWhiteChecker);
+                    }
+                    if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
+                        image = new ImageView(imageWhiteQueen);
+                    }
+                    
+                    image.relocate(j*50+10, i*50+10);
+                    checkers.getChildren().add(image); 
+                    checkersOnBoard[j][i] = image;
                 }
-                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_CHECKER) {
-                    image = new ImageView(imageBlackChecker);
-                }
-                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.BLACK_QUEEN) {
-                    image = new ImageView(imageBlackQueen);
-                }
-                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_CHECKER) {
-                    image = new ImageView(imageWhiteChecker);
-                }
-                if(mockup.getField(j, i).getCheckerMockup() == CheckerMockup.WHITE_QUEEN) {
-                    image = new ImageView(imageWhiteQueen);
-                }
-                
-                image.relocate(j*50+10, i*50+10);
-                checkers.getChildren().add(image); 
-                checkersOnBoard[j][i] = image;
             }
         }
         checkers.toFront();
@@ -234,9 +236,9 @@ public class View extends Application implements Runnable {
                 pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        System.out.println("HANDLE: "+mockup.getDeletedCheckers().size());
+                        //System.out.println("HANDLE: "+mockup.getDeletedCheckers().size());
                         for(Coordinate xy : mockup.getDeletedCheckers()) {
-                            System.out.println("usuwany " + xy.getX() + " " + xy.getY());
+                            //System.out.println("usuwany " + xy.getX() + " " + xy.getY());
                             checkers.getChildren().remove(checkersOnBoard[xy.getX()][xy.getY()]);
                             checkersOnBoard[xy.getX()][xy.getY()] = null;
                         }
@@ -256,11 +258,11 @@ public class View extends Application implements Runnable {
                 });
             }
             else {
-                System.out.println("NULL "+startX + " " + startY + " na " + endX + " " + endY);
+                //System.out.println("NULL "+startX + " " + startY + " na " + endX + " " + endY);
             }
 
         } else {
-            System.out.println("IGNORING: ruch sie powtarza");
+            //System.out.println("IGNORING: ruch sie powtarza");
         }
     }
     

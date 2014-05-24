@@ -48,6 +48,7 @@ public class Controller {
         thread.start();
         while(true) {
             processEvents();
+            
         }
     }
 
@@ -85,7 +86,7 @@ public class Controller {
                         model.processHumanMove(fieldClickEvent.getFieldX(), fieldClickEvent.getFieldY());
                 refreshView();
                 if(isHumanPlayerMoveComplete) {
-                    Thread.sleep(1000);
+                    //Thread.sleep(1000);
                     makeAIMove();
                     
                 }
@@ -126,8 +127,14 @@ public class Controller {
         boolean isCPUMoveComplete = false;
         
         while(!isCPUMoveComplete && model.isAITurn()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             isCPUMoveComplete = model.makeAIMove();
             refreshView();
+            
         }
             
     }
