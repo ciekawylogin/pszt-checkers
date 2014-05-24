@@ -212,14 +212,14 @@ public class View extends Application implements Runnable {
                 double sqrt = 10*Math.sqrt(2); 
                 Path path = new Path();
                 path.getElements().add(new MoveTo(sqrt-(endX-startX)*50, sqrt-(endY-startY)*50));
-                path.getElements().add(new LineTo((endX-startX)+sqrt, (endY-startY)+sqrt));
+                path.getElements().add(new LineTo(sqrt, sqrt));
                 
                 checkersOnBoard[startX][startY].toFront();
                 
                 PathTransition pathTransition = PathTransitionBuilder.create()
                         .node(checkersOnBoard[startX][startY])
                         .path(path)
-                        .duration(Duration.millis(700))
+                        .duration(Duration.millis(400))
                         .cycleCount(1)
                         .build();
                 

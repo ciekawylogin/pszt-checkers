@@ -1,7 +1,5 @@
 package common;
 
-import model.Checker;
-
 public class FieldMockup {
     private CheckerMockup checker;
     private boolean is_selected;
