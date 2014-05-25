@@ -269,7 +269,6 @@ public class View extends Application implements Runnable {
                     }
                 });
 
-                
                 for(Coordinate xy : mockup.getDeletedCheckers()) {
                     
                     FadeTransition fadeTransition = FadeTransitionBuilder.create()
@@ -285,8 +284,6 @@ public class View extends Application implements Runnable {
                     checkersOnBoard[xy.getX()][xy.getY()] = null;
                 }
                     
-
-                
                 checkersOnBoard[endX][endY] = checkersOnBoard[startX][startY];
                 checkersOnBoard[startX][startY] = null;
             }
