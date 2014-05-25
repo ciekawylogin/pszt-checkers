@@ -7,84 +7,55 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="610.0" maxWidth="400.0" minHeight="610.0" minWidth="400.0" prefHeight="610.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.View">
-	<children>
-		<GridPane id="board" gridLinesVisible="true" layoutX="0.0" layoutY="0.0" prefHeight="400.0" prefWidth="400.0">
-			<columnConstraints>
-				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
-				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
-				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
-				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
-				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
-				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
-				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
-				<ColumnConstraints hgrow="NEVER" prefWidth="50.0" />
-			</columnConstraints>
-			<rowConstraints>
-				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
-				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
-				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
-				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
-				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
-				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
-				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
-				<RowConstraints prefHeight="50.0" vgrow="NEVER" />
-			</rowConstraints>
-         <children>
-            <AnchorPane id="checkers" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="8" GridPane.rowSpan="8" />
-            <Text id="col0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
-               <GridPane.margin>
-                  <Insets left="22.0" top="-31.0" />
-               </GridPane.margin>
-            </Text>
-            <Text id="col1" strokeType="OUTSIDE" strokeWidth="0.0" text="1" GridPane.columnIndex="1">
-               <GridPane.margin>
-                  <Insets left="22.0" top="-31.0" />
-               </GridPane.margin>
-            </Text>
-            <Text id="col2" strokeType="OUTSIDE" strokeWidth="0.0" text="2" GridPane.columnIndex="2">
-               <GridPane.margin>
-                  <Insets left="22.0" top="-31.0" />
-               </GridPane.margin>
-            </Text>
-            <Text id="col3" strokeType="OUTSIDE" strokeWidth="0.0" text="3" GridPane.columnIndex="3">
-               <GridPane.margin>
-                  <Insets left="22.0" top="-31.0" />
-               </GridPane.margin>
-            </Text>
-            <Text id="col4" strokeType="OUTSIDE" strokeWidth="0.0" text="4" GridPane.columnIndex="4">
-               <GridPane.margin>
-                  <Insets left="22.0" top="-31.0" />
-               </GridPane.margin>
-            </Text>
-            <Text id="col5" strokeType="OUTSIDE" strokeWidth="0.0" text="5" GridPane.columnIndex="5">
-               <GridPane.margin>
-                  <Insets left="22.0" top="-31.0" />
-               </GridPane.margin>
-            </Text>
-            <Text id="col6" strokeType="OUTSIDE" strokeWidth="0.0" text="6" GridPane.columnIndex="6">
-               <GridPane.margin>
-                  <Insets left="22.0" top="-31.0" />
-               </GridPane.margin>
-            </Text>
-            <Text id="col7" strokeType="OUTSIDE" strokeWidth="0.0" text="7" GridPane.columnIndex="7">
-               <GridPane.margin>
-                  <Insets left="22.0" top="-31.0" />
-               </GridPane.margin>
-            </Text>
-            <Text id="row0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-            <Text id="row1" strokeType="OUTSIDE" strokeWidth="0.0" text="1" GridPane.rowIndex="1" />
-            <Text id="row2" strokeType="OUTSIDE" strokeWidth="0.0" text="2" GridPane.rowIndex="2" />
-            <Text id="row3" strokeType="OUTSIDE" strokeWidth="0.0" text="3" GridPane.rowIndex="3" />
-            <Text id="row4" strokeType="OUTSIDE" strokeWidth="0.0" text="4" GridPane.rowIndex="4" />
-            <Text id="row5" strokeType="OUTSIDE" strokeWidth="0.0" text="5" GridPane.rowIndex="5" />
-            <Text id="row6" strokeType="OUTSIDE" strokeWidth="0.0" text="6" GridPane.rowIndex="6" />
-            <Text id="row7" strokeType="OUTSIDE" strokeWidth="0.0" text="7" GridPane.rowIndex="7" />
-         </children>
-		</GridPane>
-		<Button fx:id="back" layoutX="286.0" layoutY="581.0" mnemonicParsing="false" onAction="#showMenu" prefWidth="100.0" text="Back to menu" />
-      <Text id="state" fill="WHITE" layoutX="50.0" layoutY="440.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="147.888671875" />
-      <Text id="message" fill="WHITE" layoutX="50.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.0" />
-      <ImageView id="playerChecker" layoutX="312.0" layoutY="430.0" />
-	</children>
+<AnchorPane minHeight="610.0" minWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.View">
+    <children>
+        <GridPane id="board" gridLinesVisible="true" layoutX="0.0" layoutY="0.0" minHeight="400.0" minWidth="400.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="16.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="16.0" vgrow="NEVER" />
+                <RowConstraints minHeight="48.0" vgrow="NEVER" />
+                <RowConstraints minHeight="48.0" vgrow="NEVER" />
+                <RowConstraints minHeight="48.0" vgrow="NEVER" />
+                <RowConstraints minHeight="48.0" vgrow="NEVER" />
+                <RowConstraints minHeight="48.0" vgrow="NEVER" />
+                <RowConstraints minHeight="48.0" vgrow="NEVER" />
+                <RowConstraints minHeight="48.0" vgrow="NEVER" />
+                <RowConstraints minHeight="48.0" vgrow="NEVER" />
+            </rowConstraints>
+            <children>
+                <AnchorPane id="checkers" mouseTransparent="true" minHeight="400.0" minWidth="400.0" GridPane.columnSpan="9" GridPane.rowSpan="9" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="1" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="4" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="5" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="6" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="7" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="4" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="5" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="6" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="7" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+            </children>
+        </GridPane>
+        <Button fx:id="instructions" layoutX="13.0" layoutY="581.0" mnemonicParsing="false" onAction="#showInstructions" prefWidth="100.0" text="Instructions" />
+        <Button fx:id="back" layoutX="286.0" layoutY="581.0" mnemonicParsing="false" onAction="#showMenu" prefWidth="100.0" text="Back to menu" />
+        <Text id="state" fill="WHITE" layoutX="50.0" layoutY="440.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="147.888671875" />
+        <Text id="message" fill="WHITE" layoutX="50.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.0" />
+        <ImageView id="playerChecker" layoutX="312.0" layoutY="430.0" />
+    </children>
 </AnchorPane>

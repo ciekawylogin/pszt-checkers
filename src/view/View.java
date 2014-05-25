@@ -123,7 +123,7 @@ public class View extends Application implements Runnable {
             for(int i = 0; i < Model.getBoardSize(); ++i) {
                 for(int j = 0; j < Model.getBoardSize(); ++j) {
                     final Button b = new Button();
-                    b.setMinSize(50, 50);
+                    b.setMinSize(48, 48);
                     if ((i+j) % 2 == 0) {
                         b.setStyle("-fx-background-image: url('" + getClass().getResource("source/black_tile.png").toExternalForm() + "');"
                                  + "-fx-background-color: transparent;");
@@ -136,7 +136,7 @@ public class View extends Application implements Runnable {
                         @Override
                         public void handle(ActionEvent event) {
                             b.setStyle(style + "-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );");
-                            blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b), GridPane.getRowIndex(b)));
+                            blocking_queue.add(new FieldClickEvent(GridPane.getColumnIndex(b)-1, GridPane.getRowIndex(b)-1));
                         }
                     });
                     fields[j][i] = b;
@@ -149,22 +149,43 @@ public class View extends Application implements Runnable {
                             }
                         }
                     });
-                    board.add(b, j, i);
+                    board.add(b, j+1, i+1);
                 }
             }
             fillBoard();
             
-            for(int i = 0; i < Model.getBoardSize(); ++i) {
-                scene.lookup("#row"+i).toFront();
-                scene.lookup("#col"+i).toFront();
-            }
-
             stage.setScene(scene);
             stage.show();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    @FXML
+    protected void showInstructions(ActionEvent event) {
+        String rules = "1.\tCheckers is played by two players. Each player begins the game with 12 colored discs.\n"
+                     + "2.\tThe board consists of 64 squares, alternating between 32 dark and 32 light squares. It is\n" 
+                     + "\tpositioned so that each player has a light square on the right side corner closest to him or her.\n" 
+                     + "3.\tWhite moves first. Players then alternate moves.\n"
+                     + "4.\tMoves are allowed only on the dark squares, so pieces always move diagonally. Single\n"
+                     + "\tpieces are always limited to forward moves (toward the opponent).\n"
+                     + "5.\tA piece making a non-capturing move (not involving a jump) may move only one square.\n"
+                     + "6.\tA piece making a capturing move (a jump) leaps over one of the opponent's pieces, landing in a\n"
+                     + "\tstraight diagonal line on the other side. Only one piece may be captured in a single jump.\n"
+                     + "\tHowever, multiple jumps are allowed on a single turn.\n"
+                     + "7.\tWhen a piece is captured, it is removed from the board.\n"
+                     + "8.\tIf a player is able to make a capture, there is no option - the jump must be made. If more than\n" 
+                     + "\tone capture is available, the player is free to choose whichever he or she prefers.\n" 
+                     + "9.\tWhen a piece reaches the furthest row from the player who controls that piece, it is crowned\n" 
+                     + "\tand becomes a king.\n"
+                     + "10.\tKings are limited to moving diagonally, but may move both forward and backward.\n"
+                     + "11.\tA player wins the game when the opponent cannot make a move. In most cases, this is\n"
+                     + "\tbecause all of the opponent's pieces have been captured, but it could also be because all\n"
+                     + "\tof his pieces are blocked in. Draw result occurs when each player moves a king 15\n"
+                     + "\ttimes without a capture.";
+        MessageBox.show(new Stage(),
+                rules, "Game rules", MessageBox.OK);
     }
     
     protected void fillBoard() {
@@ -189,7 +210,7 @@ public class View extends Application implements Runnable {
                         image = new ImageView(imageWhiteQueen);
                     }
                     
-                    image.relocate(j*50+10, i*50+10);
+                    image.relocate(j*48+25, i*48+25);
                     checkers.getChildren().add(image); 
                     checkersOnBoard[j][i] = image;
                 }
@@ -207,11 +228,11 @@ public class View extends Application implements Runnable {
             final int endY = move.getEndY();
             
             if (checkersOnBoard[startX][startY] != null) {
-                checkersOnBoard[startX][startY].relocate(endX*50+10, endY*50+10);
+                checkersOnBoard[startX][startY].relocate(endX*48+25, endY*48+25);
                 
                 double sqrt = 10*Math.sqrt(2); 
                 Path path = new Path();
-                path.getElements().add(new MoveTo(sqrt-(endX-startX)*50, sqrt-(endY-startY)*50));
+                path.getElements().add(new MoveTo(sqrt-(endX-startX)*48, sqrt-(endY-startY)*48));
                 path.getElements().add(new LineTo(sqrt, sqrt));
                 
                 checkersOnBoard[startX][startY].toFront();
@@ -225,27 +246,9 @@ public class View extends Application implements Runnable {
                 
                 pathTransition.playFromStart();
                 
-                checkersOnBoard[endX][endY] = checkersOnBoard[startX][startY];
-                checkersOnBoard[startX][startY] = null;
-    
                 pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        for(Coordinate xy : mockup.getDeletedCheckers()) {
-                            
-                            FadeTransition fadeTransition = FadeTransitionBuilder.create()
-                                    .node(checkersOnBoard[xy.getX()][xy.getY()])
-                                    .duration(Duration.millis(350))
-                                    .fromValue(1.0)
-                                    .toValue(0.0)
-                                    .cycleCount(1)
-                                    .build();
-                            
-                            fadeTransition.playFromStart();
-
-                            checkersOnBoard[xy.getX()][xy.getY()] = null;
-                        }
-                            
                         for(int i = 0; i < Model.getBoardSize(); ++i) {
                             for(int j = 0; j < Model.getBoardSize(); ++j) {
                                 fields[j][i].setStyle(fields[j][i].getStyle().replace("-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.9) , 20 , 0.3 , 1 , 0 );", ""));
@@ -257,8 +260,35 @@ public class View extends Application implements Runnable {
                                 }
                             }
                         }
+                        try {
+                            Thread.sleep(200);
+                        }
+                        catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
+
+                
+                for(Coordinate xy : mockup.getDeletedCheckers()) {
+                    
+                    FadeTransition fadeTransition = FadeTransitionBuilder.create()
+                            .node(checkersOnBoard[xy.getX()][xy.getY()])
+                            .duration(Duration.millis(350))
+                            .fromValue(1.0)
+                            .toValue(0.0)
+                            .cycleCount(1)
+                            .build();
+                    
+                    fadeTransition.playFromStart();
+
+                    checkersOnBoard[xy.getX()][xy.getY()] = null;
+                }
+                    
+
+                
+                checkersOnBoard[endX][endY] = checkersOnBoard[startX][startY];
+                checkersOnBoard[startX][startY] = null;
             }
         }
     }
@@ -398,7 +428,13 @@ public class View extends Application implements Runnable {
                         + "," + mockup.getLastMove().getEndY() + ")");
                 }
                 animateLastMove(mockup.getLastMove());
-                System.out.println("--------------------------------");
+                
+                System.out.println("----------------------------------");
+                System.out.println("game state: "+View.mockup.getGameState());
+                System.out.print("   ");
+                for(int i = 0; i < Model.getBoardSize(); ++i) {
+                    System.out.print(" "+i+"  ");
+                }
 
                 System.out.println();
                 for(int i = 0; i < Model.getBoardSize(); ++i) {
@@ -412,7 +448,7 @@ public class View extends Application implements Runnable {
                     }
                     for(int j = 0; j < Model.getBoardSize(); ++j) {
                         if(checkersOnBoard[j][i] != null)
-                            System.out.print(" " + (checkersOnBoard[j][i].getLayoutX()-10)/50 + " " + (checkersOnBoard[j][i].getLayoutY()-10)/50 + " | ");
+                            System.out.print(" " + (checkersOnBoard[j][i].getLayoutX()-25)/48 + " " + (checkersOnBoard[j][i].getLayoutY()-25)/48 + " | ");
                         else
                             System.out.print("         | ");
                     }
