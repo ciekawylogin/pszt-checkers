@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 import common.Coordinate;
 
 /**
@@ -17,6 +19,15 @@ class Move {
 
     // wspolrzedna Y koncowego pola pionka
     private int endY;
+    
+    // ktory gracz wykonal ruch? (-1 = brak danych i nieistotne)
+    private int player;
+
+    /// Pozycje zbitych pionkow (o ile jakies byly zbite)
+    ArrayList<Coordinate> capturedCheckers;
+    
+    /// Pozycje zbitych damek (o ile jakies byly zbite)
+    ArrayList<Coordinate> capturedQueens;
 
     /**
      * Konstruktor.
@@ -25,12 +36,18 @@ class Move {
      * @param startY - wspolrzedna Y poczatkowego pola pionka
      * @param endX - wspolrzedna X koncowego pola pionka
      * @param endY - wspolrzedna Y koncowego pola pionka
+     * @param player 
+     * @param capturedCheckers
+     * @param capturedQueens
      */
-    Move(final int startX, final int startY, final int endX, final int endY) {
+    Move(final int startX, final int startY, final int endX, final int endY, int player, ArrayList<Coordinate> capturedCheckers,  ArrayList<Coordinate> capturedQueens) {
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
+        this.player = player;
+        this.capturedCheckers = capturedCheckers;
+        this.capturedQueens = capturedQueens;
     }
     
     /**
@@ -43,9 +60,18 @@ class Move {
         startY = startCoordinate.getY();
         endX = endCoordinate.getX();
         endY = endCoordinate.getY();
+        player = -1;
     }
 
-    int getStartX() {
+    Move(final int startX, final int startY, final int endX, final int endY, int player) {
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
+        this.player = player;
+    }
+
+	int getStartX() {
         return startX;
     }
 
@@ -60,4 +86,21 @@ class Move {
     int getEndY() {
         return endY;
     }
+    
+    public Move reverse()
+    {
+    	return new Move(endX, endY, startX, startY, player);
+    }
+    
+    public String toString() {
+    	return "move: ("+startX+", "+startY+") -> ("+endX+", "+endY+")\n";
+    }
+
+	int getPlayer() {
+		return player;
+	}
+
+	private void setPlayer(int player) {
+		this.player = player;
+	}
 }

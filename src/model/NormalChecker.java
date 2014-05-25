@@ -291,11 +291,11 @@ abstract class NormalChecker {
      * @param targetY - wspolrzedna Y koncowej pozycji
      * @return true jesli ruch zostal wykonany
      */
-    static boolean makeMove(final int sourceX, final int sourceY, 
+    static ArrayList<Coordinate> makeMove(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, final boolean forcedCapture) {
         if(targetX >= Model.BOARD_SIZE || targetY >= Model.BOARD_SIZE ||
                 targetX < 0 || targetY < 0) {
-            return false;
+            return null;
         }
 
         boolean normalMove = NormalChecker.isNormalMoveCorrect(sourceX, sourceY, targetX, targetY);
@@ -303,7 +303,7 @@ abstract class NormalChecker {
         boolean correctMove = normalMove || captureMove;
         
         if(forcedCapture) {
-            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY));
+            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY, -1));
         };
         
         if(correctMove) {
@@ -315,13 +315,21 @@ abstract class NormalChecker {
             checker.setPositionOnBoard(targetX, targetY);
             Queen.checkQueenCondition(targetX, targetY);
         }
-        if (captureMove) {
-            int checkerToRemoveX = (targetX + sourceX) / 2;
-            int checkerToRemoveY = (targetY + sourceY) / 2;
-            Model.board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
-            deletedCheckers.add(new Coordinate(checkerToRemoveX, checkerToRemoveY));
+        if(correctMove) {
+        	ArrayList<Coordinate> capturedCheckers = new ArrayList<Coordinate>();
+        	if(captureMove) {
+                int checkerToRemoveX = (targetX + sourceX) / 2;
+                int checkerToRemoveY = (targetY + sourceY) / 2;
+                deletedCheckers.add(new Coordinate(checkerToRemoveX, checkerToRemoveY));
+        		capturedCheckers.add(new Coordinate(checkerToRemoveX, checkerToRemoveY));
+                //Model.board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
+        	}
+        	return capturedCheckers;
         }
-        return correctMove;
+        else
+        {
+        	return null;
+        }
     }
 
 }

@@ -91,6 +91,11 @@ public class Controller {
                 System.exit(0);
                 break;
                 
+            case UNDO_MOVE:
+            	model.undoLastMove();
+            	refreshView();
+            	break;
+                
             default:
                 throw new RuntimeException("unrecognized event taken from blockingQueue");
             

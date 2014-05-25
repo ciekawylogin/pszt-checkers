@@ -1,6 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Stack;
+
+import com.sun.glass.ui.View.Capability;
 
 import common.Coordinate;
 import common.Mockup;
@@ -29,6 +32,12 @@ public class Model {
     /* numer aktywnego gracze */
     private GameState gameState;
 
+    /** czy ostatnio cofnieto ruch? */
+	private boolean moveUndone;
+	
+	/** lista ruchow od poczatku gry */
+	private Stack<Move> moves;
+
     /**
      * Konstruktor.
      */
@@ -38,6 +47,7 @@ public class Model {
         active_player = 0;
         whoseWasLastMove = -1;
         gameState = GameState.NOT_STARTED;
+        moves = new Stack<Move>();
     }
     
     /**
@@ -151,20 +161,25 @@ public class Model {
             forcedCapture = true;
         }
         coordinatesToCapture = null;
-        
+
+    	ArrayList<Coordinate> capturedCheckers = new ArrayList<Coordinate>();
         if(board.getField(targetX, targetY).getChecker() == null) {
             if(sourceChecker.getType() == CheckerType.QUEEN) {
-                correctMove = Queen.makeMove(sourceX, sourceY, targetX, targetY, forcedCapture);
+            	capturedCheckers = Queen.makeMove(sourceX, sourceY, targetX, targetY, forcedCapture);
             } else {
-                correctMove = NormalChecker.makeMove(sourceX, sourceY, targetX, targetY, forcedCapture);
+            	capturedCheckers = NormalChecker.makeMove(sourceX, sourceY, targetX, targetY, forcedCapture);
             }
+            correctMove = capturedCheckers != null;
         } else {
             // docelowe pole jest zajete
             correctMove = false;
         }
         unselectChecker();
         if(correctMove) {
-        	saveCorrectMove(sourceX, sourceY, targetX, targetY);
+        	saveCorrectMove(sourceX, sourceY, targetX, targetY, capturedCheckers);
+        	for(Coordinate coord: capturedCheckers) {
+        		board.getField(coord.getX(), coord.getY()).removeChecker();
+        	}
         }
         return correctMove;
     }
@@ -175,11 +190,27 @@ public class Model {
      * @param sourceY
      * @param targetX
      * @param targetY
+     * @param capturedCheckers 
      */
     private void saveCorrectMove(final int sourceX, final int sourceY, 
-            final int targetX, final int targetY) {
-        Player player = active_player == 0 ? players[0] : players[1];        
-        player.setLastMove(new Move(sourceX, sourceY, targetX, targetY));
+            final int targetX, final int targetY, ArrayList<Coordinate> capturedCheckers) {
+        Player player = active_player == 0 ? players[0] : players[1];      
+        ArrayList<Coordinate> capturedNormalCheckers = new ArrayList<Coordinate>();
+        ArrayList<Coordinate> capturedQueens = new ArrayList<Coordinate>();
+		for(Coordinate coord: capturedCheckers) {
+			Checker checker = board.getField(coord.getX(), coord.getY()).getChecker();
+			if(checker.getType() == CheckerType.NORMAL) {
+				capturedNormalCheckers.add(coord);
+			} else if (checker.getType() == CheckerType.QUEEN) {
+				capturedQueens.add(coord);
+			} else {
+				throw new RuntimeException("unknown checker type");
+			}
+		}
+        
+		Move move = new Move(sourceX, sourceY, targetX, targetY, active_player, capturedNormalCheckers, capturedQueens);
+        player.setLastMove(move);
+        moves.add(move);
     }
     
     /**
@@ -377,12 +408,20 @@ public class Model {
         
         Move move = null;
         // ostatni ruch nalezal do gracza ludzkiego
+        /*
         if(whoseWasLastMove == 0) {
             move = players[0].getLastMove();
             
         // ostatni ruch nalezal do cpu
         } else {
             move = players[1].getLastMove();
+        }
+        */
+        move = moves.empty()? null: moves.lastElement();
+        
+        if(move!= null && moveUndone) {
+        	move = move.reverse();
+        	removeLastMoveFromHistory();
         }
         
         if(move != null) {
@@ -533,7 +572,7 @@ public class Model {
             for(int targetY=0; targetY<BOARD_SIZE; ++targetY) {
                 if(isMoveCorrect(sourceX, sourceY, targetX, targetY)) {
                     if(result != null) {
-                        result.add(new Move(sourceX, sourceY, targetX, targetY));
+                        result.add(new Move(sourceX, sourceY, targetX, targetY, active_player));
                     }
                     isAnyPossibleMove = true;
                 }
@@ -615,4 +654,42 @@ public class Model {
         
         return isCapturePossible;
     }
+
+	public void undoLastMove() {
+		/*
+		if(whoseWasLastMove == -1) {
+			return;
+		} else if(whoseWasLastMove == 0) {
+			undoMove(players[0].getLastMove());
+		} else if(whoseWasLastMove == 1) {
+			undoMove(players[1].getLastMove());
+		} else {
+			throw new RuntimeException();
+		}
+		*/
+		undoMove(moves.lastElement());
+	}
+	
+	private void removeLastMoveFromHistory(){
+		moves.pop();
+	}
+
+	private void undoMove(Move move) {
+		System.out.println("undoing..." + move.toString());
+		Field startField = board.getField(move.getStartX(), move.getStartY());
+		Field destinField = board.getField(move.getEndX(), move.getEndY());
+		Checker checker = destinField.getChecker();
+		startField.setChecker(checker);
+		destinField.removeChecker();
+		CheckerColor opponentColor = move.getPlayer() == 0? players[1].getPlayerColor(): players[0].getPlayerColor();
+		for(Coordinate coord: move.capturedCheckers) {
+			board.getField(coord.getX(), coord.getY()).setChecker(new Checker(coord.getX(), coord.getY(), opponentColor, CheckerType.NORMAL));
+		}
+		for(Coordinate coord: move.capturedQueens) {
+			board.getField(coord.getX(), coord.getY()).setChecker(new Checker(coord.getX(), coord.getY(), opponentColor, CheckerType.QUEEN));
+		}
+		moveUndone = true;
+	}
+	
+	
 }

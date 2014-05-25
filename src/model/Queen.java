@@ -111,26 +111,28 @@ abstract class Queen {
      * @param sourceY - wspolrzedna Y poczatkowej pozycji
      * @param targetX - wspolrzedna X koncowej pozycji
      * @param targetY - wspolrzedna Y koncowej pozycji
-     * @return true, jesli ruch zostal wykonany
+     * @return ArrayList<Coordinate> - lista zbitych pionkow, jesli ruch zostal wykonany (null jesli ruch byl bledny)
      */
-    static boolean makeMove(final int sourceX, final int sourceY, 
+    static ArrayList<Coordinate> makeMove(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, final boolean forcedCapture) {
         ArrayList<Coordinate> coordinatesToDelete = new ArrayList<>();
         boolean correctMove = checkMove(sourceX, sourceY, targetX, targetY, coordinatesToDelete);
         if(forcedCapture) {
-            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY));
+            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY, -1));
         };
 
         if(correctMove) {
             setOnPosition(sourceX, sourceY, targetX, targetY);
             
+            
             // usuwanie potencjalnych ofiar ruchu
             removeCapturedCheckers(coordinatesToDelete);
+            return coordinatesToDelete;
             
         } else {
             coordinatesToDelete.clear();
         }
-        return correctMove;
+        return null;
     }
     
     /**
@@ -158,7 +160,7 @@ abstract class Queen {
         for(Coordinate coordToDelete: coordinatesToDelete) {
             int x = coordToDelete.getX();
             int y = coordToDelete.getY();
-            Model.board.getField(x, y).removeChecker();
+            //Model.board.getField(x, y).removeChecker();
             deletedCheckers.add(new Coordinate(x, y));
         }
         coordinatesToDelete.clear();
