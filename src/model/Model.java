@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import javax.security.auth.Refreshable;
+
 import com.sun.glass.ui.View.Capability;
 
 import common.Coordinate;
@@ -93,6 +95,32 @@ public class Model {
         
     }
 
+
+    /**
+     * Wykonuje ruch "chwilowy" na wewnetrzne potrzeby AI (nie do wyswietlania)
+     * @param move ruch do wykonania
+     * @return czy ruch byl pojedynczy
+     */
+	public boolean performMove(Move move) {
+		System.out.println(move.toString() + ", history: " + moves.size());
+	    selectChecker(move.getStartX(), move.getStartY());
+	    Coordinate startCoordinate = getSelectedCheckerCoordinate();
+        Coordinate endCoordinate = new Coordinate(move.getEndX(), move.getEndY());
+        boolean isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
+        System.out.println(startCoordinate.getX() + " " + startCoordinate.getY());
+        if(moveSelectedCheckerTo(move.getEndX(), move.getEndY())) {
+            //setWhoseWasLastMove(0);
+            isNotASingleMove &= checkCapturesFromPosition(move.getEndX(), move.getEndY());
+            if(!isNotASingleMove) {
+                changeActivePlayer();
+            }
+        } else {
+        	throw new RuntimeException();
+        }
+        System.out.println(getMockup());
+        return isNotASingleMove;
+	}
+
     /**
      * @return true wtedy i tylko wtedy, gdy jakikolwiek pionek jest zaznaczony
      */
@@ -173,6 +201,7 @@ public class Model {
         } else {
             // docelowe pole jest zajete
             correctMove = false;
+            System.out.println("zajete");
         }
         unselectChecker();
         if(correctMove) {
@@ -222,7 +251,7 @@ public class Model {
     	boolean isNotASingleMove = true;
     	boolean isMoveCorrect = false;
         while(!isMoveCorrect && isAITurnPossible(AIMoves)) {
-        	Move selectedMove = AI.makeAIMove(AIMoves);
+        	Move selectedMove = AI.computeAIMove(this, AIMoves);
             selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
             Coordinate startCoordinate = getSelectedCheckerCoordinate();
             Coordinate endCoordinate = new Coordinate(selectedMove.getEndX(), selectedMove.getEndY());
@@ -246,7 +275,6 @@ public class Model {
         
         return !isNotASingleMove;
     	
-        
 	}
 
 	private boolean areCoordinatesOnBoard(final int x, final int y) {
@@ -310,7 +338,7 @@ public class Model {
     /**
      * Zmiana gracza wykonujacego ruch.
      */
-    private final void changeActivePlayer() {
+    final void changeActivePlayer() {
         active_player = active_player == 1 ? 0 : 1;
         gameState = active_player == 0 ? GameState.PLAYER_1_MOVE : GameState.PLAYER_2_MOVE;
     }
@@ -544,13 +572,14 @@ public class Model {
      * @param result - tablica ruchow do uzupelnienia
      * @return true jesli istnieje chociaz 1 dozwolony ruch
      */
-    private boolean checkAllPossibleMoves(CheckerColor color, ArrayList<Move> result) {
+    public boolean checkAllPossibleMoves(CheckerColor color, ArrayList<Move> result) {
         boolean isAnyPossibleMove = false;
+        boolean canCapture = checkAllPossibleCaptures(color, null);
         for(int y=0; y<BOARD_SIZE; ++y) {
             for(int x=0; x<BOARD_SIZE; ++x) {
                 if(board.getField(x, y).getChecker() != null &&
                    board.getField(x, y).getChecker().getColor() == color) {
-                    isAnyPossibleMove |= checkAllPossibleMovesFromPosition(x, y, result);
+                    isAnyPossibleMove |= checkAllPossibleMovesFromPosition(x, y, result, canCapture);
                 }
             }
         };
@@ -564,9 +593,10 @@ public class Model {
      * @param sourceX - wspolrzedna x pola sprawdzanego
      * @param sourceY - wspolrzedna y pola sprawdzanego
      * @param result - tablica ruchow do uzupelnienia
+     * @param capturesOnly 
      * @return true jesli istnieje chociaz 1 dozwolony ruch
      */
-    private boolean checkAllPossibleMovesFromPosition(int sourceX, int sourceY, ArrayList<Move> result) {
+    private boolean checkAllPossibleMovesFromPosition(int sourceX, int sourceY, ArrayList<Move> result, boolean capturesOnly) {
         boolean isAnyPossibleMove = false;
         for(int targetX=0; targetX<BOARD_SIZE; ++targetX) {
             for(int targetY=0; targetY<BOARD_SIZE; ++targetY) {
@@ -670,10 +700,9 @@ public class Model {
 		undoMove(moves.lastElement());
 	}
 	
-	private void removeLastMoveFromHistory(){
-		moves.pop();
-	}
-
+	/**
+	 * Cofa podany ruch
+	 */
 	private void undoMove(Move move) {
 		System.out.println("undoing..." + move.toString());
 		Field startField = board.getField(move.getStartX(), move.getStartY());
@@ -688,8 +717,33 @@ public class Model {
 		for(Coordinate coord: move.capturedQueens) {
 			board.getField(coord.getX(), coord.getY()).setChecker(new Checker(coord.getX(), coord.getY(), opponentColor, CheckerType.QUEEN));
 		}
-		moveUndone = true;
+		System.out.println(getMockup());
+		//moveUndone = true;
 	}
+
+	/**
+	 * Usuwa ostatnio wykonany ruch z historii, wo³aæ tylko po cofniêciu ruchu!
+	 */
+	void removeLastMoveFromHistory(){
+		moves.pop();
+	}
+
+
+	/**
+	 * @return kolor aktywnego gracza
+	 */
+	public CheckerColor getCurrentPlayerColor() {
+		return players[active_player].getPlayerColor();
+	}
+
+	/**
+	 * 
+	 * @return stan gry
+	 */
+	public GameState getGameState() {
+		return gameState;
+	}
+	
 	
 	
 }
