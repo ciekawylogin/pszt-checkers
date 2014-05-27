@@ -3,17 +3,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jfxmessagebox-1.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/alt-rt.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/charsets.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/deploy.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/javaws.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/jce.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/jfr.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/jfxrt.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/jsse.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/management-agent.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/plugin.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/resources.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_45/jre/lib/rt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

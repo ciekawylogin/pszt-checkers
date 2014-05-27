@@ -164,7 +164,7 @@ abstract class Queen {
         for(Coordinate coordToDelete: coordinatesToDelete) {
             int x = coordToDelete.getX();
             int y = coordToDelete.getY();
-            //Model.board.getField(x, y).removeChecker();
+            Model.board.getField(x, y).removeChecker();
             deletedCheckers.add(new Coordinate(x, y));
         }
         coordinatesToDelete.clear();
@@ -432,7 +432,7 @@ abstract class Queen {
             for(Field field : rows) {
                 checkerOnField = field.getChecker();
                 if(checkerOnField!= null && checkerOnField.getType() == CheckerType.QUEEN && 
-                        checkerOnField.getColor() == color) {            
+                        checkerOnField.getColor() == color) {
                     isCapturePossible |= 
                             checkPossibleCapturesFromQueen(checkerOnField, coordinatesToCapture);
                     }
