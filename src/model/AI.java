@@ -12,33 +12,53 @@ abstract class AI {
      *  (wlasciwy ruch moze skladac sie z kilku mniejszych -> bicie wielokrotne)
      */
     static Move computeAIMove(Model model, ArrayList<Move> AIMoves) {
+    	int AIPlayer = model.getActivePlayer();
+    	
         // mozliwe posuniecia w pierwszym ruchu
     	ArrayList<Move> possibleMoves = new ArrayList<Move>();
     	
     	model.checkAllPossibleMoves(model.getCurrentPlayerColor(), possibleMoves);
-    	int numberOfPossibleMoves = possibleMoves.size();
+
     	Move bestMove = null;
-    	int bestMoveValue = -1000; // duza ujemna liczba
-    	
-    	for(Move move: possibleMoves)
+    	if(AIPlayer == 0)
     	{
-    		int moveValue = minMax(move, getMaxDepth(), model);
-    		if(moveValue >= bestMoveValue)
-    		{
-    			bestMoveValue = moveValue;
-    			bestMove = move;
-    		}
+	    	int bestMoveValue = -1000; // duza ujemna liczba
+	    	
+	    	for(Move move: possibleMoves)
+	    	{
+	    		int moveValue = minMax(move, getMaxDepth(), model);
+	    		if(moveValue >= bestMoveValue)
+	    		{
+	    			bestMoveValue = moveValue;
+	    			bestMove = move;
+	    		}
+	    	}
+    	}
+    	else
+    	{
+	    	int bestMoveValue = +1000; // duza dodatnia liczba
+	    	
+	    	for(Move move: possibleMoves)
+	    	{
+	    		int moveValue = minMax(move, getMaxDepth(), model);
+	    		if(moveValue <= bestMoveValue)
+	    		{
+	    			bestMoveValue = moveValue;
+	    			bestMove = move;
+	    		}
+	    	}
     	}
         return bestMove;
     }
 
 	private static int getMaxDepth() {
-		return 10;
+		return 6;
 	}
 
 	private static int minMax(Move move, int depth, Model model) {
 		System.out.println(" > MinMax("+depth+"), gameState = " + model.getGameState().name());
 		int result = 0;
+		
 		boolean playerUnchanged = model.performMove(move);
 		if(model.getGameState() == GameState.PLAYER_1_WON) {
 			result = +100;

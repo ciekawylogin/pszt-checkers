@@ -108,7 +108,10 @@ public class Model {
         Coordinate endCoordinate = new Coordinate(move.getEndX(), move.getEndY());
         boolean isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
         System.out.println(startCoordinate.getX() + " " + startCoordinate.getY());
-        System.out.println("mv:" + moveSelectedCheckerTo(move.getEndX(), move.getEndY()));
+        boolean moveCorrect = moveSelectedCheckerTo(move.getEndX(), move.getEndY());
+        if(!moveCorrect) {
+        	System.out.println("incorrect move");
+        }
         //if() {
             //setWhoseWasLastMove(0);
             isNotASingleMove = isNotASingleMove && checkCapturesFromPosition(move.getEndX(), move.getEndY());
@@ -182,6 +185,11 @@ public class Model {
         //System.out.println("c " + sourceX + " " + sourceY);
         //System.out.println("d " + targetX + " " + targetY);
         Checker sourceChecker = board.getField(sourceX, sourceY).getChecker();
+        if(sourceChecker == null)
+        {
+            System.out.println("nie ma takiego pionka");
+        	return false;
+        }
         boolean correctMove = true;
         boolean forcedCapture = false;
         
@@ -792,6 +800,14 @@ public class Model {
 		ArrayList<Move> result = new ArrayList<Move>();
 		checkAllPossibleMoves(getCurrentPlayerColor(), result);
 		return result;
+	}
+
+	/**
+	 * 
+	 * @return numer aktywnego gracze (0 lub 1)
+	 */
+	public int getActivePlayer() {
+		return active_player;
 	}
 	
 	

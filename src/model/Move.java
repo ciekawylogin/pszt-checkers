@@ -105,9 +105,9 @@ class Move {
 		return player;
 	}
 
-	private void setPlayer(int player) {
-		this.player = player;
-	}
+//	private void setPlayer(int player) {
+//		this.player = player;
+//	}
 
 	boolean isPromotion() {
 		return promotion;

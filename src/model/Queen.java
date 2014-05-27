@@ -102,8 +102,8 @@ abstract class Queen {
     static boolean checkQueenCondition(final int targetX, final int targetY) {
     	Checker checker = Model.board.getField(targetX, targetY).getChecker();
         if((targetY == 0 && checker.getColor() == CheckerColor.BLACK)||(targetY == Model.BOARD_SIZE-1 && checker.getColor() == CheckerColor.WHITE)) {
-            checker.promote();
-            return true;
+           // checker.promote();
+           // return true;
         }
         return false;
     }
