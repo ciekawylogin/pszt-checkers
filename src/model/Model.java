@@ -597,7 +597,8 @@ public class Model {
         boolean canCapture = checkAllPossibleCaptures(color, null);
         for(int y=0; y<BOARD_SIZE; ++y) {
             for(int x=0; x<BOARD_SIZE; ++x) {
-                if(board.getField(x, y).getChecker() != null &&
+                if((x + y) % 2 == 0 &&
+                   board.getField(x, y).getChecker() != null &&
                    board.getField(x, y).getChecker().getColor() == color) {
                     isAnyPossibleMove |= checkAllPossibleMovesFromPosition(x, y, result, canCapture);
                 }
@@ -620,7 +621,11 @@ public class Model {
         boolean isAnyPossibleMove = false;
         for(int targetX=0; targetX<BOARD_SIZE; ++targetX) {
             for(int targetY=0; targetY<BOARD_SIZE; ++targetY) {
-                if(isMoveCorrect(sourceX, sourceY, targetX, targetY)) {
+            	int xdiff = sourceX - targetX;
+            	int ydiff = sourceY - targetY;
+                if((xdiff == ydiff || xdiff == -ydiff) &&
+                	(targetX + targetY) % 2 == 0 &&
+                	isMoveCorrect(sourceX, sourceY, targetX, targetY)) {
                 	Move move = new Move(sourceX, sourceY, targetX, targetY, active_player);
                     if(!capturesOnly || isMoveACapture(move)) {
                     	if(result != null)
@@ -812,14 +817,14 @@ public class Model {
 	}
 
 	public boolean hasWhiteWon() {
-		return (gameState == GameState.PLAYER_1_WON && players[0].getPlayerColor() == CheckerColor.WHITE)
+		return  (gameState == GameState.PLAYER_1_WON && players[0].getPlayerColor() == CheckerColor.WHITE)
 				||
 				(gameState == GameState.PLAYER_2_WON && players[1].getPlayerColor() == CheckerColor.WHITE);
 				
 	}
 
 	public boolean hasBlackWon() {
-		return (gameState == GameState.PLAYER_1_WON && players[0].getPlayerColor() == CheckerColor.BLACK)
+		return  (gameState == GameState.PLAYER_1_WON && players[0].getPlayerColor() == CheckerColor.BLACK)
 				||
 				(gameState == GameState.PLAYER_2_WON && players[1].getPlayerColor() == CheckerColor.BLACK);
 				

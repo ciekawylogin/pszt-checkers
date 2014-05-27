@@ -53,7 +53,6 @@
             </children>
         </GridPane>
         <Button fx:id="instructions" layoutX="14.0" layoutY="581.0" mnemonicParsing="false" onAction="#showInstructions" prefWidth="100.0" text="Instructions" />
-        <Button fx:id="undo" layoutX="150.0" layoutY="581.0" mnemonicParsing="false" onAction="#undoMove" prefWidth="100.0" text="Undo move" />
         <Button fx:id="back" layoutX="286.0" layoutY="581.0" mnemonicParsing="false" onAction="#showMenu" prefWidth="100.0" text="Back to menu" />
         <Text id="state" fill="WHITE" layoutX="50.0" layoutY="440.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="147.888671875" />
         <Text id="message" fill="WHITE" layoutX="50.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="290.0" />

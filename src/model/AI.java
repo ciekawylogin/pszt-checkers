@@ -25,6 +25,13 @@ abstract class AI {
     	model.checkAllPossibleMoves(model.getCurrentPlayerColor(), possibleMoves);
 
     	Move bestMove = null;
+    	
+    	if(model.getActivePlayer().getGameLevel() == GameLevel.EASY)
+    	{
+	    	int selectedMove = (int)Math.floor(Math.random() * possibleMoves.size());
+	    	return possibleMoves.get(selectedMove);
+    	}
+    	
     	if(model.getCurrentPlayerColor() == CheckerColor.WHITE)
     	{
 	    	int bestMoveValue = -1000; // duza ujemna liczba
