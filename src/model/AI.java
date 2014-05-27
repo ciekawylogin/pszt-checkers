@@ -17,7 +17,7 @@ abstract class AI {
     		return null;
     	}
     	
-    	int AIPlayer = model.getActivePlayer();
+    	int AIPlayer = model.getActivePlayerNumber();
     	
         // mozliwe posuniecia w pierwszym ruchu
     	ArrayList<Move> possibleMoves = new ArrayList<Move>();
@@ -31,7 +31,7 @@ abstract class AI {
 	    	
 	    	for(Move move: possibleMoves)
 	    	{
-	    		int moveValue = minMax(move, getMaxDepth(), model);
+	    		int moveValue = minMax(move, getMaxDepth(model), model);
 	    		if(moveValue >= bestMoveValue)
 	    		{
 	    			bestMoveValue = moveValue;
@@ -45,7 +45,7 @@ abstract class AI {
 	    	
 	    	for(Move move: possibleMoves)
 	    	{
-	    		int moveValue = minMax(move, getMaxDepth(), model);
+	    		int moveValue = minMax(move, getMaxDepth(model), model);
 	    		if(moveValue <= bestMoveValue)
 	    		{
 	    			bestMoveValue = moveValue;
@@ -56,8 +56,19 @@ abstract class AI {
         return bestMove;
     }
 
-	private static int getMaxDepth() {
-		return 6;
+	private static int getMaxDepth(Model model) {
+		if(model.getActivePlayer().getGameLevel() == GameLevel.EASY)
+		{
+			return 2;
+		}
+		else if(model.getActivePlayer().getGameLevel() == GameLevel.MEDIUM)
+		{
+			return 4;
+		}
+		else
+		{
+			return 6;
+		}
 	}
 
 	private static int minMax(Move move, int depth, Model model) {

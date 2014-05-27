@@ -432,7 +432,7 @@ public class Model {
             final GameLevel gameLevel, final CheckerColor checkerColor) {
 
         players[0] = new Player("player", checkerColor, false, gameLevel);
-        players[1] = new Player("CPU", CheckerColor.getOppositeColor(checkerColor), true, null);
+        players[1] = new Player("CPU", CheckerColor.getOppositeColor(checkerColor), true, gameLevel);
         active_player = players[0].getPlayerColor() == CheckerColor.WHITE ? 0 : 1;
         gameState = players[0].getPlayerColor() == CheckerColor.WHITE ? 
                 GameState.PLAYER_1_MOVE : GameState.PLAYER_2_MOVE;
@@ -807,7 +807,7 @@ public class Model {
 	 * 
 	 * @return numer aktywnego gracze (0 lub 1)
 	 */
-	public int getActivePlayer() {
+	public int getActivePlayerNumber() {
 		return active_player;
 	}
 
@@ -823,6 +823,10 @@ public class Model {
 				||
 				(gameState == GameState.PLAYER_2_WON && players[1].getPlayerColor() == CheckerColor.BLACK);
 				
+	}
+
+	public Player getActivePlayer() {
+		return players[active_player];
 	}
 
 	
