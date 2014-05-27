@@ -289,7 +289,7 @@ abstract class NormalChecker {
      * @param sourceY - wspolrzedna Y poczatkowej pozycji
      * @param targetX - wspolrzedna X koncowej pozycji
      * @param targetY - wspolrzedna Y koncowej pozycji
-     * @return true jesli ruch zostal wykonany
+     * @return lista zbitych pionkow (byc moze pusta) jesli ruch poprawny); w przeciwnym wypadku null
      */
     static ArrayList<Coordinate> makeMove(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, final boolean forcedCapture) {
@@ -313,7 +313,6 @@ abstract class NormalChecker {
             Field newField = Model.board.getField(targetX, targetY);
             newField.setChecker(checker);
             checker.setPositionOnBoard(targetX, targetY);
-            Queen.checkQueenCondition(targetX, targetY);
         }
         if(correctMove) {
         	ArrayList<Coordinate> capturedCheckers = new ArrayList<Coordinate>();

@@ -108,15 +108,16 @@ public class Model {
         Coordinate endCoordinate = new Coordinate(move.getEndX(), move.getEndY());
         boolean isNotASingleMove = isMoveACapture(new Move(startCoordinate, endCoordinate));
         System.out.println(startCoordinate.getX() + " " + startCoordinate.getY());
-        if(moveSelectedCheckerTo(move.getEndX(), move.getEndY())) {
+        System.out.println("mv:" + moveSelectedCheckerTo(move.getEndX(), move.getEndY()));
+        //if() {
             //setWhoseWasLastMove(0);
-            isNotASingleMove &= checkCapturesFromPosition(move.getEndX(), move.getEndY());
+            isNotASingleMove = isNotASingleMove && checkCapturesFromPosition(move.getEndX(), move.getEndY());
             if(!isNotASingleMove) {
                 changeActivePlayer();
             }
-        } else {
-        	throw new RuntimeException();
-        }
+        //} else {
+        	
+        //}
         System.out.println(getMockup());
         return isNotASingleMove;
 	}
@@ -189,6 +190,7 @@ public class Model {
             forcedCapture = true;
         }
         coordinatesToCapture = null;
+        boolean promoted = false;
 
     	ArrayList<Coordinate> capturedCheckers = new ArrayList<Coordinate>();
         if(board.getField(targetX, targetY).getChecker() == null) {
@@ -196,6 +198,9 @@ public class Model {
             	capturedCheckers = Queen.makeMove(sourceX, sourceY, targetX, targetY, forcedCapture);
             } else {
             	capturedCheckers = NormalChecker.makeMove(sourceX, sourceY, targetX, targetY, forcedCapture);
+            	if(capturedCheckers != null) {            	
+                    promoted = Queen.checkQueenCondition(targetX, targetY);
+            	}
             }
             correctMove = capturedCheckers != null;
         } else {
@@ -205,7 +210,7 @@ public class Model {
         }
         unselectChecker();
         if(correctMove) {
-        	saveCorrectMove(sourceX, sourceY, targetX, targetY, capturedCheckers);
+        	saveCorrectMove(sourceX, sourceY, targetX, targetY, capturedCheckers, promoted);
         	for(Coordinate coord: capturedCheckers) {
         		board.getField(coord.getX(), coord.getY()).removeChecker();
         	}
@@ -220,9 +225,10 @@ public class Model {
      * @param targetX
      * @param targetY
      * @param capturedCheckers 
+     * @param promoted 
      */
     private void saveCorrectMove(final int sourceX, final int sourceY, 
-            final int targetX, final int targetY, ArrayList<Coordinate> capturedCheckers) {
+            final int targetX, final int targetY, ArrayList<Coordinate> capturedCheckers, boolean promoted) {
         Player player = active_player == 0 ? players[0] : players[1];      
         ArrayList<Coordinate> capturedNormalCheckers = new ArrayList<Coordinate>();
         ArrayList<Coordinate> capturedQueens = new ArrayList<Coordinate>();
@@ -237,7 +243,7 @@ public class Model {
 			}
 		}
         
-		Move move = new Move(sourceX, sourceY, targetX, targetY, active_player, capturedNormalCheckers, capturedQueens);
+		Move move = new Move(sourceX, sourceY, targetX, targetY, active_player, capturedNormalCheckers, capturedQueens, promoted);
         player.setLastMove(move);
         moves.add(move);
     }
@@ -295,6 +301,11 @@ public class Model {
             final int targetX, final int targetY)
     {
         CheckerType type = board.getField(sourceX, sourceY).getChecker().getType();
+        Field target = board.getField(targetX, targetY);
+        if(target.getChecker() != null)
+        {
+        	return false;
+        }
         if(type == CheckerType.NORMAL) {
             return NormalChecker.isMoveCorrect(sourceX, sourceY, targetX, targetY);
         } else {
@@ -601,10 +612,14 @@ public class Model {
         for(int targetX=0; targetX<BOARD_SIZE; ++targetX) {
             for(int targetY=0; targetY<BOARD_SIZE; ++targetY) {
                 if(isMoveCorrect(sourceX, sourceY, targetX, targetY)) {
-                    if(result != null) {
-                        result.add(new Move(sourceX, sourceY, targetX, targetY, active_player));
+                	Move move = new Move(sourceX, sourceY, targetX, targetY, active_player);
+                    if(!capturesOnly || isMoveACapture(move)) {
+                    	if(result != null)
+                    	{
+                            result.add(move);
+                    	}
+                        isAnyPossibleMove = true;
                     }
-                    isAnyPossibleMove = true;
                 }
             }
         }
@@ -705,19 +720,28 @@ public class Model {
 	 */
 	private void undoMove(Move move) {
 		System.out.println("undoing..." + move.toString());
+		//System.out.println("Mockup before undo:" + getMockup());
 		Field startField = board.getField(move.getStartX(), move.getStartY());
 		Field destinField = board.getField(move.getEndX(), move.getEndY());
 		Checker checker = destinField.getChecker();
 		startField.setChecker(checker);
+        checker.setPositionOnBoard(move.getStartX(), move.getStartY());
 		destinField.removeChecker();
 		CheckerColor opponentColor = move.getPlayer() == 0? players[1].getPlayerColor(): players[0].getPlayerColor();
-		for(Coordinate coord: move.capturedCheckers) {
+		for(Coordinate coord: move.getCapturedCheckers()) {
 			board.getField(coord.getX(), coord.getY()).setChecker(new Checker(coord.getX(), coord.getY(), opponentColor, CheckerType.NORMAL));
 		}
-		for(Coordinate coord: move.capturedQueens) {
+		for(Coordinate coord: move.getCapturedQueens()) {
 			board.getField(coord.getX(), coord.getY()).setChecker(new Checker(coord.getX(), coord.getY(), opponentColor, CheckerType.QUEEN));
 		}
-		System.out.println(getMockup());
+		
+		//jezeli w ruchu nastapila promocja, to ja cofamy
+		if(move.isPromotion())
+		{
+			checker.unpromote();
+		}
+		
+		//System.out.println("Mockup afer undo:" + getMockup());
 		//moveUndone = true;
 	}
 
@@ -742,6 +766,32 @@ public class Model {
 	 */
 	public GameState getGameState() {
 		return gameState;
+	}
+
+	/**
+	 * @param type typ pionka 
+	 * @param color kolor pionka
+	 * @return liczba pionkow na planszy o zadanym typie i kolorze
+	 */
+	public int countCheckers(CheckerType type, CheckerColor color) {
+		int count = 0;
+
+        for(int x = 0; x < BOARD_SIZE; ++x) {
+            for(int y = 0; y < BOARD_SIZE; ++y) {
+            	Checker checker = board.getField(x, y).getChecker();
+                if(checker != null && checker.getType() == type && checker.getColor() == color) {
+                    count++;
+                }
+            }
+        }
+        
+        return count;
+	}
+
+	public ArrayList<Move> getPossibleMoves() {
+		ArrayList<Move> result = new ArrayList<Move>();
+		checkAllPossibleMoves(getCurrentPlayerColor(), result);
+		return result;
 	}
 	
 	

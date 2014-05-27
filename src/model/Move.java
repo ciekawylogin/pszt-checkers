@@ -24,10 +24,13 @@ class Move {
     private int player;
 
     /// Pozycje zbitych pionkow (o ile jakies byly zbite)
-    ArrayList<Coordinate> capturedCheckers;
+    private ArrayList<Coordinate> capturedCheckers;
     
     /// Pozycje zbitych damek (o ile jakies byly zbite)
-    ArrayList<Coordinate> capturedQueens;
+    private ArrayList<Coordinate> capturedQueens;
+    
+    /// czy ruch spowodowa³ promocjê?
+    private boolean promotion;
 
     /**
      * Konstruktor.
@@ -39,15 +42,17 @@ class Move {
      * @param player 
      * @param capturedCheckers
      * @param capturedQueens
+     * @param promoted 
      */
-    Move(final int startX, final int startY, final int endX, final int endY, int player, ArrayList<Coordinate> capturedCheckers,  ArrayList<Coordinate> capturedQueens) {
+    Move(final int startX, final int startY, final int endX, final int endY, int player, ArrayList<Coordinate> capturedCheckers,  ArrayList<Coordinate> capturedQueens, boolean promoted) {
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
         this.player = player;
-        this.capturedCheckers = capturedCheckers;
-        this.capturedQueens = capturedQueens;
+        this.setCapturedCheckers(capturedCheckers);
+        this.setCapturedQueens(capturedQueens);
+        this.setPromotion(promoted);
     }
     
     /**
@@ -102,5 +107,29 @@ class Move {
 
 	private void setPlayer(int player) {
 		this.player = player;
+	}
+
+	boolean isPromotion() {
+		return promotion;
+	}
+
+	void setPromotion(boolean promotion) {
+		this.promotion = promotion;
+	}
+
+	ArrayList<Coordinate> getCapturedQueens() {
+		return capturedQueens;
+	}
+
+	void setCapturedQueens(ArrayList<Coordinate> capturedQueens) {
+		this.capturedQueens = capturedQueens;
+	}
+
+	ArrayList<Coordinate> getCapturedCheckers() {
+		return capturedCheckers;
+	}
+
+	void setCapturedCheckers(ArrayList<Coordinate> capturedCheckers) {
+		this.capturedCheckers = capturedCheckers;
 	}
 }

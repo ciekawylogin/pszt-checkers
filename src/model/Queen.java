@@ -97,11 +97,15 @@ abstract class Queen {
      *
      * @param targetX - wspolrzedna X koncowej pozycji
      * @param targetY - wspolrzedna Y koncowej pozycji
+     * @return 
      */
-    static void checkQueenCondition(final int targetX, final int targetY) {
-        if(targetY == 0 || targetY == Model.BOARD_SIZE-1) {
-            Model.board.getField(targetX, targetY).getChecker().promote();
+    static boolean checkQueenCondition(final int targetX, final int targetY) {
+    	Checker checker = Model.board.getField(targetX, targetY).getChecker();
+        if((targetY == 0 && checker.getColor() == CheckerColor.BLACK)||(targetY == Model.BOARD_SIZE-1 && checker.getColor() == CheckerColor.WHITE)) {
+            checker.promote();
+            return true;
         }
+        return false;
     }
     
     /**
@@ -425,18 +429,14 @@ abstract class Queen {
         boolean isCapturePossible = false;
         
         for(Field[] rows : Model.board.getFields()) {
-            
             for(Field field : rows) {
                 checkerOnField = field.getChecker();
                 if(checkerOnField!= null && checkerOnField.getType() == CheckerType.QUEEN && 
-                        checkerOnField.getColor() == color) {
-                    
+                        checkerOnField.getColor() == color) {            
                     isCapturePossible |= 
                             checkPossibleCapturesFromQueen(checkerOnField, coordinatesToCapture);
-                    
                     }
                 }
-                
         }
         
         

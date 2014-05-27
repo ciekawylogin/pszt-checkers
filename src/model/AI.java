@@ -23,7 +23,7 @@ abstract class AI {
     	for(Move move: possibleMoves)
     	{
     		int moveValue = minMax(move, getMaxDepth(), model);
-    		if(moveValue > bestMoveValue)
+    		if(moveValue >= bestMoveValue)
     		{
     			bestMoveValue = moveValue;
     			bestMove = move;
@@ -33,10 +33,11 @@ abstract class AI {
     }
 
 	private static int getMaxDepth() {
-		return 2;
+		return 10;
 	}
 
 	private static int minMax(Move move, int depth, Model model) {
+		System.out.println(" > MinMax("+depth+"), gameState = " + model.getGameState().name());
 		int result = 0;
 		boolean playerUnchanged = model.performMove(move);
 		if(model.getGameState() == GameState.PLAYER_1_WON) {
@@ -44,14 +45,14 @@ abstract class AI {
 		} else if (model.getGameState() == GameState.PLAYER_2_WON) {
 			result = -100;
 		} else if(depth == 0) {
-			result = getGameStateValue();
+			result = getGameStateValue(model);
 		} else if (model.getGameState() == GameState.PLAYER_1_MOVE
-				   ||  model.getGameState() == GameState.PLAYER_1_MOVE_REPEAT_MOVE){
+			   ||  model.getGameState() == GameState.PLAYER_1_MOVE_REPEAT_MOVE){
 				int max = -1000;
-		    	ArrayList<Move> possibleMoves = new ArrayList<Move>();
+		    	ArrayList<Move> possibleMoves = model.getPossibleMoves();
 				for(Move nextMove: possibleMoves) {
 					int moveValue = minMax(nextMove, depth-1, model);
-					if(moveValue > max)
+					if(moveValue >= max)
 					{
 						max = moveValue;
 					}
@@ -60,7 +61,7 @@ abstract class AI {
 		} else if (model.getGameState() == GameState.PLAYER_2_MOVE
 			   ||  model.getGameState() == GameState.PLAYER_2_MOVE_REPEAT_MOVE){
 			int min = 1000;
-	    	ArrayList<Move> possibleMoves = new ArrayList<Move>();
+	    	ArrayList<Move> possibleMoves = model.getPossibleMoves();
 			for(Move nextMove: possibleMoves) {
 				int moveValue = minMax(nextMove, depth-1, model);
 				if(moveValue < min)
@@ -76,11 +77,21 @@ abstract class AI {
 		}
 		model.undoLastMove();
 		model.removeLastMoveFromHistory();
+		System.out.println(" < MinMax("+depth+")");
 		return result;
 	}
 
-	private static int getGameStateValue() {
-		return 0;
+	private static int getGameStateValue(Model model) {
+		int whiteCheckers = model.countCheckers(CheckerType.NORMAL, CheckerColor.WHITE);
+		int blackCheckers = model.countCheckers(CheckerType.NORMAL, CheckerColor.BLACK);
+
+		int whiteQueens = model.countCheckers(CheckerType.QUEEN, CheckerColor.WHITE);
+		int blackQueens = model.countCheckers(CheckerType.QUEEN, CheckerColor.BLACK);
+		
+		int value = whiteCheckers + whiteQueens * 5
+				  - blackCheckers - blackQueens * 5;
+		
+		return value;
 	}
     
 }

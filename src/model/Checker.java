@@ -109,4 +109,15 @@ public class Checker {
             type = CheckerType.QUEEN;
         }
     }
+
+    /**
+     * cofniecie awansu
+     */
+	public void unpromote() {
+		if(type == CheckerType.NORMAL)
+		{
+			throw new RuntimeException();
+		}
+		type = CheckerType.NORMAL;
+	}
 }
