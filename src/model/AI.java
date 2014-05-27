@@ -12,6 +12,11 @@ abstract class AI {
      *  (wlasciwy ruch moze skladac sie z kilku mniejszych -> bicie wielokrotne)
      */
     static Move computeAIMove(Model model, ArrayList<Move> AIMoves) {
+    	if(!model.isAITurn())
+    	{
+    		return null;
+    	}
+    	
     	int AIPlayer = model.getActivePlayer();
     	
         // mozliwe posuniecia w pierwszym ruchu
@@ -20,7 +25,7 @@ abstract class AI {
     	model.checkAllPossibleMoves(model.getCurrentPlayerColor(), possibleMoves);
 
     	Move bestMove = null;
-    	if(AIPlayer == 0)
+    	if(model.getCurrentPlayerColor() == CheckerColor.WHITE)
     	{
 	    	int bestMoveValue = -1000; // duza ujemna liczba
 	    	
@@ -34,7 +39,7 @@ abstract class AI {
 	    		}
 	    	}
     	}
-    	else
+    	else // czarne
     	{
 	    	int bestMoveValue = +1000; // duza dodatnia liczba
 	    	
@@ -58,16 +63,14 @@ abstract class AI {
 	private static int minMax(Move move, int depth, Model model) {
 		System.out.println(" > MinMax("+depth+"), gameState = " + model.getGameState().name());
 		int result = 0;
-		
 		boolean playerUnchanged = model.performMove(move);
-		if(model.getGameState() == GameState.PLAYER_1_WON) {
+		if(model.hasWhiteWon()) {
 			result = +100;
-		} else if (model.getGameState() == GameState.PLAYER_2_WON) {
+		} else if (model.hasBlackWon()) {
 			result = -100;
 		} else if(depth == 0) {
 			result = getGameStateValue(model);
-		} else if (model.getGameState() == GameState.PLAYER_1_MOVE
-			   ||  model.getGameState() == GameState.PLAYER_1_MOVE_REPEAT_MOVE){
+		} else if (model.getCurrentPlayerColor() == CheckerColor.WHITE){
 				int max = -1000;
 		    	ArrayList<Move> possibleMoves = model.getPossibleMoves();
 				for(Move nextMove: possibleMoves) {
@@ -78,8 +81,7 @@ abstract class AI {
 					}
 				}
 				result = max;
-		} else if (model.getGameState() == GameState.PLAYER_2_MOVE
-			   ||  model.getGameState() == GameState.PLAYER_2_MOVE_REPEAT_MOVE){
+		} else if (model.getCurrentPlayerColor() == CheckerColor.BLACK){
 			int min = 1000;
 	    	ArrayList<Move> possibleMoves = model.getPossibleMoves();
 			for(Move nextMove: possibleMoves) {

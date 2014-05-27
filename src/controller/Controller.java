@@ -65,6 +65,7 @@ public class Controller {
                 final GameStartEvent gameStartEvent = (GameStartEvent)event;
                 model.startGame(gameStartEvent.getPlayerName(), gameStartEvent.getGameLevel(), 
                         gameStartEvent.getCheckerColor());
+                refreshView();
                 model.makeAIMove();
                 refreshView();
                 break;
@@ -136,7 +137,6 @@ public class Controller {
             isCPUMoveComplete |= checkEndGameConditions();
         }
     }
-    
     
     /**
      * Sprawdza czy ktorys z graczy wygral badz czy nastapil remis

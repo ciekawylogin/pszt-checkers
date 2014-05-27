@@ -6,6 +6,7 @@ import java.util.Stack;
 import javax.security.auth.Refreshable;
 
 import com.sun.glass.ui.View.Capability;
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 import common.Coordinate;
 import common.Mockup;
@@ -809,7 +810,21 @@ public class Model {
 	public int getActivePlayer() {
 		return active_player;
 	}
-	
+
+	public boolean hasWhiteWon() {
+		return (gameState == GameState.PLAYER_1_WON && players[0].getPlayerColor() == CheckerColor.WHITE)
+				||
+				(gameState == GameState.PLAYER_2_WON && players[1].getPlayerColor() == CheckerColor.WHITE);
+				
+	}
+
+	public boolean hasBlackWon() {
+		return (gameState == GameState.PLAYER_1_WON && players[0].getPlayerColor() == CheckerColor.BLACK)
+				||
+				(gameState == GameState.PLAYER_2_WON && players[1].getPlayerColor() == CheckerColor.BLACK);
+				
+	}
+
 	
 	
 }
