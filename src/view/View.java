@@ -7,7 +7,6 @@ import common.events.GameEvent;
 import common.events.GameFinishEvent;
 import common.events.GameStartEvent;
 import common.events.ProgramQuitEvent;
-import common.events.UndoMoveEvent;
 import common.Coordinate;
 import common.CheckerMockup;
 import common.GameStateMockup;
@@ -92,11 +91,6 @@ public class View extends Application implements Runnable {
         System.out.println("Start game");
     }
 
-    @FXML
-    protected void undoMove(ActionEvent event) {
-    	blocking_queue.add(new UndoMoveEvent());
-    }
-    
     @FXML
     protected void showMenu(ActionEvent event) {
         AnchorPane page;
@@ -275,7 +269,6 @@ public class View extends Application implements Runnable {
                     }
                 });
 
-                
                 for(Coordinate xy : mockup.getDeletedCheckers()) {
                     
                     FadeTransition fadeTransition = FadeTransitionBuilder.create()
@@ -291,8 +284,6 @@ public class View extends Application implements Runnable {
                     checkersOnBoard[xy.getX()][xy.getY()] = null;
                 }
                     
-
-                
                 checkersOnBoard[endX][endY] = checkersOnBoard[startX][startY];
                 checkersOnBoard[startX][startY] = null;
             }
@@ -461,7 +452,6 @@ public class View extends Application implements Runnable {
                     System.out.println();
                 }
             }
-            
         });
 
     }

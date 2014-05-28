@@ -289,13 +289,13 @@ abstract class NormalChecker {
      * @param sourceY - wspolrzedna Y poczatkowej pozycji
      * @param targetX - wspolrzedna X koncowej pozycji
      * @param targetY - wspolrzedna Y koncowej pozycji
-     * @return lista zbitych pionkow (byc moze pusta) jesli ruch poprawny); w przeciwnym wypadku null
+     * @return true jesli ruch zostal wykonany
      */
-    static ArrayList<Coordinate> makeMove(final int sourceX, final int sourceY, 
+    static boolean makeMove(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, final boolean forcedCapture) {
         if(targetX >= Model.BOARD_SIZE || targetY >= Model.BOARD_SIZE ||
                 targetX < 0 || targetY < 0) {
-            return null;
+            return false;
         }
 
         boolean normalMove = NormalChecker.isNormalMoveCorrect(sourceX, sourceY, targetX, targetY);
@@ -303,7 +303,7 @@ abstract class NormalChecker {
         boolean correctMove = normalMove || captureMove;
         
         if(forcedCapture) {
-            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY, -1));
+            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY));
         };
         
         if(correctMove) {
@@ -313,22 +313,15 @@ abstract class NormalChecker {
             Field newField = Model.board.getField(targetX, targetY);
             newField.setChecker(checker);
             checker.setPositionOnBoard(targetX, targetY);
+            Queen.checkQueenCondition(targetX, targetY);
         }
-        if(correctMove) {
-        	ArrayList<Coordinate> capturedCheckers = new ArrayList<Coordinate>();
-        	if(captureMove) {
-                int checkerToRemoveX = (targetX + sourceX) / 2;
-                int checkerToRemoveY = (targetY + sourceY) / 2;
-                deletedCheckers.add(new Coordinate(checkerToRemoveX, checkerToRemoveY));
-        		capturedCheckers.add(new Coordinate(checkerToRemoveX, checkerToRemoveY));
-                //Model.board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
-        	}
-        	return capturedCheckers;
+        if (captureMove) {
+            int checkerToRemoveX = (targetX + sourceX) / 2;
+            int checkerToRemoveY = (targetY + sourceY) / 2;
+            Model.board.getField(checkerToRemoveX, checkerToRemoveY).removeChecker();
+            deletedCheckers.add(new Coordinate(checkerToRemoveX, checkerToRemoveY));
         }
-        else
-        {
-        	return null;
-        }
+        return correctMove;
     }
 
 }

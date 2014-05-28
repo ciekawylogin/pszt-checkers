@@ -65,7 +65,6 @@ public class Controller {
                 final GameStartEvent gameStartEvent = (GameStartEvent)event;
                 model.startGame(gameStartEvent.getPlayerName(), gameStartEvent.getGameLevel(), 
                         gameStartEvent.getCheckerColor());
-                refreshView();
                 model.makeAIMove();
                 refreshView();
                 break;
@@ -91,11 +90,6 @@ public class Controller {
             case PROGRAM_QUIT:
                 System.exit(0);
                 break;
-                
-            case UNDO_MOVE:
-            	model.undoLastMove();
-            	refreshView();
-            	break;
                 
             default:
                 throw new RuntimeException("unrecognized event taken from blockingQueue");
@@ -137,6 +131,7 @@ public class Controller {
             isCPUMoveComplete |= checkEndGameConditions();
         }
     }
+    
     
     /**
      * Sprawdza czy ktorys z graczy wygral badz czy nastapil remis

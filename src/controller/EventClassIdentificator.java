@@ -5,7 +5,6 @@ import common.events.GameEvent;
 import common.events.GameFinishEvent;
 import common.events.GameStartEvent;
 import common.events.ProgramQuitEvent;
-import common.events.UndoMoveEvent;
 
 /**
  * Klasa wiazaca klase eventu z przystepniejszym dla czytelnika identyfikatorem.
@@ -18,7 +17,6 @@ enum EventClassIdentificator {
     GAME_START,
     GAME_FINISH,
     PROGRAM_QUIT,
-    UNDO_MOVE,
     UNRECOGNIZED;
     
     /**
@@ -36,8 +34,6 @@ enum EventClassIdentificator {
             return GAME_FINISH;
         } else if(event_class == ProgramQuitEvent.class) {
             return PROGRAM_QUIT;
-        } else if(event_class == UndoMoveEvent.class) {
-        	return UNDO_MOVE;
         }
         return UNRECOGNIZED;
     }

@@ -97,15 +97,11 @@ abstract class Queen {
      *
      * @param targetX - wspolrzedna X koncowej pozycji
      * @param targetY - wspolrzedna Y koncowej pozycji
-     * @return 
      */
-    static boolean checkQueenCondition(final int targetX, final int targetY) {
-    	Checker checker = Model.board.getField(targetX, targetY).getChecker();
-        if((targetY == 0 && checker.getColor() == CheckerColor.BLACK)||(targetY == Model.BOARD_SIZE-1 && checker.getColor() == CheckerColor.WHITE)) {
-           checker.promote();
-           return true;
+    static void checkQueenCondition(final int targetX, final int targetY) {
+        if(targetY == 0 || targetY == Model.BOARD_SIZE-1) {
+            Model.board.getField(targetX, targetY).getChecker().promote();
         }
-        return false;
     }
     
     /**
@@ -115,28 +111,26 @@ abstract class Queen {
      * @param sourceY - wspolrzedna Y poczatkowej pozycji
      * @param targetX - wspolrzedna X koncowej pozycji
      * @param targetY - wspolrzedna Y koncowej pozycji
-     * @return ArrayList<Coordinate> - lista zbitych pionkow, jesli ruch zostal wykonany (null jesli ruch byl bledny)
+     * @return true, jesli ruch zostal wykonany
      */
-    static ArrayList<Coordinate> makeMove(final int sourceX, final int sourceY, 
+    static boolean makeMove(final int sourceX, final int sourceY, 
             final int targetX, final int targetY, final boolean forcedCapture) {
         ArrayList<Coordinate> coordinatesToDelete = new ArrayList<>();
         boolean correctMove = checkMove(sourceX, sourceY, targetX, targetY, coordinatesToDelete);
         if(forcedCapture) {
-            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY, -1));
+            correctMove &= isMoveACapture(new Move(sourceX, sourceY, targetX, targetY));
         };
 
         if(correctMove) {
             setOnPosition(sourceX, sourceY, targetX, targetY);
             
-            
             // usuwanie potencjalnych ofiar ruchu
             removeCapturedCheckers(coordinatesToDelete);
-            return coordinatesToDelete;
             
         } else {
             coordinatesToDelete.clear();
         }
-        return null;
+        return correctMove;
     }
     
     /**
@@ -429,14 +423,18 @@ abstract class Queen {
         boolean isCapturePossible = false;
         
         for(Field[] rows : Model.board.getFields()) {
+            
             for(Field field : rows) {
                 checkerOnField = field.getChecker();
                 if(checkerOnField!= null && checkerOnField.getType() == CheckerType.QUEEN && 
                         checkerOnField.getColor() == color) {
+                    
                     isCapturePossible |= 
                             checkPossibleCapturesFromQueen(checkerOnField, coordinatesToCapture);
+                    
                     }
                 }
+                
         }
         
         
