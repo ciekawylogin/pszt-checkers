@@ -12,6 +12,8 @@ import common.events.GameFinishEvent;
 import java.util.concurrent.BlockingQueue;
 
 public class Controller {
+	public static Controller instance; // debug only, remove it from final version
+	
     // Model
     private final Model model;
 
@@ -32,6 +34,7 @@ public class Controller {
         this.model = model;
         this.view = view;
         this.blocking_queue = blocking_queue;
+        this.instance = this;
     }
 
     /**
@@ -109,7 +112,7 @@ public class Controller {
     /**
      * Kaz widokowi sie odswiezyc
      */
-    private void refreshView() {
+    public void refreshView() {
         Mockup mockup = model.getMockup();
         view.draw(mockup);
     }

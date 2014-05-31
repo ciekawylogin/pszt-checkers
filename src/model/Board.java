@@ -6,7 +6,7 @@ import model.CheckerType;
 
 class Board {
     // pola planszy
-    private static Field fields[][];
+    private Field fields[][];
 
     // @see #Model.BOARD_SIZE
     private final int SIZE;
@@ -25,8 +25,8 @@ class Board {
         this.INIT_ROWS = init_rows;
         fields = new Field[SIZE][SIZE];
 
-        for(int i = 0; i < Model.BOARD_SIZE; ++i) {
-            for(int j = 0; j < Model.BOARD_SIZE; ++j) {
+        for(int i = 0; i < SIZE; ++i) {
+            for(int j = 0; j < SIZE; ++j) {
                 fields[j][i] = new Field(j, i);
             }
         }
@@ -110,5 +110,35 @@ class Board {
             }
         }
         
+    }
+    
+
+	/**
+	 * @param type typ pionka 
+	 * @param color kolor pionka
+	 * @return liczba pionkow na planszy o zadanym typie i kolorze
+	 */
+    public int countCheckers(CheckerType type, CheckerColor color) {
+		int count = 0;
+	
+	    for(int x = 0; x < SIZE; ++x) {
+	        for(int y = 0; y < SIZE; ++y) {
+	        	Checker checker = getField(x, y).getChecker();
+	            if(checker != null && checker.getType() == type && checker.getColor() == color) {
+	                count++;
+	            }
+	        }
+	    }
+		return count;
+    }        
+    
+    public Board clone() {
+        Board result = new Board(SIZE, INIT_ROWS);
+        for(int i = 0; i < SIZE; ++i) {
+            for(int j = 0; j < SIZE; ++j) {
+                result.getFields()[i][j] = fields[i][j].clone();
+            }
+        }
+		return result;
     }
 }

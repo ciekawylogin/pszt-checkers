@@ -109,4 +109,8 @@ public class Checker {
             type = CheckerType.QUEEN;
         }
     }
+    
+    public Checker clone() {
+    	return new Checker(this);
+    }
 }

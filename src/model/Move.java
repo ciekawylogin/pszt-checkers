@@ -1,11 +1,16 @@
 package model;
 
+import java.util.ArrayList;
+
+import com.sun.scenario.effect.Blend.Mode;
+
 import common.Coordinate;
+import controller.Controller;
 
 /**
  * Klasa reprezentujaca pojedynczy ruch gracza
  */
-class Move {
+class Move implements AIMove {
     // wspolrzedna X poczatkowego pola pionka
     private int startX;
 
@@ -60,4 +65,34 @@ class Move {
     int getEndY() {
         return endY;
     }
+
+	@Override
+	public AIGameState applyTo(AIGameState state) {
+		if(!(state instanceof GamePosition)) {
+			throw new RuntimeException("unknown type");
+		}
+		
+		GameState gameState = ((GamePosition)state).gameState;
+		Board board = ((GamePosition)state).board.clone();
+
+		Board boardCopy = Model.board.clone();
+		GameState stateCopy = Model.gameState;
+
+		Model.board = board;
+		Model.gameState = gameState;
+		
+		Model.instance.performMove(this);
+
+		GamePosition newState = new GamePosition(Model.board, Model.gameState);
+		newState.lastMove = this;
+
+		Model.board = boardCopy;
+		Model.gameState = stateCopy;
+		
+		return newState;
+	}
+	
+	public String toString() {
+		return "move: ("+startX+", "+startY+") -> ("+endX+", "+endY+")\n";
+	}
 }

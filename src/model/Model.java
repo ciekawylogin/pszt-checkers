@@ -6,7 +6,9 @@ import common.Coordinate;
 import common.Mockup;
 import common.PlayerMockup;
 
-public class Model {
+public class Model implements AIGameInterface {
+	static Model instance;
+	
     /* rozmiar planszy */
     final static int BOARD_SIZE = 8;
 
@@ -20,14 +22,11 @@ public class Model {
     /* gracze */
     private Player players[];
 
-    /* numer aktywnego gracze */
-    private int active_player;
-    
     /* numer gracza ktorego ruch byl ostatni */
     private int whoseWasLastMove;
     
     /* numer aktywnego gracze */
-    private GameState gameState;
+    static GameState gameState;
 
     /**
      * Konstruktor.
@@ -35,9 +34,9 @@ public class Model {
     public Model() {
         board = new Board(Model.BOARD_SIZE, Model.INITIAL_CHECKERS_ROWS);
         players = new Player[2];
-        active_player = 0;
         whoseWasLastMove = -1;
         gameState = GameState.NOT_STARTED;
+        instance = this;
     }
     
     /**
@@ -178,7 +177,7 @@ public class Model {
      */
     private void saveCorrectMove(final int sourceX, final int sourceY, 
             final int targetX, final int targetY) {
-        Player player = active_player == 0 ? players[0] : players[1];        
+        Player player = getActivePlayer() == 0 ? players[0] : players[1];        
         player.setLastMove(new Move(sourceX, sourceY, targetX, targetY));
     }
     
@@ -187,11 +186,23 @@ public class Model {
      * @return jesli ruch poprawny
      */
     public boolean makeAIMove() {
+//    	ArrayList<Coordinate> queenDeletedCheckers = Queen.deletedCheckers;
+//    	ArrayList<Coordinate> normalDeletedCheckers = NormalChecker.deletedCheckers;
+    	
     	ArrayList<Move> AIMoves = new ArrayList<Move>();
     	boolean isNotASingleMove = true;
     	boolean isMoveCorrect = false;
         while(!isMoveCorrect && isAITurnPossible(AIMoves)) {
-        	Move selectedMove = AI.makeAIMove(AIMoves);
+        	AI ai = new AI(new GamePosition(board, gameState));
+        	ai.buildNextTreeLevel();
+        	ai.buildNextTreeLevel();
+        	ai.buildNextTreeLevel();
+        	ai.buildNextTreeLevel();
+        	ai.buildNextTreeLevel();
+        	ai.buildNextTreeLevel(); // przewiduje 6 ruchow...
+        	ai.updateValues();
+        	Move selectedMove = (Move)ai.getBestMove();
+        	
             selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
             Coordinate startCoordinate = getSelectedCheckerCoordinate();
             Coordinate endCoordinate = new Coordinate(selectedMove.getEndX(), selectedMove.getEndY());
@@ -212,6 +223,11 @@ public class Model {
             }
             AIMoves.clear();
         }
+        
+        
+//      Queen.deletedCheckers = queenDeletedCheckers;
+//    	NormalChecker.deletedCheckers = normalDeletedCheckers;
+    	
         
         return !isNotASingleMove;
     	
@@ -280,8 +296,7 @@ public class Model {
      * Zmiana gracza wykonujacego ruch.
      */
     private final void changeActivePlayer() {
-        active_player = active_player == 1 ? 0 : 1;
-        gameState = active_player == 0 ? GameState.PLAYER_1_MOVE : GameState.PLAYER_2_MOVE;
+        gameState = getActivePlayer() == 1 ? GameState.PLAYER_1_MOVE : GameState.PLAYER_2_MOVE;
     }
     
     /**
@@ -326,8 +341,8 @@ public class Model {
             return false;
         }
         
-        if(active_player == 0 && checker.getColor() == players[0].getPlayerColor()
-                || active_player == 1 && checker.getColor() == players[1].getPlayerColor() ) {
+        if(getActivePlayer() == 0 && checker.getColor() == players[0].getPlayerColor()
+                || getActivePlayer() == 1 && checker.getColor() == players[1].getPlayerColor() ) {
             return true;
         }
         return false;
@@ -354,7 +369,6 @@ public class Model {
 
         players[0] = new Player("player", checkerColor, false, gameLevel);
         players[1] = new Player("CPU", CheckerColor.getOppositeColor(checkerColor), true, null);
-        active_player = players[0].getPlayerColor() == CheckerColor.WHITE ? 0 : 1;
         gameState = players[0].getPlayerColor() == CheckerColor.WHITE ? 
                 GameState.PLAYER_1_MOVE : GameState.PLAYER_2_MOVE;
         // rozstaw pionki
@@ -583,7 +597,7 @@ public class Model {
      * @return true jesli tura komputera
      */
     public boolean isAITurn() {
-        return players[active_player].isCpu();
+        return players[getActivePlayer()].isCpu();
     }
     
     /**
@@ -591,10 +605,15 @@ public class Model {
      * @return true jesli tura komputera i ma sie gdzie ruszyc
      */
     public boolean isAITurnPossible(ArrayList<Move>AIMoves) {
-        return isAITurn() && checkAllPossibleMoves(players[active_player].getPlayerColor(), AIMoves);
+        return isAITurn() && checkAllPossibleMoves(players[getActivePlayer()].getPlayerColor(), AIMoves);
     }
     
-    /**
+    private int getActivePlayer() {
+		return gameState == GameState.PLAYER_1_MOVE || gameState == GameState.PLAYER_1_MOVE_REPEAT_MOVE?
+				0: 1;
+	}
+
+	/**
      * Sprawdza czy mozliwe jest bicie z danej pozycji
      * @param x
      * @param y
@@ -615,4 +634,43 @@ public class Model {
         
         return isCapturePossible;
     }
+
+    public ArrayList<Move> getPossibleMoves() {
+    	ArrayList<Move> possibleMoves = new ArrayList<Move>();
+    	ArrayList<Coordinate> captures = new ArrayList<Coordinate>();
+    	checkAllPossibleMoves(getCurrentPlayerColor(), possibleMoves);
+    	if(checkAllPossibleCaptures(getCurrentPlayerColor(), captures)) {
+        	ArrayList<Move> result = new ArrayList<Move>();
+    		for(Move move: possibleMoves) {
+    			if(isMoveACapture(move)) {
+    				result.add(move);
+    			}
+    		}
+        	return result;
+    	}
+    	return possibleMoves;
+    }
+    
+	@Override
+	public AIGameState getCurrentState() {
+		throw new RuntimeException();
+	}
+	
+	public CheckerColor getCurrentPlayerColor() {
+		return players[getActivePlayer()].getPlayerColor();
+	}
+
+	public void performMove(Move move) {
+		System.out.println(move);
+		selectChecker(move.getStartX(), move.getStartY());
+        boolean isNotASingleMove = isMoveACapture(move);        
+        moveSelectedCheckerTo(move.getEndX(), move.getEndY());
+        isNotASingleMove &= checkCapturesFromPosition(move.getEndX(), move.getEndY());
+        if(!isNotASingleMove) {
+            changeActivePlayer();
+        }
+        
+        //saveCorrectMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
+       // unselectChecker();
+	}
 }

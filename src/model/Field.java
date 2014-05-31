@@ -97,4 +97,12 @@ class Field {
     int getY() {
         return positionY;
     }
+    
+    public Field clone() {
+    	Field result = new Field(positionX, positionY);
+    	if(checker != null) {    		
+        	result.setChecker(checker.clone());
+    	}
+    	return result;
+    }
 }
