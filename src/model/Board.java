@@ -141,4 +141,39 @@ class Board {
         }
 		return result;
     }
+
+	public int countCheckersInLine(int y, CheckerType type, CheckerColor color) {
+		int count = 0;
+	    for(int x = 0; x < SIZE; ++x) {
+        	Checker checker = getField(x, y).getChecker();
+            if(checker != null && checker.getType() == type && checker.getColor() == color) {
+                count++;
+            }
+	    }
+	    return count;
+	}
+	
+	public int countBlockedcheckers(CheckerColor color) {
+		int count = 0;
+		int direction = color == CheckerColor.WHITE? 1:-1;
+		CheckerColor oppositeColor = CheckerColor.getOppositeColor(color);
+        for(int y = 2; y < SIZE-2; ++y) {
+        	for(int i=0;i<=1;++i) {
+        		int x = i==0? 0: 7;
+        		int factor = i==0? 1: -1;
+        		Checker checker = getField(x, y).getChecker();
+        		if(checker != null && checker.getColor() == color) {
+            		Checker second = getField(x+factor, y+direction).getChecker();
+            		Checker third  = getField(x+factor*2, y+direction*2).getChecker();
+            		if (second!=null && third!=null &&
+            		    second.getColor() == oppositeColor &&
+            			third.getColor() == oppositeColor)
+            		{
+            			count++;
+            		}
+        		}
+        	}
+        }
+		return count;
+	}
 }

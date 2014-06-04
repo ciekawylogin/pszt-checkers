@@ -72,8 +72,8 @@ class Move implements AIMove {
 			throw new RuntimeException("unknown type");
 		}
 		
-		GameState gameState = ((GamePosition)state).gameState;
-		Board board = ((GamePosition)state).board.clone();
+		GameState gameState = ((GamePosition)state).getGameState();
+		Board board = ((GamePosition)state).getBoard().clone();
 
 		Board boardCopy = Model.board.clone();
 		GameState stateCopy = Model.gameState;
@@ -84,7 +84,7 @@ class Move implements AIMove {
 		Model.instance.performMove(this);
 
 		GamePosition newState = new GamePosition(Model.board, Model.gameState);
-		newState.lastMove = this;
+		newState.setLastMove(this);
 
 		Model.board = boardCopy;
 		Model.gameState = stateCopy;

@@ -20,7 +20,7 @@ public class Model implements AIGameInterface {
     static Board board;
 
     /* gracze */
-    private Player players[];
+    static public Player players[];
 
     /* numer gracza ktorego ruch byl ostatni */
     private int whoseWasLastMove;
@@ -194,13 +194,14 @@ public class Model implements AIGameInterface {
     	boolean isMoveCorrect = false;
         while(!isMoveCorrect && isAITurnPossible(AIMoves)) {
         	AI ai = new AI(new GamePosition(board, gameState));
-        	ai.buildNextTreeLevel();
-        	ai.buildNextTreeLevel();
-        	ai.buildNextTreeLevel();
-        	ai.buildNextTreeLevel();
-        	ai.buildNextTreeLevel();
-        	ai.buildNextTreeLevel(); // przewiduje 6 ruchow...
-        	ai.updateValues();
+        	
+        	GameLevel level = getPlayer(0).getGameLevel();
+        	int miliseconds = 
+        			level == GameLevel.EASY?    500:
+        			level == GameLevel.MEDIUM? 1500:
+        		  /*level == GameLevel.HARD*/  3000;
+        	
+        	ai.buildTree(miliseconds);
         	Move selectedMove = (Move)ai.getBestMove();
         	
             selectChecker(selectedMove.getStartX(), selectedMove.getStartY());
@@ -661,7 +662,7 @@ public class Model implements AIGameInterface {
 	}
 
 	public void performMove(Move move) {
-		System.out.println(move);
+		//System.out.println(move);
 		selectChecker(move.getStartX(), move.getStartY());
         boolean isNotASingleMove = isMoveACapture(move);        
         moveSelectedCheckerTo(move.getEndX(), move.getEndY());
@@ -669,6 +670,11 @@ public class Model implements AIGameInterface {
         if(!isNotASingleMove) {
             changeActivePlayer();
         }
+        checkIfAnyPlayerWon();
+        checkIfWithdraw();
+        
+        Queen.deletedCheckers.clear();
+        NormalChecker.deletedCheckers.clear();
         
         //saveCorrectMove(move.getStartX(), move.getStartY(), move.getEndX(), move.getEndY());
        // unselectChecker();

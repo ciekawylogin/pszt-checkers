@@ -105,4 +105,9 @@ class Field {
     	}
     	return result;
     }
+    
+    @Override
+    public String toString() {
+    	return checker == null? " " : checker.getColor() == CheckerColor.WHITE? "w" : "b";
+    }
 }

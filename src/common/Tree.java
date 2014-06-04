@@ -26,6 +26,8 @@ public class Tree<T> {
         /// Glebokosc wezla (korzen ma zero, jego dzieci 1, etc.)
         private int depth;
         
+        public boolean checked = false;
+        
         /**
          * Konstruktor ustawiajacy dane wezla, ojca i indeks
          * @param data dane
@@ -81,9 +83,10 @@ public class Tree<T> {
 		 * Dodaje nowy element o zadanej zawartoœci
 		 * @param childContent zawartosc wezla do dodania
 		 */
-		public void addChild(T childContent) {
+		public Node<T> addChild(T childContent) {
 			Node<T> child = new Node<T>(childContent, this, this.countChildren());
 			addChild(child);
+			return child;
 		}
 		
 		/**
@@ -164,6 +167,7 @@ public class Tree<T> {
 		public boolean isLeaf() {
 			return countChildren() == 0;
 		}
+
     }
     
     public static class TreeLevelIterator<T> implements Iterator<Node<T>> {
@@ -217,5 +221,9 @@ public class Tree<T> {
 		Node<T> firstNode = root.getFirstDescendantOnDepth(depth);
 		return new TreeLevel<T>(firstNode);
     }
+
+	public Node<T> getRoot() {
+		return root;
+	}
 
 }
