@@ -12,7 +12,7 @@ import common.events.GameFinishEvent;
 import java.util.concurrent.BlockingQueue;
 
 public class Controller {
-	public static Controller instance; // debug only, remove it from final version
+	//public static Controller instance; // debug only, remove it from final version
 	
     // Model
     private final Model model;
@@ -34,7 +34,7 @@ public class Controller {
         this.model = model;
         this.view = view;
         this.blocking_queue = blocking_queue;
-        this.instance = this;
+        //this.instance = this;
     }
 
     /**
@@ -52,8 +52,6 @@ public class Controller {
 
     /**
      * Pobiera obiekt z kolejki zdarzen (by  moze czekajac na niego), po czym obsluguje go
-     *
-     * @TODO zastosowac wzorzec strategii
      */
     private void processEvents() {
         try {
